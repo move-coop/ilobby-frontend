@@ -2,11 +2,24 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import * as serviceWorker from './serviceWorker';
+import registerServiceWorker from './registerServiceWorker';
+// IF YOU WISH TO USE REACT ROUTER uncomment lines 7,19,21
+import { BrowserRouter as Router } from 'react-router-dom';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+// Provider is a react component which wraps your app and 'provides' your redux store to the rest of your application
+import { Provider } from 'react-redux'
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+//function which returns store
+import configureStore from './store/configureStore'
+
+const store = configureStore()
+// console.log('store', store)
+// console.log('state', store.getState())
+
+ReactDOM.render(
+  <Provider store={store}>
+    <Router>
+    <App />
+    </Router>
+  </Provider>, document.getElementById('root'));
+registerServiceWorker();
