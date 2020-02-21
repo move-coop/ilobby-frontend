@@ -6,7 +6,9 @@ import CampaignPageContainer from "./CampaignPageContainer";
 
 class LoggedInContainer extends React.Component {
   render() {
-    return <div></div>;
+    return(<div>
+
+    </div>);
   }
 }
 

@@ -1,41 +1,57 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { Map, GoogleApiWrapper, Polygon } from "google-maps-react";
 import WelcomeContainer from './Containers/WelcomeContainer'
 import LoggedInContainer from './Containers/LoggedInContainer'
+import { connect } from 'react-redux'
+import { Button, Header, Icon } from 'semantic-ui-react'
 
 
 class App extends React.Component {
   
   render() {
 
+    // if we are not logged in, render the WelcomeContainer
+    // otherwise, render LoggedInContainer
+
     return (
       <div>
-        
+        <Header as="h2" icon>
+          <Icon name="volleyball ball" />
+          Here We Go
+          <Header.Subheader>
+            iLobby is ramping up.
+          </Header.Subheader>
+        </Header>
+        <hr />
+    <Button onClick={this.props.toggleCurrentUser} primary>{this.props.currentUser ? "Logout" : "Login" }</Button>
+        <LoggedInContainer />
       </div>
     );
   }
 }
 
-export default App
+// export default App
 // export default GoogleApiWrapper({
 //   apiKey: process.env.REACT_APP_GOOGLEMAPS_API_KEY
 // })(App);
 
-// const mapStateToProps = (state) => {
-//   return {
-//     exampleMessage: state.exampleState.exampleMessage
-//   }
-// }
+const mapStateToProps = (state) => {
+  console.log("msp state", state)
+  return {
+    currentUser: state.currentUser
+    // exampleMessage: state.exampleState.exampleMessage
+  }
+}
 
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     changeExampleMessage: () => { dispatch(changeExampleMessage()) }
-//   }
-// }
+const mapDispatchToProps = (dispatch) => {
+  return {
+    toggleCurrentUser: () => {dispatch({type: "TOGGLE"})}
+    // changeExampleMessage: () => { dispatch(changeExampleMessage()) }
+  }
+}
 
-// export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
 
 
 

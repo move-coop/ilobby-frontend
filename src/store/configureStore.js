@@ -1,5 +1,5 @@
 import { createStore, /* applyMiddleware, compose */} from 'redux';
-import rootReducer from '../reducers';
+import reducer from "../reducers";
 // import thunk from 'redux-thunk';
 
 // If you want to use...
@@ -9,9 +9,9 @@ import rootReducer from '../reducers';
 export default function configureStore() {
   // const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
   return createStore(
-    rootReducer,
+    reducer
     // composeEnhancers(
-        // applyMiddleware(thunk)
+    // applyMiddleware(thunk)
     // )
   );
 }

@@ -47,4 +47,4 @@ class SPCMapsContainer extends React.Component {
 
 export default GoogleApiWrapper({
   apiKey: process.env.REACT_APP_GOOGLEMAPS_API_KEY
-})(App);
+})(SPCMapsContainer);
