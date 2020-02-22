@@ -6,8 +6,8 @@ class SPCMapsContainer extends React.Component {
   render() {
 
     const mapStyles = {
-      width: "100%",
-      height: "100%"
+      width: "50%",
+      height: "50%"
     };
 
     const triangleCoords = [
@@ -24,7 +24,7 @@ class SPCMapsContainer extends React.Component {
           zoom={7.3}
           style={mapStyles}
           disableDefaultUI={true}
-          mapType={"satellite"}
+          mapType={"terrain"}
           initialCenter={{ lat: 42.8182876, lng: -75.9917835 }}
         >
           {/* {displayPolygons} */}
@@ -43,7 +43,6 @@ class SPCMapsContainer extends React.Component {
   }
 }
 
-// export default SPCMapsContainer;
 
 export default GoogleApiWrapper({
   apiKey: process.env.REACT_APP_GOOGLEMAPS_API_KEY

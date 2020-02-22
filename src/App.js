@@ -16,16 +16,7 @@ class App extends React.Component {
 
     return (
       <div>
-        <Header as="h2" icon>
-          <Icon name="volleyball ball" />
-          Here We Go
-          <Header.Subheader>
-            iLobby is ramping up.
-          </Header.Subheader>
-        </Header>
-        <hr />
-    <Button onClick={this.props.toggleCurrentUser} primary>{this.props.currentUser ? "Logout" : "Login" }</Button>
-        <LoggedInContainer />
+        {this.props.currentUser ? <LoggedInContainer /> : <WelcomeContainer /> }
       </div>
     );
   }
