@@ -8,7 +8,14 @@ const NavBar = (props) => {
   // local state just to handle active menu item
   const [activeItem, setActiveItem] = useState("")
 
-  const handleItemClick = (e, { name }) => setActiveItem(name);
+  const handleItemClick = (e, { name }) => {
+    setActiveItem(name)
+    if (name === "campaigns") {
+      props.history.push('/campaigns')
+    } else {
+      props.history.push('/')
+    }
+  };
 
   return (
     // <div>NAVBAR</div>
@@ -22,7 +29,7 @@ const NavBar = (props) => {
         active={activeItem === "search"}
         onClick={handleItemClick}
       >
-        <Link to="/">Search</Link>
+        Search
       </Menu.Item>
 
       <Menu.Item
@@ -30,13 +37,15 @@ const NavBar = (props) => {
         active={activeItem === "campaigns"}
         onClick={handleItemClick}
       >
-        <Link to="/campaigns">Campaigns</Link>
+        Campaigns
       </Menu.Item>
+      <Menu.Menu position='right'>
         <Menu.Item>
-          <Button onClick={props.toggleCurrentUser} primary float right>
+          <Button onClick={props.toggleCurrentUser} primary>
             {props.currentUser ? "Logout" : "Login"}
           </Button>
         </Menu.Item>
+      </Menu.Menu>
     </Menu>
   );
 }

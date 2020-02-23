@@ -10,7 +10,7 @@ class LoggedInContainer extends React.Component {
   render() {
     return (
       <div>
-        <NavBar />
+        <Route path="/" component={NavBar} />
         <Header size="tiny">LOGGED IN</Header>
         <Switch >
           <Route path="/campaigns">
