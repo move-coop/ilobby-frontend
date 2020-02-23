@@ -4,11 +4,23 @@ import './App.css';
 import WelcomeContainer from './Containers/WelcomeContainer'
 import LoggedInContainer from './Containers/LoggedInContainer'
 import { connect } from 'react-redux'
+import { fetchActionCreator } from './reducers/reducer'
 import { Button, Header, Icon } from 'semantic-ui-react'
 
+const API = "http://localhost:3000/legislators"
 
 class App extends React.Component {
   
+  componentDidMount() {
+    console.log("App Did Mount")
+    fetch(API)
+    .then(res => res.json())
+    .then(data => {
+      this.props.fetchLegislators(data)}
+      )
+  }
+      
+
   render() {
 
     // if we are not logged in, render the WelcomeContainer
@@ -34,14 +46,16 @@ const mapStateToProps = (state) => {
   }
 }
 
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     toggleCurrentUser: () => {dispatch({type: "TOGGLE"})}
-//     // changeExampleMessage: () => { dispatch(changeExampleMessage()) }
-//   }
-// }
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchLegislators: (data) => {
+      dispatch({ type: "FETCH_LEGISLATORS", payload: data })
+    }
+  }
+    // changeExampleMessage: () => { dispatch(changeExampleMessage()) }
+}
 
-export default connect(mapStateToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
 
 
 

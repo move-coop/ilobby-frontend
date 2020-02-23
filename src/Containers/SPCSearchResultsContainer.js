@@ -5,7 +5,10 @@ import SPCSearchResultsBody from "./SPCSearchResultsBody";
 
 class SPCSearchResultsContainer extends React.Component {
   render() {
-    return <div></div>;
+    return <div>
+      <SPCSearchResultsHeader />
+      <SPCSearchResultsBody />
+    </div>;
   }
 }
 

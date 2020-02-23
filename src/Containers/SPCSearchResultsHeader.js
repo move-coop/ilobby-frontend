@@ -2,7 +2,7 @@ import React from "react";
 
 class SPCSearchResultsHeader extends React.Component {
   render() {
-    return <div></div>;
+    return <div>SPCSearchResultsHeader</div>;
   }
 }
 

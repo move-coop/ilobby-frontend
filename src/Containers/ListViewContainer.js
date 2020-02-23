@@ -3,7 +3,7 @@ import LegislatorRow from '../Components/LegislatorRow'
 
 class ListViewContainer extends React.Component {
   render() {
-    return <div></div>;
+    return <div>ListViewContainer</div>;
   }
 }
 

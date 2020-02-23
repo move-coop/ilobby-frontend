@@ -1,6 +1,8 @@
 // a reducer is a PURE function that takes the previous state and an action as arguments and returns new state based on the action.type
 // import { /* your type here, CHANGE_MESSAGE */ } from '../actions/types'
 
+// const API = "http://localhost:3000/legislators"
+
 const chamberOptions = [
   {
     key: 'Senate',
@@ -58,14 +60,28 @@ const initialState = {
   partyOptions: partyOptions,
   committeeFilter: [],
   committeeOptions: committeeOptions,
+  legislators: []
 
 }
+
+// const fetchActionCreator = () => {
+//   return (dispatch) => {
+//     fetch(API)
+//       .then(res => res.json())
+//       .then(data => dispatch({ type: FETCH_LEGISLATORS, payload: data }))
+//   }
+// }
+
 
 export const reducer = (prevState = initialState, action) => {
   switch (action.type) {
     case "TOGGLE":
       console.log("toggling!")
       return { ...prevState, currentUser: !prevState.currentUser }
+
+    case "FETCH_LEGISLATORS":
+      console.log("reducer legislators", action.payload)
+      return { ...prevState, legilators: action.payload }
 
     case "SEARCH_FILTER":
       console.log("search filtering!")

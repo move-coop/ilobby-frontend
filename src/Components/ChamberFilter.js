@@ -11,7 +11,7 @@ const ChamberFilter = props => {
 
   return (
     <Dropdown
-      placeholder="Select Chamber"
+      placeholder="Chamber"
       fluid
       selection
       clearable

@@ -11,7 +11,7 @@ const CommitteeFilter = props => {
 
   return (
     <Dropdown
-      placeholder="Select Committee"
+      placeholder="Committee"
       fluid
       multiple
       search

@@ -3,7 +3,10 @@ import ListViewContainer from "./ListViewContainer";
 
 class SPCSearchResultsBody extends React.Component {
   render() {
-    return <div></div>;
+    return <div>
+      SPCSearchResultsBody
+      <ListViewContainer />
+      </div>;
   }
 }
 

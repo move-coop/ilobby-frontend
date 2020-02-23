@@ -11,7 +11,7 @@ const PartyFilter = props => {
 
   return (
     <Dropdown
-      placeholder="Select Party"
+      placeholder="Party"
       fluid
       selection
       clearable

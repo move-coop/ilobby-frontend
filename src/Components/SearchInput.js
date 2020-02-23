@@ -16,7 +16,7 @@ const SearchInput = props => {
       onChange={e => props.editSearchFilter(e.target.value)}
       value={props.searchFilter}
       type="text"
-      placeholder="Filter by name or district..."
+      placeholder="Name or district..."
     />
   );
 };
