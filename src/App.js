@@ -28,21 +28,20 @@ class App extends React.Component {
 // })(App);
 
 const mapStateToProps = (state) => {
-  console.log("msp state", state)
   return {
     currentUser: state.currentUser
     // exampleMessage: state.exampleState.exampleMessage
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    toggleCurrentUser: () => {dispatch({type: "TOGGLE"})}
-    // changeExampleMessage: () => { dispatch(changeExampleMessage()) }
-  }
-}
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     toggleCurrentUser: () => {dispatch({type: "TOGGLE"})}
+//     // changeExampleMessage: () => { dispatch(changeExampleMessage()) }
+//   }
+// }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps)(App);
 
 
 

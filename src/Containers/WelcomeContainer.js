@@ -18,7 +18,6 @@ class WelcomeContainer extends React.Component {
 }
 
 const mapStateToProps = state => {
-  console.log("msp state", state);
   return {
     currentUser: state.currentUser
     // exampleMessage: state.exampleState.exampleMessage

@@ -1,34 +1,43 @@
 import React, { useState } from "react";
 import { Dropdown } from "semantic-ui-react";
-
-const chamberOptions = [
-  {
-    key: 'Senate',
-    text: 'Senate',
-    value: 'Senate',
-  },
-  {
-    key: 'Assembly',
-    text: 'Assembly',
-    value: 'Assembly',
-
-  }
-]
+import { connect } from "react-redux";
 
 const ChamberFilter = props => {
-  const [getSearch, setSearch] = useState("");
-
-  const searchChangeHandler = newSearch => setSearch(newSearch);
+  
+  // FIRST WROTE THIS TO COMPONENT TO USE STATE FOR CONTROLLED INPUT
+  // REFACTORED TO USE STORE
+  // const [getSearch, setSearch] = useState("");
+  // const searchChangeHandler = newSearch => setSearch(newSearch);
 
   return (
     <Dropdown
       placeholder="Select Chamber"
       fluid
       selection
-      options={chamberOptions}
-      onChange={e => searchChangeHandler(e.target.value)}
+      clearable
+      options={props.chamberOptions}
+      value={props.chamberFilter}
+      onChange={(e, { value }) => props.editChamberFilter({ value })}
     />
   );
 };
 
-export default ChamberFilter;
+const mapStateToProps = state => {
+  return {
+    chamberFilter: state.chamberFilter,
+    chamberOptions: state.chamberOptions
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    editChamberFilter: (valueObj) => {
+      dispatch({ type: "CHAMBER_FILTER", payload: valueObj.value });
+    }
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChamberFilter);
+
+
+

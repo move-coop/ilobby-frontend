@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Button, Menu, Icon, Dropdown } from "semantic-ui-react";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
 
@@ -50,8 +49,7 @@ const NavBar = (props) => {
   );
 }
 
-const mapStateToProps = state => {
-  console.log("msp state", state);
+ const mapStateToProps = state => {
   return {
     currentUser: state.currentUser
     // exampleMessage: state.exampleState.exampleMessage
