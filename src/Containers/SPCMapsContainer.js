@@ -40,20 +40,9 @@ class SPCMapsContainer extends React.Component {
   }
 }
 
-
-// export default GoogleApiWrapper({
-//   apiKey: process.env.REACT_APP_GOOGLEMAPS_API_KEY
-// })(SPCMapsContainer);
-
 const mapStateToProps = (state) => {
   return {
-    legislators: state.legislators,
-    searchFilter: state.searchFilter,
-    chamberFilter: state.chamberFilter,
-    partyFilter: state.partyFilter,
-    committeeFilter: state.committeeFilter,
     renderedLegislatorCount: state.renderedLegislatorCount
-    // exampleMessage: state.exampleState.exampleMessage
   }
 }
 
@@ -63,7 +52,6 @@ const mapDispatchToProps = (dispatch) => {
       dispatch({ type: "UPDATE_RENDERED_LEGISLATOR_COUNT", payload: count })
     }
   }
-  // changeExampleMessage: () => { dispatch(changeExampleMessage()) }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(GoogleApiWrapper({

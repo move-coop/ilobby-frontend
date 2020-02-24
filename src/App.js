@@ -4,8 +4,6 @@ import './App.css';
 import WelcomeContainer from './Containers/WelcomeContainer'
 import LoggedInContainer from './Containers/LoggedInContainer'
 import { connect } from 'react-redux'
-import { fetchActionCreator } from './reducers/reducer'
-import { Button, Header, Icon } from 'semantic-ui-react'
 
 const API = "http://localhost:3000/legislators"
 
@@ -16,16 +14,17 @@ class App extends React.Component {
     fetch(API)
     .then(res => res.json())
     .then(data => {
-      this.props.fetchLegislators(data)}
+      // sort alphabetically
+      let legislators = data.sort((a, b) => a.name.localeCompare(b.name))
+
+      this.props.storeLegislators(legislators)}
       )
   }
       
-
   render() {
 
     // if we are not logged in, render the WelcomeContainer
     // otherwise, render LoggedInContainer
-
     return (
       <div>
         {this.props.currentUser ? <LoggedInContainer /> : <WelcomeContainer /> }
@@ -34,53 +33,45 @@ class App extends React.Component {
   }
 }
 
-// export default App
-// export default GoogleApiWrapper({
-//   apiKey: process.env.REACT_APP_GOOGLEMAPS_API_KEY
-// })(App);
-
 const mapStateToProps = (state) => {
   return {
     currentUser: state.currentUser
-    // exampleMessage: state.exampleState.exampleMessage
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchLegislators: (data) => {
-      dispatch({ type: "FETCH_LEGISLATORS", payload: data })
+    storeLegislators: (data) => {
+      dispatch({ type: "STORE_LEGISLATORS", payload: data })
     }
   }
-    // changeExampleMessage: () => { dispatch(changeExampleMessage()) }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
 
 
-
-    // CODE FOR TRANSFORMING GeoJSON data into format usable by Google Maps API
-    // 
-    // let TestFileHelped = TestFile.features.map(feature => {
-    //   let coordinatesArray = feature.geometry.coordinates.map(
-    //     polygon => {
-    //       let latLongArray = polygon.map(pair => {
-    //         return {
-    //           lat: pair[0],
-    //           lng: pair[1]
-    //         };
-    //       });
-    //       return latLongArray;
-    //     }
-    //   );
-    //   // console.log("coordinatesArray", coordinatesArray);
-    //   // console.log("feature", feature);
-    //   let returnItem = {
-    //     ...feature,
-    //     geometry: {
-    //       ...feature.geometry,
-    //       coordinates: coordinatesArray
-    //     }
-    //   };
-    //   return returnItem;
-    // });
+// CODE FOR TRANSFORMING GeoJSON data into format usable by Google Maps API
+// 
+// let TestFileHelped = TestFile.features.map(feature => {
+//   let coordinatesArray = feature.geometry.coordinates.map(
+//     polygon => {
+//       let latLongArray = polygon.map(pair => {
+//         return {
+//           lat: pair[0],
+//           lng: pair[1]
+//         };
+//       });
+//       return latLongArray;
+//     }
+//   );
+//   // console.log("coordinatesArray", coordinatesArray);
+//   // console.log("feature", feature);
+//   let returnItem = {
+//     ...feature,
+//     geometry: {
+//       ...feature.geometry,
+//       coordinates: coordinatesArray
+//     }
+//   };
+//   return returnItem;
+// });

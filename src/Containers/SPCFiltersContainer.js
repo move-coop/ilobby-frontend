@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import SearchInput from "../Components/SearchInput";
 import PartyFilter from "../Components/PartyFilter";
 import ChamberFilter from "../Components/ChamberFilter";
 import CommitteeFilter from "../Components/CommitteeFilter";
-import { Grid, GridColumn } from "semantic-ui-react";
+import { Grid } from "semantic-ui-react";
 
 
 class SPCFiltersContainer extends React.Component {

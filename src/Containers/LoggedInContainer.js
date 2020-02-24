@@ -4,7 +4,6 @@ import Footer from '../Components/Footer'
 import SearchPageContainer from "./SearchPageContainer";
 import CampaignPageContainer from "./CampaignPageContainer";
 import { Switch, Route } from 'react-router-dom'
-import { Header } from 'semantic-ui-react'
 
 class LoggedInContainer extends React.Component {
   render() {
