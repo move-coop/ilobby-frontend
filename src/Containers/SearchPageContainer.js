@@ -2,7 +2,7 @@ import React from "react";
 import SPCSearchResultsContainer from "./SPCSearchResultsContainer";
 import SPCFiltersContainer from "./SPCFiltersContainer";
 import SPCMapsContainer from "./SPCMapsContainer";
-import { Grid, Header } from "semantic-ui-react";
+import { Grid, Segment } from "semantic-ui-react";
 
 
 
@@ -12,15 +12,15 @@ class SearchPageContainer extends React.Component {
         <Grid columns='equal'>
           <Grid.Row>
             <Grid.Column>
-              <SPCFiltersContainer />
+                <SPCFiltersContainer />
             </Grid.Column>
           </Grid.Row>
-          <Grid.Row>
+          <Grid.Row stretched>
             <Grid.Column>
-              <SPCSearchResultsContainer />
+                <SPCSearchResultsContainer />
             </Grid.Column>
             <Grid.Column>
-              <SPCMapsContainer />
+                <SPCMapsContainer />
             </Grid.Column>
           </Grid.Row>
         </Grid>

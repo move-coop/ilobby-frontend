@@ -60,7 +60,9 @@ const initialState = {
   partyOptions: partyOptions,
   committeeFilter: [],
   committeeOptions: committeeOptions,
-  legislators: []
+  legislators: [],
+  renderedLegislatorCount: 0,
+  selectionCount: 0
 
 }
 
@@ -81,7 +83,10 @@ export const reducer = (prevState = initialState, action) => {
 
     case "FETCH_LEGISLATORS":
       console.log("reducer legislators", action.payload)
-      return { ...prevState, legilators: action.payload }
+      return { ...prevState, legislators: action.payload }
+
+    case "UPDATE_RENDERED_LEGISLATOR_COUNT":
+      return { ...prevState, renderedLegislatorCount: action.payload }
 
     case "SEARCH_FILTER":
       console.log("search filtering!")

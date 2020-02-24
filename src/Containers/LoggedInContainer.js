@@ -11,7 +11,6 @@ class LoggedInContainer extends React.Component {
     return (
       <div>
         <Route path="/" component={NavBar} />
-        <Header size="tiny">LOGGED IN</Header>
         <Switch >
           <Route path="/campaigns">
             <CampaignPageContainer />
