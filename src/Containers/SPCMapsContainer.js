@@ -3,9 +3,14 @@ import { Map, GoogleApiWrapper, Polygon } from "google-maps-react";
 import { connect } from 'react-redux'
 
 
+const colors = {
+  democratic: "#0000FF",
+  republican: "#FF0000"
+}
+
 class SPCMapsContainer extends React.Component {
 
-  // districtCoords: this.state.geoJSON.shape.coordinates[0][0].map(pair => ({ lat: pair[1], lng: pair[0] }))
+
 
   render() {
 
@@ -26,11 +31,11 @@ class SPCMapsContainer extends React.Component {
         key={legislator.id} 
         {...legislator} 
         paths={paths}
-        strokeColor="#0000FF"
-        strokeOpacity={0.8}
-        strokeWeight={2}
-        fillColor="#0000FF"
-        fillOpacity={0.35}
+        strokeColor="#000000"
+        strokeOpacity={0.7}
+        strokeWeight={1}
+        fillColor={legislator.party === "Democratic" ? colors.democratic : colors.republican}
+        fillOpacity={0.25}
         />
       })
     }
