@@ -1,22 +1,52 @@
 import React from "react";
 import { connect } from 'react-redux'
-import { Header } from 'semantic-ui-react'
+import { Header, Checkbox, Button } from 'semantic-ui-react'
 
 class SPCSearchResultsHeader extends React.Component {
   render() {
+
+    const displayCount = () => {
+      if (this.props.legislators) {
+        return this.props.legislators.filter(legislator => legislator.display === true).length
+      } else {
+        return 0
+      }
+    }
+
+    const selectedCount = () => {
+      if (this.props.legislators) {
+        return this.props.legislators.filter(legislator => legislator.selected === true).length
+      } else {
+        return 0
+      }
+    }
+
     return(
-    <Header>
-        {this.props.displayLegislators.length} Results. {this.props.selectionCount} Selected.
-      </Header>
+      <div>
+        <Header>
+          {displayCount} Results. {selectedCount} Selected.
+        </Header>
+        <Button onClick={this.props.toggleAllSelection} >Select All/None</Button>
+        <Button>Take Action</Button>
+        <Checkbox toggle label="Card View" />
+
+      </div>
       );
   }
 }
 
 const mapStateToProps = (state) => {
   return {
-    displayLegislators: state.displayLegislators,
-    selectionCount: state.selectionCount
+    legislators: state.legislators,
   }
 }
 
-export default connect(mapStateToProps)(SPCSearchResultsHeader);
+const mapDispatchToProps = dispatch => {
+  return {
+    toggleAllSelection: () => {
+      dispatch({ type: "TOGGLE_ALL_SELECTION" })
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SPCSearchResultsHeader);

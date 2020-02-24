@@ -7,7 +7,9 @@ import { Segment } from 'semantic-ui-react'
 class ListViewContainer extends React.Component {
   render() {
 
-    const renderLegislators = this.props.displayLegislators.map(legislator => <LegislatorRow key={legislator.id} {...legislator} />)
+    console.log(this.props.legislators)
+    const displayLegislators = this.props.legislators.filter(legislator => legislator.display === true)
+    const renderLegislators = displayLegislators.map(legislator => <LegislatorRow key={legislator.id} {...legislator} />)
 
     return(
       <div>
@@ -21,7 +23,7 @@ class ListViewContainer extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    displayLegislators: state.displayLegislators
+    legislators: state.legislators
   }
 }
 

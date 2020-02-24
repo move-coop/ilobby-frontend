@@ -81,17 +81,22 @@ const updateDisplayLegislators = (newState) =>{
   const { legislators, searchFilter, chamberFilter, partyFilter, committeeFilter } = newState
 
   // apply 4 filers
-  let displayLegislators = legislators.filter(legislator => (
-    (
+  let displayLegislators = legislators.map(legislator => {
+    if ((
       legislator.name.toLowerCase().includes(searchFilter.toLowerCase())
       || legislator.district.toString().includes(searchFilter)
     ) && (
       legislator.chamber.includes(chamberFilter) &&
       legislator.party.includes(partyFilter)
       // include committees once that is serialized from the backend
-    )
-  ))
-  console.log("updateDisplayLegislators", displayLegislators)
+    )) {
+      return {...legislator, display: true}
+    } else {
+      return {...legislator, display: false}
+    }
+
+  })
+  // console.log("updateDisplayLegislators", displayLegislators)
   return displayLegislators
 }
 
@@ -106,41 +111,65 @@ export const reducer = (prevState = initialState, action) => {
       return { ...prevState, currentUser: !prevState.currentUser }
 
     case "STORE_LEGISLATORS":
-      console.log("reducer legislators", action.payload)
+      // console.log("reducer legislators", action.payload)
       newState =  { ...prevState, legislators: action.payload }
       displayLegislators = updateDisplayLegislators(newState)
-      return { ...newState, displayLegislators: displayLegislators }
-
-    case "UPDATE_DISPLAY_LEGISLATORS":
-      if (prevState.displayLegislators !== action.payload) {
-        return { ...prevState, displayLegislators: action.payload }
-      } else {
-        return prevState;
-      }
-
+      return { ...newState, legislators: displayLegislators }
+      
     case "SEARCH_FILTER":
-      console.log("search filtering!")
+        console.log("search filtering!")
       newState = { ...prevState, searchFilter: action.payload }
       displayLegislators = updateDisplayLegislators(newState)
-      return { ...newState, displayLegislators: displayLegislators}
-
+      return { ...newState, legislators: displayLegislators}
+      
     case "CHAMBER_FILTER":
       console.log("chamber filtering!")
       newState = { ...prevState, chamberFilter: action.payload }
       displayLegislators = updateDisplayLegislators(newState)
-      return { ...newState, displayLegislators: displayLegislators}
-
+      return { ...newState, legislators: displayLegislators}
+      
     case "PARTY_FILTER":
       console.log("party filtering!", action.payload)
       newState = { ...prevState, partyFilter: action.payload }
       displayLegislators = updateDisplayLegislators(newState)
-      return { ...newState, displayLegislators: displayLegislators}
-
-    case "COMMITTEE_FILTER":
-      console.log("committee filtering!")
-      newState = { ...prevState, committeeFilter: action.payload }
-      displayLegislators = updateDisplayLegislators(newState)
-      return { ...newState, displayLegislators: displayLegislators}
+      return { ...newState, legislators: displayLegislators}
+      
+      case "COMMITTEE_FILTER":
+        console.log("committee filtering!")
+        newState = { ...prevState, committeeFilter: action.payload }
+        displayLegislators = updateDisplayLegislators(newState)
+        return { ...newState, legislators: displayLegislators}
+      
+      case "TOGGLE_ALL_SELECTION":
+        console.log("select all / none!")
+        
+        displayLegislators = prevState.legislators.filter(legislator => legislator.display === true)
+        
+        //  if there are any displayed legislators that are not selectd, then select them all and return them
+        if (!!displayLegislators.find(legislator => legislator.selected === false)) {
+          
+          // map through legislators changing those currently displayed to selected = true
+          let updatedLegislators = prevState.legislators.map(legislator => {
+            if (legislator.display === true) {
+              return {...legislator, selected: true}
+            } else {
+              return legislator
+            }
+          })
+          return {...prevState, legislators: updatedLegislators }
+        } else {
+          // otherwise, map through legislators changing those currently displayed to selected = false
+          let updatedLegislators = prevState.legislators.map(legislator => {
+            if (legislator.display === true) {
+              return {...legislator, selected: false}
+            } else {
+              return legislator
+            }
+          })
+          return {...prevState, legislators: updatedLegislators }
+        }
+      
+  
 
     default:
       return prevState;
