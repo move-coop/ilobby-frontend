@@ -9,10 +9,39 @@ class SPCMapsContainer extends React.Component {
 
   render() {
 
+    let renderPolygons
+    console.log("displayLegislators", this.props.displayLegislators)
+
+    if (this.props.displayLegislators.length > 0) {
+      renderPolygons = this.props.displayLegislators.map(legislator => {
+
+        // console.log(JSON.parse(legislator.geo))
+        
+        let paths = JSON.parse(legislator.geo).shape.coordinates[0][0].map(pair => ({ lat: pair[1], lng: pair[0] }))
+        
+        console.log("id", legislator.id, ", paths:", paths)
+        // return legislator
+        
+        return <Polygon 
+        key={legislator.id} 
+        {...legislator} 
+        paths={paths}
+        strokeColor="#0000FF"
+        strokeOpacity={0.8}
+        strokeWeight={2}
+        fillColor="#0000FF"
+        fillOpacity={0.35}
+        />
+      })
+    }
+
+
     const mapStyles = {
       width: "100%",
       height: "80vh"
     };
+
+    console.log("renderPolygons", renderPolygons)
     
     return (
       <div id="map">
@@ -24,16 +53,7 @@ class SPCMapsContainer extends React.Component {
           mapType={"terrain"}
           initialCenter={{ lat: 42.985056, lng: -78.944561 }}
         >
-          {/* {displayPolygons} */}
-          {/* <Polygon
-            // key={feature.properties.OBJECTID_1}
-            paths={this.state.districtCoords}
-            strokeColor="#0000FF"
-            strokeOpacity={0.8}
-            strokeWeight={2}
-            fillColor="#0000FF"
-            fillOpacity={0.35}
-          /> */}
+          {renderPolygons}
         </Map>
       </div>
     );
@@ -42,19 +62,11 @@ class SPCMapsContainer extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    renderedLegislatorCount: state.renderedLegislatorCount
+    displayLegislators: state.displayLegislators
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    updateRenderedLegislatorCount: (count) => {
-      dispatch({ type: "UPDATE_RENDERED_LEGISLATOR_COUNT", payload: count })
-    }
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(GoogleApiWrapper({
+export default connect(mapStateToProps)(GoogleApiWrapper({
   apiKey: process.env.REACT_APP_GOOGLEMAPS_API_KEY
 })(SPCMapsContainer));
 
