@@ -8,6 +8,9 @@ const colors = {
   republican: "#FF0000"
 }
 
+const centerOfNewYorkState = { lat: 42.6339359, lng: - 75.9691296}
+
+
 class SPCMapsContainer extends React.Component {
 
   render() {
@@ -45,11 +48,11 @@ class SPCMapsContainer extends React.Component {
       <div id="map">
         <Map
           google={this.props.google}
-          zoom={7.3}
+          zoom={6.5}
           style={mapStyles}
           disableDefaultUI={true}
           mapType={"terrain"}
-          initialCenter={{ lat: 42.985056, lng: -78.944561 }}
+          initialCenter={centerOfNewYorkState}
         >
           {renderPolygons}
         </Map>

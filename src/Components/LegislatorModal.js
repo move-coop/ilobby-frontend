@@ -1,21 +1,29 @@
 import React from 'react'
-import { Image, Modal, Header, Button } from 'semantic-ui-react'
+import { Image, Modal, Grid, Button, Header } from 'semantic-ui-react'
 import { connect } from 'react-redux'
+import TwitterEmbed from './TwitterEmbed'
 
 const LegislatorModal = (props) => {
 
   return(
-    <Modal trigger={<Button compact floated='right' size="mini">Profile</Button>}>
-      <Modal.Header>Select a Photo</Modal.Header>
-      <Modal.Content image>
-        <Image wrapped size='medium' src='/images/avatar/large/rachel.png' />
+    <Modal 
+      basic
+      closeIcon
+      trigger={<Button compact floated='right' size="mini">Profile</Button>}>
+      <Modal.Header>{`${props.chamber === "Senate" ? "Sen." : "Assemb."} ${props.name} (${props.party === "Democratic" ? "D-" : "R-"}${props.district})`}</Modal.Header>
+      <Modal.Content image scrolling >
+        <Image circular wrapped size='medium' src={props.image} />
         <Modal.Description>
-          <Header>LEGISLATOR</Header>
-          <p>
-            We've found the following gravatar image associated with your e-mail
-            address.
-        </p>
-          <p>Is it okay to use this photo?</p>
+          <Grid>
+            <Grid.Row id="contactsAndCommittees">
+              <Header>Contact Information</Header>
+              <Header>Committees</Header>
+              
+            </Grid.Row>
+            <Grid.Row id="twitter">
+              <TwitterEmbed {...props} />
+            </Grid.Row>
+          </Grid>
         </Modal.Description>
       </Modal.Content>
     </Modal>

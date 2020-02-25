@@ -18,7 +18,7 @@ const LegislatorRow = props => {
           onClick={(event) => props.toggleOneSelection(event.target.id)}
           label={`${props.chamber === "Senate" ? "Sen." : "Assemb." } ${props.name} (${props.party === "Democratic" ? "D-" : "R-" }${props.district})`} 
         />
-      <LegislatorModal />
+      <LegislatorModal {...props} />
       </Segment>
         
   )
