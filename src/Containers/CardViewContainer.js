@@ -4,20 +4,21 @@ import { connect } from 'react-redux'
 import { Grid, Segment, SegmentGroup } from 'semantic-ui-react'
 
 
-class ListViewContainer extends React.Component {
+class CardViewContainer extends React.Component {
   render() {
 
     console.log(this.props.legislators)
     const displayLegislators = this.props.legislators.filter(legislator => legislator.display === true)
     const renderLegislators = displayLegislators.map(legislator => <LegislatorRow key={legislator.id} {...legislator} />)
 
-    return(
+    return (
       <div>
-        <SegmentGroup >
+        CARD VIEW
+        {/* <SegmentGroup >
           {renderLegislators}
-        </SegmentGroup>
+        </SegmentGroup> */}
       </div>
-      );
+    );
   }
 }
 
@@ -27,5 +28,5 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(ListViewContainer);
+export default connect(mapStateToProps)(CardViewContainer);
 

@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from 'react-redux'
 import { Header, Checkbox, Button } from 'semantic-ui-react'
+import TakeActionModal from '../Components/TakeActionModal'
 
 class SPCSearchResultsHeader extends React.Component {
   render() {
@@ -13,9 +14,9 @@ class SPCSearchResultsHeader extends React.Component {
       }
     }
 
-    const selectedCount = () => {
+    const displaySelectedCount = () => {
       if (this.props.legislators) {
-        return this.props.legislators.filter(legislator => legislator.selected === true).length
+        return this.props.legislators.filter(legislator => legislator.selected === true && legislator.display === true ).length
       } else {
         return 0
       }
@@ -24,11 +25,16 @@ class SPCSearchResultsHeader extends React.Component {
     return(
       <div>
         <Header>
-          {displayCount} Results. {selectedCount} Selected.
+          {displayCount()} Results. {displaySelectedCount()} Selected.
         </Header>
         <Button onClick={this.props.toggleAllSelection} >Select All/None</Button>
-        <Button>Take Action</Button>
-        <Checkbox toggle label="Card View" />
+        <TakeActionModal />
+        <Checkbox 
+          checked={this.props.cardView}
+          onClick={this.props.toggleCardView}
+          toggle 
+          label="Card View" 
+        />
 
       </div>
       );
@@ -38,6 +44,7 @@ class SPCSearchResultsHeader extends React.Component {
 const mapStateToProps = (state) => {
   return {
     legislators: state.legislators,
+    cardView: state.cardView
   }
 }
 
@@ -45,6 +52,9 @@ const mapDispatchToProps = dispatch => {
   return {
     toggleAllSelection: () => {
       dispatch({ type: "TOGGLE_ALL_SELECTION" })
+    },
+    toggleCardView: () => {
+      dispatch({ type: "TOGGLE_CARDVIEW" })
     }
   }
 }

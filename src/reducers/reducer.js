@@ -65,7 +65,9 @@ const initialState = {
   
   legislators: [],
   displayLegislators: [],
-  selectionCount: 0
+  selectionCount: 0,
+
+  cardView: false
 
 }
 
@@ -106,6 +108,10 @@ export const reducer = (prevState = initialState, action) => {
   let newState
 
   switch (action.type) {
+    case "TOGGLE_CARDVIEW":
+      console.log("toggling cardview !")
+      return { ...prevState, cardView: !prevState.cardView }
+
     case "TOGGLE":
       console.log("toggling!")
       return { ...prevState, currentUser: !prevState.currentUser }
@@ -140,13 +146,26 @@ export const reducer = (prevState = initialState, action) => {
         displayLegislators = updateDisplayLegislators(newState)
         return { ...newState, legislators: displayLegislators}
       
+      case "TOGGLE_ONE_SELECTION":
+        console.log("toggle one selection", action.payload)
+        let updatedLegislators = prevState.legislators.map(legislator => {
+          if (legislator.id === parseInt(action.payload)){
+            console.log(legislator.id)
+            return { ...legislator, selected: !legislator.selected}
+          } else {
+            return legislator
+          }
+        })
+        return {...prevState, legislators: updatedLegislators}
+
       case "TOGGLE_ALL_SELECTION":
-        console.log("select all / none!")
         
+        // get array of legislators currently displayed
         displayLegislators = prevState.legislators.filter(legislator => legislator.display === true)
         
-        //  if there are any displayed legislators that are not selectd, then select them all and return them
-        if (!!displayLegislators.find(legislator => legislator.selected === false)) {
+        //  if there are any displayed legislators that are not selectd, then select them all
+        console.log(displayLegislators.find(legislator => legislator.selected !== true), "leg !== true")
+        if (!!displayLegislators.find(legislator => legislator.selected !== true)) {
           
           // map through legislators changing those currently displayed to selected = true
           let updatedLegislators = prevState.legislators.map(legislator => {
