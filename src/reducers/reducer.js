@@ -91,7 +91,6 @@ const actionTypeOptions = [
 
 const initialState = {
   currentUser: false,
-  currentUserId: 1,
 
   campaignOptions: campaignOptions,
   campaignSelection: "",
@@ -109,20 +108,12 @@ const initialState = {
   committeeOptions: committeeOptions,
   
   legislators: [],
-  displayLegislators: [],
-  selectionCount: 0,
+  // displayLegislators: [],
+  // selectionCount: 0,
 
   cardView: false
 
 }
-
-// const fetchActionCreator = () => {
-//   return (dispatch) => {
-//     fetch(API)
-//       .then(res => res.json())
-//       .then(data => dispatch({ type: STORE_LEGISLATORS, payload: data }))
-//   }
-// }
 
 const updateDisplayLegislators = (newState) =>{
   const { legislators, searchFilter, chamberFilter, partyFilter, committeeFilter } = newState
@@ -157,19 +148,30 @@ const updateDisplayLegislators = (newState) =>{
   return displayLegislators
 }
 
-
 export const reducer = (prevState = initialState, action) => {
   let displayLegislators
   let newState
 
   switch (action.type) {
+    case "SET_USER":
+      console.log("SET USER:", action.payload.user)
+      localStorage.token = action.payload.token  
+      return { 
+          ...prevState, 
+          currentUser: action.payload.user
+        }
+
+    case "LOGOUT":
+      return { ...prevState, currentUser: false }
+
+  
     case "TOGGLE_CARDVIEW":
       console.log("toggling cardview !")
       return { ...prevState, cardView: !prevState.cardView }
 
-    case "TOGGLE":
-      console.log("toggling!")
-      return { ...prevState, currentUser: !prevState.currentUser }
+    // case "TOGGLE":
+    //   console.log("toggling!")
+    //   return { ...prevState, currentUser: !prevState.currentUser }
 
     case "STORE_LEGISLATORS":
       // console.log("reducer legislators", action.payload)

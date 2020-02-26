@@ -5,7 +5,16 @@ import { connect } from "react-redux";
 
 const NavBar = (props) => {
   // local state just to handle active menu item
-  const [activeItem, setActiveItem] = useState("")
+
+  const getPath = () => {
+    if (props.location.pathname.includes("campaigns")) {
+      return "campaigns"
+    } else {
+      return "search"
+    }
+  }
+
+  const [activeItem, setActiveItem] = useState(getPath())
 
   const handleItemClick = (e, { name }) => {
     setActiveItem(name)
@@ -40,8 +49,8 @@ const NavBar = (props) => {
       </Menu.Item>
       <Menu.Menu position='right'>
         <Menu.Item>
-          <Button onClick={props.toggleCurrentUser} primary>
-            {props.currentUser ? "Logout" : "Login"}
+          <Button onClick={props.logoutCurrentUser} primary>
+            {props.currentUser ? `Logout ${props.currentUser.email}` : "Login"}
           </Button>
         </Menu.Item>
       </Menu.Menu>
@@ -58,8 +67,8 @@ const NavBar = (props) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    toggleCurrentUser: () => {
-      dispatch({ type: "TOGGLE" });
+    logoutCurrentUser: () => {
+      dispatch({ type: "LOGOUT" });
     }
     // changeExampleMessage: () => { dispatch(changeExampleMessage()) }
   };
