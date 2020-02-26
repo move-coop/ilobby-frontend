@@ -12,13 +12,13 @@ const TakeActionModal = (props) => {
   })
 
   const [getModalOpen, setModalOpen] = useState(false)
-  const [getErrors, setErrors] = useState([])
-  const emptyArray = []
 
   const handleOpen = () => {setModalOpen(true)}
   const handleClose = () => {setModalOpen(false)}
-  const handleSubmit = () => {
-    
+  const handleSubmit = (value) => {
+    props.createNewAction({
+      type: "CREATE_NEW_ACTION"
+    })
     handleClose()
   }
   
@@ -124,7 +124,7 @@ const mapDispatchToProps = dispatch => {
     },
     createNewAction: (valueObj) => {
       console.log("createNewAction", valueObj.value)
-      dispatch({ type: "EDIT_ACTION_NAME", payload: valueObj.value });
+      dispatch({ type: "CREATE_NEW_ACTION", payload: valueObj.value });
     }
     
     // addCampaign: (valueObj) => {

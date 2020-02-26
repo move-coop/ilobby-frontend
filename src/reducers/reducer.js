@@ -90,7 +90,7 @@ const actionTypeOptions = [
 ]
 
 const initialState = {
-  currentUser: true,
+  currentUser: false,
   currentUserId: 1,
 
   campaignOptions: campaignOptions,
@@ -253,6 +253,7 @@ export const reducer = (prevState = initialState, action) => {
         return {...prevState, actionNameInput: action.payload}
 
       case "CREATE_NEW_ACTION":
+        console.log("create new action")
         return {...prevState}
       
       // case "ADD_CAMPAIGN":
