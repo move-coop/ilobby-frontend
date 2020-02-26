@@ -51,8 +51,53 @@ const committeeOptions = [
   }
 ]
 
+const campaignOptions = [
+  {
+    key: '1',
+    text: 'Bail Reform',
+    value: '1'
+  },
+  {
+    key: '2',
+    text: 'Greenlight NYC',
+    value: '2'
+  },
+  {
+    key: '3',
+    text: 'Single Payer Healthcare',
+    value: '3'
+  }
+]
+
+const actionTypeOptions = [
+  {
+    key: '1',
+    text: 'Create Call List',
+    value: '1'
+  },
+  {
+    key: '2',
+    text: 'Send Email',
+    value: '2',
+    disabled: true
+  },
+  {
+    key: '3',
+    text: 'Track Stances',
+    value: '3',
+    disabled: true
+  }
+]
+
 const initialState = {
   currentUser: true,
+  currentUserId: 1,
+
+  campaignOptions: campaignOptions,
+  campaignSelection: "",
+  actionTypeOptions: actionTypeOptions,
+  actionTypeSelection: "",
+  actionNameInput: "",
 
   searchFilter: "",
   chamberFilter: "Senate",
@@ -89,8 +134,18 @@ const updateDisplayLegislators = (newState) =>{
       || legislator.district.toString().includes(searchFilter)
     ) && (
       legislator.chamber.includes(chamberFilter) &&
-      legislator.party.includes(partyFilter)
-      // include committees once that is serialized from the backend
+      legislator.party.includes(partyFilter) &&
+      
+      // every() will result in showing legislators on ALL of the committeeFilter selections
+      // every() defaults to true if committeeFilter is blank
+      // some() will result in showing legislators on ANY of the committeeFilter selections
+      // some() defaults to false if committeeFilter is blank
+      (committeeFilter.length === 0 ? true : 
+        committeeFilter.some( (element) => {
+          return !!legislator.committees.find( committee => committee.name === element)
+        })
+      ) 
+      
     )) {
       return {...legislator, display: true}
     } else {
@@ -187,9 +242,24 @@ export const reducer = (prevState = initialState, action) => {
           })
           return {...prevState, legislators: updatedLegislators }
         }
-      
-  
 
+      case "CAMPAIGN_SELECTION":
+        return {...prevState, campaignSelection: action.payload}
+      
+      case "ACTION_TYPE_SELECTION":
+        return {...prevState, actionTypeSelection: action.payload}
+      
+      case "EDIT_ACTION_NAME":
+        return {...prevState, actionNameInput: action.payload}
+
+      case "CREATE_NEW_ACTION":
+        return {...prevState}
+      
+      // case "ADD_CAMPAIGN":
+      //   // post request
+      //   // add to campaign options
+      //   return {...prevState, campaignSelection: action.payload}
+      
     default:
       return prevState;
   }

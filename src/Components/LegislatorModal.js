@@ -5,6 +5,21 @@ import TwitterEmbed from './TwitterEmbed'
 
 const LegislatorModal = (props) => {
 
+  let displayContactInfos = () => {
+    let infoObj = {}
+
+    props.contact_infos.forEach(info => {
+        infoObj = {
+          ...infoObj,
+          [info.note]: {
+            ...infoObj[info.note],
+            [info.kind]: info.value
+          }
+        }
+      })
+    
+  }
+
   return(
     <Modal 
       basic
@@ -17,6 +32,7 @@ const LegislatorModal = (props) => {
           <Grid>
             <Grid.Row id="contactsAndCommittees">
               <Header>Contact Information</Header>
+              {console.log(displayContactInfos())}
               <Header>Committees</Header>
               
             </Grid.Row>

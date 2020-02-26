@@ -8,6 +8,7 @@ class ListViewContainer extends React.Component {
   render() {
 
     console.log(this.props.legislators)
+    console.log(this.props.committeeFilter)
     const displayLegislators = this.props.legislators.filter(legislator => legislator.display === true)
     const renderLegislators = displayLegislators.map(legislator => <LegislatorRow key={legislator.id} {...legislator} />)
 
@@ -23,7 +24,8 @@ class ListViewContainer extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    legislators: state.legislators
+    legislators: state.legislators,
+    committeeFilter: state.committeeFilter
   }
 }
 
