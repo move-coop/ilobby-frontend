@@ -20,6 +20,50 @@ class App extends React.Component {
       this.props.storeLegislators(legislators)}
       )
   }
+
+  // testForLogin = () => {
+  //   const token = localStorage.token;
+
+  //   if (this.props.currentUser) {
+  //     console.log("A")
+  //     return <LoggedInContainer />
+  //   } else {
+  //     if (token) {
+  //       console.log("token!", token)
+  //       this.checkAutoLogin(token)
+  //     } else {
+        
+  //       console.log("C")
+  //       return <WelcomeContainer />
+  //     }
+  //     console.log("D")
+  //     return <WelcomeContainer />
+  //   }
+  // }
+
+  // checkAutoLogin = token => {
+  //   fetch("http://localhost:3000/auto_login", {
+  //     headers: {
+  //       Authorization: token
+  //     }
+  //   })
+  //     .then(res => res.json())
+  //     .then(response => {
+  //       if (response.errors) {
+
+  //         alert(response.errors);
+  //         console.log("B")
+          
+  //         return <WelcomeContainer />
+  //       } else {
+  //         this.props.setUser(response)
+  //         console.log("B a winner")
+
+  //         return <LoggedInContainer />
+  //       }
+  //     });
+  // };
+
       
   render() {
 
@@ -28,6 +72,7 @@ class App extends React.Component {
     return (
       <div>
         {this.props.currentUser ? <LoggedInContainer /> : <WelcomeContainer /> }
+        {/* { this.testForLogin() } */}
       </div>
     );
   }
@@ -43,6 +88,11 @@ const mapDispatchToProps = (dispatch) => {
   return {
     storeLegislators: (data) => {
       dispatch({ type: "STORE_LEGISLATORS", payload: data })
+    },
+    setUser: (json) => {
+      console.log("App called setUser")
+      debugger
+      dispatch({ type: "SET_USER", payload: json })
     }
   }
 }
