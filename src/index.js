@@ -10,10 +10,11 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { Provider } from 'react-redux'
 
 //function which returns store
-import { createStore } from "redux";
+import { createStore, applyMiddleware } from "redux";
+import thunk from 'redux-thunk'
 import { reducer } from "./reducers/reducer";
 
-const store = createStore(reducer)
+const store = createStore(reducer, applyMiddleware(thunk))
 // console.log('store', store)
 // console.log('state', store.getState())
 
