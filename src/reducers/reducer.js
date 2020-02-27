@@ -148,6 +148,53 @@ const updateDisplayLegislators = (newState) =>{
   return displayLegislators
 }
 
+const createNewAction = (payload, userId) => {
+  // hard coding for call list creation and therefore not making user of payload.actionTypeId
+
+  // create 1 Call list
+  const callListId = createCallList(payload.actionName, payload.campaignId)
+  
+  // for each legislator selected (7)...
+  payload.legislators.forEach(legislator => {
+  
+    // create action with user_id and campaign_id. type, status=backlog
+    const actionId = createAction(userId, payload.campaignId)
+    // create legislator action. one for each action id and one for each legislator id
+    createLegislatorAction(actionId, legislator.id)
+    // create call. one for each action id. Eachwith call_list_id
+    createCall(actionId, callListId)
+    
+  });
+  
+  // these last ones might go back in the main reducer function?
+    // clear store values for:
+    // campaignSelection: state.campaignSelection,
+    // actionTypeSelection: state.actionTypeSelection,
+    // actionNameInput: state.actionNameInput
+  // redirect to calllists/:id
+
+}
+
+const createCallList = (name, campaignId) => {
+  // fetch post request
+  // return callListId
+}
+
+const createAction = (userId, campaignId, type) => {
+  // fetch post request
+  // return actionId
+}
+
+const createLegislatorAction = (actionId, legislatorId) => {
+  // fetch post request
+}
+
+const createCall = (actionId, callListId) => {
+  // fetch post request
+}
+
+
+
 export const reducer = (prevState = initialState, action) => {
   let displayLegislators
   let newState
@@ -255,7 +302,8 @@ export const reducer = (prevState = initialState, action) => {
         return {...prevState, actionNameInput: action.payload}
 
       case "CREATE_NEW_ACTION":
-        console.log("create new action")
+        console.log("create new action", action.payload)
+        // createNewAction(payload, prevState.currentUser.id)
         return {...prevState}
       
       // case "ADD_CAMPAIGN":

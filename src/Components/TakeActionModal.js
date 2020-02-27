@@ -17,8 +17,12 @@ const TakeActionModal = (props) => {
   const handleClose = () => {setModalOpen(false)}
   const handleSubmit = (value) => {
     props.createNewAction({
-      type: "CREATE_NEW_ACTION"
-    })
+        campaignId: props.campaignSelection,
+        actionTypeId: props.actionTypeSelection,
+        actionName: props.actionNameInput,
+        legislators: selectedLegislators
+      }
+    )
     handleClose()
   }
   
@@ -28,7 +32,11 @@ const TakeActionModal = (props) => {
       closeIcon
       open={getModalOpen}
       onClose={handleClose}
-      trigger={<Button onClick={handleOpen} >Take Action</Button>}>
+      trigger={
+        <Button
+          disabled = {selectedLegislators.length === 0} 
+          onClick={handleOpen} 
+        >Take Action</Button>}>
       <Modal.Header>Take Action</Modal.Header>
       <Modal.Content scrolling>
         <Modal.Description>
@@ -122,9 +130,9 @@ const mapDispatchToProps = dispatch => {
       console.log("editActionName", valueObj.value)
       dispatch({ type: "EDIT_ACTION_NAME", payload: valueObj.value });
     },
-    createNewAction: (valueObj) => {
-      console.log("createNewAction", valueObj.value)
-      dispatch({ type: "CREATE_NEW_ACTION", payload: valueObj.value });
+    createNewAction: (payload) => {
+      console.log("createNewAction", payload)
+      dispatch({ type: "CREATE_NEW_ACTION", payload: payload });
     }
     
     // addCampaign: (valueObj) => {
