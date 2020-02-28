@@ -20,7 +20,7 @@ const TakeActionModal = (props) => {
     let selectedLegislatorIds = selectedLegislators.map(legislator => legislator.id)
 
     createCallList({
-        action_name: props.actionNameInput,
+        call_list_name: props.actionNameInput,
         campaign_id: props.campaignSelection,
         legislator_ids: selectedLegislatorIds,
         current_user_id: props.currentUser.id
@@ -44,7 +44,7 @@ const TakeActionModal = (props) => {
     .then(resp => resp.json())
     .then(json => {
       console.log(json)
-      debugger
+      
       // add responses to store: currentUser.callLists
       props.addTAResponseToStore({
         callList: {
@@ -59,7 +59,7 @@ const TakeActionModal = (props) => {
       // clear store values:
       props.editCampaignSelection({value: ""})
       props.editActionTypeSelection({value: ""})
-      props.editActionTypeSelection({value: ""})
+      props.editActionName({value: ""})
       
       // redirect to calllists/:id
       props.history.push(`/calllists/${json.id}`)
