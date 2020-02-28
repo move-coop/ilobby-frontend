@@ -15,16 +15,48 @@ const TakeActionModal = (props) => {
 
   const handleOpen = () => {setModalOpen(true)}
   const handleClose = () => {setModalOpen(false)}
-  const handleSubmit = (value) => {
-    props.createNewAction({
-        campaignId: props.campaignSelection,
-        actionTypeId: props.actionTypeSelection,
-        actionName: props.actionNameInput,
-        legislators: selectedLegislators
-      }
-    )
+  const handleSubmit = () => {
+
+    let selectedLegislatorIds = selectedLegislators.map(legislator => legislator.id)
+
+    createCallList({
+        action_name: props.actionNameInput,
+        campaign_id: props.campaignSelection,
+        legislator_ids: selectedLegislatorIds,
+        current_user_id: props.currentUser.id
+    })
     handleClose()
   }
+
+  const createCallList = (bodyObj) => {
+    // fetch post request
+    const url = "http://localhost:3000/call_lists"
+    const configObj = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accepts": "application/json"
+      },
+      body: JSON.stringify({call_list: bodyObj})
+    }
+
+    fetch(url, configObj)
+    .then(resp => resp.json())
+    .then(json => {
+      console.log(json)
+      // add response to store: currentUser.callLists
+      // return callListId
+
+      // clear store values for:
+      // campaignSelection: state.campaignSelection,
+      // actionTypeSelection: state.actionTypeSelection,
+      // actionNameInput: state.actionNameInput
+      // redirect to calllists/:id
+
+    })
+
+  }
+
   
   return(
     <Modal 
@@ -112,7 +144,8 @@ const mapStateToProps = state => {
     campaignSelection: state.campaignSelection,
     actionTypeOptions: state.actionTypeOptions,
     actionTypeSelection: state.actionTypeSelection,
-    actionNameInput: state.actionNameInput
+    actionNameInput: state.actionNameInput,
+    currentUser: state.currentUser
   }
 }
 
@@ -129,11 +162,11 @@ const mapDispatchToProps = dispatch => {
     editActionName: (valueObj) => {
       console.log("editActionName", valueObj.value)
       dispatch({ type: "EDIT_ACTION_NAME", payload: valueObj.value });
-    },
-    createNewAction: (payload) => {
-      console.log("createNewAction", payload)
-      dispatch({ type: "CREATE_NEW_ACTION", payload: payload });
     }
+    // createNewAction: (payload) => {
+    //   console.log("createNewAction", payload)
+    //   dispatch({ type: "CREATE_NEW_ACTION", payload: payload });
+    // }
     
     // addCampaign: (valueObj) => {
     //   console.log("addCampaign", valueObj.value)
