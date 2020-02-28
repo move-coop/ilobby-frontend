@@ -1,4 +1,5 @@
 import React from "react";
+import { Route } from 'react-router'
 import { connect } from 'react-redux'
 import { Header, Checkbox, Button } from 'semantic-ui-react'
 import TakeActionModal from '../Components/TakeActionModal'
@@ -28,7 +29,8 @@ class SPCSearchResultsHeader extends React.Component {
           {displayCount()} Results. {displaySelectedCount()} Selected.
         </Header>
         <Button onClick={this.props.toggleAllSelection} >Select All/None</Button>
-        <TakeActionModal />
+        <Route component={TakeActionModal}>
+        </Route>
         <Checkbox 
           checked={this.props.cardView}
           onClick={this.props.toggleCardView}

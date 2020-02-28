@@ -44,16 +44,28 @@ const TakeActionModal = (props) => {
     .then(resp => resp.json())
     .then(json => {
       console.log(json)
-      // add response to store: currentUser.callLists
-      // return callListId
+      debugger
+      // add responses to store: currentUser.callLists
+      props.addTAResponseToStore({
+        callList: {
+          id: json.id,
+          name: json.name,
+          campaignId: json.campaign.id
+        },
+        calls: json.calls,
+        actions: json.call_actions,
+        legislatorActions: json.call_action_legislators 
+      })
 
-      // clear store values for:
-      // campaignSelection: state.campaignSelection,
-      // actionTypeSelection: state.actionTypeSelection,
-      // actionNameInput: state.actionNameInput
+      // clear store values:
+      props.editCampaignSelection({value: ""})
+      props.editActionTypeSelection({value: ""})
+      props.editActionTypeSelection({value: ""})
+      
       // redirect to calllists/:id
+      props.history.push(`/calllists/${json.id}`)
 
-    })
+    }, )
 
   }
 
@@ -162,11 +174,11 @@ const mapDispatchToProps = dispatch => {
     editActionName: (valueObj) => {
       console.log("editActionName", valueObj.value)
       dispatch({ type: "EDIT_ACTION_NAME", payload: valueObj.value });
+    },
+    addTAResponseToStore: (valueObj) => {
+      console.log("addTAResponseToStore")
+      dispatch({ type: "ADD_TA_RESPONSE_TO_STORE", payload: valueObj });
     }
-    // createNewAction: (payload) => {
-    //   console.log("createNewAction", payload)
-    //   dispatch({ type: "CREATE_NEW_ACTION", payload: payload });
-    // }
     
     // addCampaign: (valueObj) => {
     //   console.log("addCampaign", valueObj.value)

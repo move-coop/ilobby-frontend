@@ -98,6 +98,12 @@ const initialState = {
     updated_at: "2020-02-26T20:54:06.690Z" 
   },
 
+  campaigns: [],
+  actions: [],
+  legislatorActions: [],
+  callLists: [],
+  calls: [],
+
   campaignOptions: campaignOptions,
   campaignSelection: "",
   actionTypeOptions: actionTypeOptions,
@@ -260,10 +266,15 @@ export const reducer = (prevState = initialState, action) => {
       case "EDIT_ACTION_NAME":
         return {...prevState, actionNameInput: action.payload}
 
-      case "CREATE_NEW_ACTION":
-        console.log("create new action", action.payload)
-        // createNewAction(payload, prevState.currentUser.id)
-        return {...prevState}
+      case "ADD_TA_RESPONSE_TO_STORE":
+        console.log("addTAResponseToStore", action.payload)
+        return {
+          ...prevState,
+          callLists: [...prevState.callLists, action.payload.callList],
+          calls: [...prevState.calls, ...action.payload.calls],
+          actions: [...prevState.actions, ...action.payload.actions],
+          legislatorActions: [...prevState.legislatorActions, ...action.payload.legislatorActions]
+        }
       
       // case "ADD_CAMPAIGN":
       //   // post request
