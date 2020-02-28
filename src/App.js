@@ -5,20 +5,32 @@ import WelcomeContainer from './Containers/WelcomeContainer'
 import LoggedInContainer from './Containers/LoggedInContainer'
 import { connect } from 'react-redux'
 
-const API = "http://localhost:3000/legislators"
+const legislatorsEndpoint = "http://localhost:3000/legislators"
+const userDataEndpoint = "http://localhost:3000/users"
 
 class App extends React.Component {
   
   componentDidMount() {
     console.log("App Did Mount")
-    fetch(API)
+    fetch(legislatorsEndpoint)
     .then(res => res.json())
     .then(data => {
       // sort alphabetically
       let legislators = data.sort((a, b) => a.name.localeCompare(b.name))
 
-      this.props.storeLegislators(legislators)}
-      )
+      this.props.storeLegislators(legislators)
+    })
+
+    // const userDataUrl = userDataEndpoint + `/${this.props.currentUser.id}`
+
+    // fetch(userDataUrl)
+    // .then(res => res.json())
+    // .then(data => {
+    //   // sort alphabetically
+    //   let legislators = data.sort((a, b) => a.name.localeCompare(b.name))
+
+    //   this.props.storeLegislators(legislators)
+    // })
   }
 
   // testForLogin = () => {

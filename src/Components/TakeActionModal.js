@@ -53,16 +53,24 @@ const TakeActionModal = (props) => {
           campaignId: json.campaign.id
         },
         calls: json.calls,
-        actions: json.call_actions,
+        actions: json.call_actions
       })
 
-      // clear store values:
+      // clear store values for modal fields:
       props.editCampaignSelection({value: ""})
       props.editActionTypeSelection({value: ""})
       props.editActionName({value: ""})
+
+      // clear selected legislators
+      selectedLegislators.forEach(legislator => {
+        legislator.selected = false
+      })
+        
+      // reset filters and display legislators ?
+
       
       // redirect to calllists/:id
-      props.history.push(`/calllists/${json.id}`)
+      props.history.push(`/campaigns/calllists/${json.id}`)
 
     }, )
 

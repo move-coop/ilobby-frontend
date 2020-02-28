@@ -44,7 +44,7 @@ class LoggedInContainer extends React.Component {
       <div>
         <Route path="/" component={NavBar} />
         <Switch >
-          <Route path="/calllists/:id" component={CallListContainer} />
+          <Route path="/campaigns/calllists/:id" component={CallListContainer} />
           <Route path="/campaigns" component={CampaignPageContainer} />
           <Route path="/" component={SearchPageContainer} />
         </Switch>

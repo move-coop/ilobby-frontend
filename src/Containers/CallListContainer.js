@@ -1,11 +1,12 @@
 import React from "react";
 import { connect } from 'react-redux'
-import { Header } from "semantic-ui-react";
+import { Checkbox, Table, Dropdown, Input, Header } from "semantic-ui-react";
 
 
 class CallListContainer extends React.Component {
   
   render() {
+    const callList = this.props.callLists.find(list => list.id === this.props.match.params.id)
 
     // We can use the `useParams` hook here to access
     // the dynamic pieces of the URL.
@@ -13,7 +14,7 @@ class CallListContainer extends React.Component {
 
     return (
       <div>
-        <h3>ID: {this.props.match.params.id}</h3>
+        {/* <Header >{callList.name}</Header> */}
       </div>
     )
   } 
