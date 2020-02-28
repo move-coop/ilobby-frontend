@@ -54,7 +54,6 @@ const TakeActionModal = (props) => {
         },
         calls: json.calls,
         actions: json.call_actions,
-        legislatorActions: json.call_action_legislators 
       })
 
       // clear store values:

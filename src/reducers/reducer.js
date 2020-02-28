@@ -100,7 +100,6 @@ const initialState = {
 
   campaigns: [],
   actions: [],
-  legislatorActions: [],
   callLists: [],
   calls: [],
 
@@ -272,8 +271,7 @@ export const reducer = (prevState = initialState, action) => {
           ...prevState,
           callLists: [...prevState.callLists, action.payload.callList],
           calls: [...prevState.calls, ...action.payload.calls],
-          actions: [...prevState.actions, ...action.payload.actions],
-          legislatorActions: [...prevState.legislatorActions, ...action.payload.legislatorActions]
+          actions: [...prevState.actions, ...action.payload.actions]
         }
       
       // case "ADD_CAMPAIGN":
