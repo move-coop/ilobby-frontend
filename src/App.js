@@ -19,18 +19,17 @@ class App extends React.Component {
       let legislators = data.sort((a, b) => a.name.localeCompare(b.name))
 
       this.props.storeLegislators(legislators)
+      this.props.legislatorDataLoaded()
     })
 
-    // const userDataUrl = userDataEndpoint + `/${this.props.currentUser.id}`
+    const userDataUrl = userDataEndpoint + `/${this.props.currentUser.id}`
 
-    // fetch(userDataUrl)
-    // .then(res => res.json())
-    // .then(data => {
-    //   // sort alphabetically
-    //   let legislators = data.sort((a, b) => a.name.localeCompare(b.name))
-
-    //   this.props.storeLegislators(legislators)
-    // })
+    fetch(userDataUrl)
+    .then(res => res.json())
+    .then(data => {
+      this.props.storeUserData(data)
+      this.props.userDataLoaded()
+    })
   }
 
   // testForLogin = () => {
@@ -92,7 +91,11 @@ class App extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    currentUser: state.currentUser
+    currentUser: state.currentUser,
+    campaigns: state.campaigns,
+    actions: state.actions,
+    callLists: state.callLists,
+    calls: state.calls
   }
 }
 
@@ -101,10 +104,20 @@ const mapDispatchToProps = (dispatch) => {
     storeLegislators: (data) => {
       dispatch({ type: "STORE_LEGISLATORS", payload: data })
     },
+    storeUserData: (data) => {
+      dispatch({ type: "STORE_USER_DATA", payload: data })
+    },
     setUser: (json) => {
       console.log("App called setUser")
-      debugger
       dispatch({ type: "SET_USER", payload: json })
+    },
+    userDataLoaded: () => {
+      console.log("User Data Loaded")
+      dispatch({ type: "USER_DATA_LOADED" })
+    },
+    legislatorDataLoaded: () => {
+      console.log("User Data Loaded")
+      dispatch({ type: "LEGISLATOR_DATA_LOADED" })
     }
   }
 }

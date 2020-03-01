@@ -89,6 +89,47 @@ const actionTypeOptions = [
   }
 ]
 
+const outcomeOptions = [
+  {
+    key: '1',
+    text: "Left Message",
+    value: 'Left Message'
+  },
+  {
+    key: '2',
+    text: "No Answer",
+    value: 'No Answer'
+  },
+  {
+    key: '3',
+    text: "Spoke with Staff",
+    value: 'Spoke with Staff'
+  },
+  {
+    key: '4',
+    text: "Spoke with Elected",
+    value: 'Spoke with Elected'
+  }
+]
+
+const commitmentOptions = [
+  {
+    key: '1',
+    text: "Yes",
+    value: 'Yes'
+  },
+  {
+    key: '2',
+    text: "No",
+    value: 'No'
+  },
+  {
+    key: '3',
+    text: "Non-commital",
+    value: 'Non-commital'
+  }
+]
+
 const initialState = {
   currentUser: { 
     id: 1, 
@@ -97,6 +138,9 @@ const initialState = {
     created_at: "2020-02-26T20:54:06.690Z", 
     updated_at: "2020-02-26T20:54:06.690Z" 
   },
+
+  legislatorDataLoaded: false,
+  userDataLoaded: false,
 
   campaigns: [],
   actions: [],
@@ -108,6 +152,8 @@ const initialState = {
   actionTypeOptions: actionTypeOptions,
   actionTypeSelection: "",
   actionNameInput: "",
+  outcomeOptions: outcomeOptions,
+  commitmentOptions: commitmentOptions,
 
   searchFilter: "",
   chamberFilter: "Senate",
@@ -122,11 +168,15 @@ const initialState = {
   // displayLegislators: [],
   // selectionCount: 0,
 
-  cardView: false
+  cardView: false,
+
+  campaignSearchInput: "",
+  actionSearchInput: "",
+  callListSearchInput: ""
 
 }
 
-const updateDisplayLegislators = (newState) =>{
+const updateDisplayLegislators = (newState) => {
   const { legislators, searchFilter, chamberFilter, partyFilter, committeeFilter } = newState
 
   // apply 4 filers
@@ -159,9 +209,53 @@ const updateDisplayLegislators = (newState) =>{
   return displayLegislators
 }
 
+const updateDisplayCampaigns = (newState) => {
+  const { campaignSearchInput, campaigns } = newState
+
+  const displayCampaigns = campaigns.map(campaign => {
+    if (campaign.name.toLowerCase().includes(campaignSearchInput.toLowerCase())) {
+      return {...campaign, display: true}
+    } else {
+      return {...campaign, display: false}
+    }
+  }) 
+
+  return displayCampaigns
+
+}
+
+const updateDisplayActions = (newState) => {
+  const { campaignSearchInput, actionSearchInput, campaigns, actions, legislators } = newState
+  
+  // belongs to one of the selected campaigns
+  const displayCampaigns = campaigns.filter(campaign => campaign.display === true)
+  const displayCampaignIds = displayCampaigns.map(campaign => campaign.id)
+  
+  const displayActions = actions.map(action => {
+
+    // actionSearchInput is included in related legislator name or district
+    const legislator = legislators.find(legislator => legislator.id === action.legislator_id)
+    // debugger
+    if (displayCampaignIds.includes(action.campaign_id) && (legislator.name.toLowerCase().includes(actionSearchInput.toLowerCase()) || legislator.district.toString().includes(actionSearchInput))) {
+      return {...action, display: true}
+    } else {
+      return {...action, display: false}
+    }
+  })
+
+return displayActions
+
+}
+
 export const reducer = (prevState = initialState, action) => {
   let displayLegislators
   let newState
+  let newNewState
+  let newCalls
+  let call
+  let newActions
+  let displayCampaigns
+  let displayActions
 
   switch (action.type) {
     case "SET_USER":
@@ -189,6 +283,26 @@ export const reducer = (prevState = initialState, action) => {
       newState =  { ...prevState, legislators: action.payload }
       displayLegislators = updateDisplayLegislators(newState)
       return { ...newState, legislators: displayLegislators }
+      
+    case "STORE_USER_DATA":
+      // console.log("reducer legislators", action.payload)
+      const { campaigns, actions, call_lists, calls } = action.payload
+      newState = {
+        ...prevState, 
+        campaigns,
+        actions, 
+        callLists: call_lists,
+        calls
+      }
+      displayCampaigns = updateDisplayCampaigns(newState)
+      displayActions = newState.actions.map(action => {
+        return {...action, display: true}
+      })
+      return {
+        ...newState, 
+        campaigns: displayCampaigns,
+        actions: displayActions
+      }
       
     case "SEARCH_FILTER":
         console.log("search filtering!")
@@ -267,14 +381,105 @@ export const reducer = (prevState = initialState, action) => {
 
       case "ADD_TA_RESPONSE_TO_STORE":
         console.log("addTAResponseToStore", action.payload)
+        debugger
         return {
           ...prevState,
           callLists: [...prevState.callLists, action.payload.callList],
           calls: [...prevState.calls, ...action.payload.calls],
           actions: [...prevState.actions, ...action.payload.actions]
         }
+
+      case "USER_DATA_LOADED":
+        return {...prevState, userDataLoaded: true}
       
-      // case "ADD_CAMPAIGN":
+      case "LEGISLATOR_DATA_LOADED":
+        return {...prevState, legislatorDataLoaded: true}
+
+      case "UPDATE_CALL_OUTCOME":
+        console.log("update call outcome", action.payload)
+        newCalls = prevState.calls.map(call => {
+          if (call.id === action.payload.id) {
+            return {...call, outcome: action.payload.value, changed: true}
+          } else {
+            return call
+          }
+        })
+        return {...prevState, calls: newCalls }
+
+      case "UPDATE_CALL_COMMITMENT":
+        console.log("update call commitment", action.payload)
+        newCalls = prevState.calls.map(call => {
+          if (call.id === action.payload.id) {
+            return { ...call, commitment: action.payload.value, changed: true }
+          } else {
+            return call
+          }
+        })
+        return { ...prevState, calls: newCalls }
+
+      case "UPDATE_CALL_NOTES":
+        console.log("update call notes", action.payload)
+        newCalls = prevState.calls.map(call => {
+          if (call.id === action.payload.id) {
+            return {...call, notes: action.payload.value, changed: true}
+          } else {
+            return call
+          }
+        })
+        return {...prevState, calls: newCalls }
+
+      case "UPDATE_CALL_DURATION":
+        console.log("update call duration", action.payload)
+        newCalls = prevState.calls.map(call => {
+          if (call.id === action.payload.id) {
+            return { ...call, duration: action.payload.value, changed: true }
+          } else {
+            return call
+          }
+        })
+        return { ...prevState, calls: newCalls }
+
+      case "RESET_CALL_CHANGED":
+        console.log("hitting1")
+        newCalls = prevState.calls.map(call => {
+          if (call.id === action.payload.id) {
+            console.log("hitting2")
+            return { ...call, changed: false }
+          } else {
+            return call
+          }
+        })
+        return { ...prevState, calls: newCalls }
+
+
+      case "UPDATE_ACTION_COMPLETE":
+        call = prevState.calls.find(call => call.id === action.payload.id)  
+        newActions = prevState.actions.map(act => {
+          if (act.id === call.action_id && !!call.outcome && !!call.duration && !!call.notes && call.commitment) {
+            return { ...act, complete: true }
+          } else {
+            return act
+          }
+        })
+        return { ...prevState, actions: newActions }
+      
+      case "CHANGE_CAMPAIGN_INPUT":
+        newState = { ...prevState, campaignSearchInput: action.payload}
+        displayCampaigns = updateDisplayCampaigns(newState)
+        newNewState = {...newState, campaigns: displayCampaigns}
+        displayActions = updateDisplayActions(newNewState)
+        return {...newNewState, actions: displayActions}
+      
+
+      case "CHANGE_ACTION_INPUT":
+        newState = { ...prevState, actionSearchInput: action.payload }
+        displayActions = updateDisplayActions(newState)
+        return { ...newState, actions: displayActions }
+    
+      case "CHANGE_CALL_LIST_INPUT":
+      return { ...prevState, callListSearchInput: action.payload}
+    
+        // case "ADD_CAMPAIGN":
       //   // post request
       //   // add to campaign options
       //   return {...prevState, campaignSelection: action.payload}
