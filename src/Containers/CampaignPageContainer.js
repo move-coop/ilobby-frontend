@@ -5,35 +5,6 @@ import { connect } from 'react-redux'
 
 class CampaignPageContainer extends React.Component {
   
-  // findLegislator = (id) => {
-  //   const legislator = this.props.legislators.find(legislator => legislator.id == id)
-  //   return legislator
-  // }
-
-  // renderCampaigns = (displayCampaigns) => {
-  //   return displayCampaigns.map(campaign => <Header key={campaign.id} >{campaign.name}</Header>)
-  // }
-
-  // displayActions = (displayCampaigns) => {
-  //   // belongs to one of the selected campaigns
-  //   const displayCampaignIds = displayCampaigns.map(campaign => campaign.id)
-  //   const campaignFilteredActions = this.props.actions.filter(action => {
-  //     return displayCampaignIds.includes(action.campaign_id)
-  //   })
-
-  //   return campaignFilteredActions
-  //   // name matches search input
-  //   // campaignFilteredActions.
-  // }
-
-  renderActions = (displayActions) => displayActions.map(action => {
-    const legislator = this.findLegislator(action.legislator_id)
-    const legislatorSlug = `${legislator.chamber === "Senate" ? "Sen." : "Assemb."} ${legislator.name} (${legislator.party === "Democratic" ? "D-" : "R-"}${legislator.district})`
-    return <List.Item key={action.id} >
-      {action.kind} | {legislatorSlug}: 
-    </List.Item>
-  })
-  
   render() {
     
     const displayCampaigns = this.props.campaigns.filter(campaign => campaign.display === true)
@@ -45,12 +16,11 @@ class CampaignPageContainer extends React.Component {
       let legislatorSlug
       if (!!legislator) {
         legislatorSlug = `${legislator.chamber === "Senate" ? "Sen." : "Assemb."} ${legislator.name} (${legislator.party === "Democratic" ? "D-" : "R-"}${legislator.district})`
+        return <List.Item key={action.id} >
+          {action.kind} | {legislatorSlug}:
+        </List.Item>
       }
-      return <List.Item key={action.id} >
-        {action.kind} | {legislatorSlug}:
-      </List.Item>
     })
-
 
     const panes = [
       { menuItem: 'Actions', render: () => {
