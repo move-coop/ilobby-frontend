@@ -1,7 +1,7 @@
 import React from "react";
 import LegislatorRow from '../Components/LegislatorRow'
 import { connect } from 'react-redux'
-import { Grid, Segment, SegmentGroup } from 'semantic-ui-react'
+import { Dimmer, Loader, SegmentGroup } from 'semantic-ui-react'
 
 
 class ListViewContainer extends React.Component {
@@ -14,9 +14,10 @@ class ListViewContainer extends React.Component {
 
     return(
       <div>
-        <SegmentGroup >
+        {!this.props.legislatorDataLoaded ? <Dimmer active inverted ><Loader inverted content="Loading" /></Dimmer> :
+          <SegmentGroup >
           {renderLegislators}
-        </SegmentGroup>
+        </SegmentGroup>}
       </div>
       );
   }
@@ -25,7 +26,8 @@ class ListViewContainer extends React.Component {
 const mapStateToProps = (state) => {
   return {
     legislators: state.legislators,
-    committeeFilter: state.committeeFilter
+    committeeFilter: state.committeeFilter,
+    legislatorDataLoaded: state.legislatorDataLoaded
   }
 }
 

@@ -50,7 +50,7 @@ const TakeActionModal = (props) => {
         callList: {
           id: json.id,
           name: json.name,
-          campaignId: json.campaign.id
+          campaign_id: json.campaign.id
         },
         calls: json.calls,
         actions: json.call_actions

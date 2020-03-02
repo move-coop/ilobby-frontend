@@ -108,7 +108,6 @@ class CallListContainer extends React.Component {
 
   render() {
 
-    
     return (
       <div>
         <Header color="purple" > {this.props.userDataLoaded && `Campaign: ${this.currentCampaign().name}`} </Header>
