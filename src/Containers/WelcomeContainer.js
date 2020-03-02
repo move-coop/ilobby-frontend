@@ -2,7 +2,7 @@ import React from 'react';
 import Login from "../Components/Login";
 import Signup from "../Components/Signup";
 import { connect } from "react-redux";
-import { Grid, Button, Divider } from "semantic-ui-react";
+import { Grid } from "semantic-ui-react";
 
 class WelcomeContainer extends React.Component {
   render() {

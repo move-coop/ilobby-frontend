@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Button, Menu, Icon, Dropdown } from "semantic-ui-react";
+import React from "react";
+import { Button, Menu, Icon } from "semantic-ui-react";
 import { connect } from "react-redux";
 
 

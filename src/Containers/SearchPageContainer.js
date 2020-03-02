@@ -2,7 +2,7 @@ import React from "react";
 import SPCSearchResultsContainer from "./SPCSearchResultsContainer";
 import SPCFiltersContainer from "./SPCFiltersContainer";
 import SPCMapsContainer from "./SPCMapsContainer";
-import { Grid, Segment } from "semantic-ui-react";
+import { Grid } from "semantic-ui-react";
 
 
 

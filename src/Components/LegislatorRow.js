@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Checkbox, Segment, Button } from "semantic-ui-react"
+import { Checkbox, Segment } from "semantic-ui-react"
 import { connect } from 'react-redux'
 import LegislatorModal from './LegislatorModal'
 

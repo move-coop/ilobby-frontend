@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Divider, Dropdown, Grid, Header, Icon, Input, List, Tab, Table } from "semantic-ui-react";
+import { Dimmer, Divider, Grid, Header, Icon, Input, Loader, Tab, Table } from "semantic-ui-react";
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import AddCampaignModal from "../Components/AddCampaignModal";
@@ -26,7 +26,7 @@ class CampaignPageContainer extends React.Component {
     const renderActions = displayActions.map(action => {
       const actionCampaign = this.props.campaigns.find(campaign => campaign.id === action.campaign_id)
       const actionCall = this.props.calls.find(call => call.action_id === action.id)
-      const legislator = this.props.legislators.find(legislator => legislator.id == action.legislator_id)
+      const legislator = this.props.legislators.find(legislator => legislator.id === action.legislator_id)
       let legislatorSlug
       if (!!legislator) {
         legislatorSlug = `${legislator.chamber === "Senate" ? "Sen." : "Assemb."} ${legislator.name} (${legislator.party === "Democratic" ? "D-" : "R-"}${legislator.district})`
@@ -47,10 +47,11 @@ class CampaignPageContainer extends React.Component {
             {actionCampaign.name}
           </Table.Cell>
         </Table.Row>
+      } else {
+        return <Dimmer active inverted ><Loader inverted content="Loading" /></Dimmer>
       }
     })
 
-    var parse = require("postgres-date");
     const displayCallLists = this.props.callLists.filter(list => list.display === true)
     const renderCallLists = displayCallLists.map(list => {
       const callListCampaign = this.props.campaigns.find(campaign => list.campaign_id === campaign.id)
@@ -90,7 +91,9 @@ class CampaignPageContainer extends React.Component {
             Showing {displayCallLists.length} of {this.props.callLists.length}
             <Divider hidden />
             <Table basic='very'>
-              {renderCallLists}
+              <tbody>
+                {renderCallLists}
+              </tbody>
             </Table>
           </Tab.Pane>
         }
@@ -107,8 +110,10 @@ class CampaignPageContainer extends React.Component {
           {/* <Button icon><Icon name='add' /></Button><br /> */}
           Showing {displayActions.length} of {this.props.actions.length}
           <Divider hidden />
-          <Table basic='very'>           
-            {renderActions}
+          <Table basic='very'>  
+            <tbody>
+              {renderActions}
+            </tbody>         
           </Table>
         </Tab.Pane>
       }}

@@ -1,7 +1,7 @@
 import React from "react";
 import LegislatorRow from '../Components/LegislatorRow'
 import { connect } from 'react-redux'
-import { Grid, Segment, SegmentGroup } from 'semantic-ui-react'
+// import { Grid, Segment, SegmentGroup } from 'semantic-ui-react'
 
 
 class CardViewContainer extends React.Component {

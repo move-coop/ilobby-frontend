@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { Input, Icon, Dropdown, Modal, Header, Button, Grid, List, Divider, Message } from 'semantic-ui-react'
+import { Input, Icon, Dropdown, Modal, Header, Button, Grid, List, Divider } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 
 const TakeActionModal = (props) => {

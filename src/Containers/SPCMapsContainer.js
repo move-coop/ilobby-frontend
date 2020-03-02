@@ -1,5 +1,5 @@
 import React from "react";
-import { Map, GoogleApiWrapper, Polygon, InfoBox } from "google-maps-react";
+import { Map, GoogleApiWrapper, Polygon } from "google-maps-react";
 import { connect } from 'react-redux'
 
 
@@ -8,14 +8,15 @@ const colors = {
   republican: "#FF0000"
 }
 
-const centerOfNewYorkState = { lat: 42.6339359, lng: - 75.9691296}
+const centerOfNewYorkState = { lat: 42.6339359, lng: -75.9691296}
 
 
 class SPCMapsContainer extends React.Component {
 
   centerReducer = (acc, legislator) => {
     
-    JSON.parse(legislator.geo).extent.forEach(ele => {
+    JSON.parse(legislator.geo).extent.forEach(element => {
+      const ele = parseFloat(element)
       if (ele > 0) {
         if (ele > acc.latmax || !acc.latmax) {
           acc = {
