@@ -172,7 +172,10 @@ const initialState = {
 
   campaignSearchInput: "",
   actionSearchInput: "",
-  callListSearchInput: ""
+  callListSearchInput: "",
+
+  campaignNameInput: ""
+
 
 }
 
@@ -225,7 +228,7 @@ const updateDisplayCampaigns = (newState) => {
 }
 
 const updateDisplayActions = (newState) => {
-  const { campaignSearchInput, actionSearchInput, campaigns, actions, legislators } = newState
+  const { actionSearchInput, campaigns, actions, legislators } = newState
   
   // belongs to one of the selected campaigns
   const displayCampaigns = campaigns.filter(campaign => campaign.display === true)
@@ -244,18 +247,36 @@ const updateDisplayActions = (newState) => {
   })
 
 return displayActions
+}
 
+const updateDisplayCallLists = (newState) => {
+  const { callListSearchInput, callLists, campaigns } = newState
+
+  const displayCampaigns = campaigns.filter(campaign => campaign.display === true)
+  const displayCampaignIds = displayCampaigns.map(campaign => campaign.id)
+
+  const displayCallLists = callLists.map(list => {
+    if (displayCampaignIds.includes(list.campaign_id) && list.name.toLowerCase().includes(callListSearchInput.toLowerCase())) {
+      return { ...list, display: true }
+    } else {
+      return { ...list, display: false }
+    }
+  })
+  return displayCallLists
 }
 
 export const reducer = (prevState = initialState, action) => {
   let displayLegislators
   let newState
-  let newNewState
+  let secondNewState
+  let thirdNewState
   let newCalls
   let call
   let newActions
   let displayCampaigns
   let displayActions
+  let displayCallLists
+  let newCampaign
 
   switch (action.type) {
     case "SET_USER":
@@ -298,10 +319,14 @@ export const reducer = (prevState = initialState, action) => {
       displayActions = newState.actions.map(action => {
         return {...action, display: true}
       })
+      displayCallLists = newState.callLists.map(list => {
+        return {...list, display: true}
+      })
       return {
         ...newState, 
         campaigns: displayCampaigns,
-        actions: displayActions
+        actions: displayActions,
+        callLists: displayCallLists
       }
       
     case "SEARCH_FILTER":
@@ -466,23 +491,35 @@ export const reducer = (prevState = initialState, action) => {
       case "CHANGE_CAMPAIGN_INPUT":
         newState = { ...prevState, campaignSearchInput: action.payload}
         displayCampaigns = updateDisplayCampaigns(newState)
-        newNewState = {...newState, campaigns: displayCampaigns}
-        displayActions = updateDisplayActions(newNewState)
-        return {...newNewState, actions: displayActions}
+        
+        secondNewState = {...newState, campaigns: displayCampaigns}
+        displayActions = updateDisplayActions(secondNewState)
+        
+        thirdNewState = {...secondNewState, actions: displayActions}
+        displayCallLists = updateDisplayCallLists(thirdNewState)
+        return {...thirdNewState, callLists: displayCallLists}
       
 
       case "CHANGE_ACTION_INPUT":
         newState = { ...prevState, actionSearchInput: action.payload }
         displayActions = updateDisplayActions(newState)
         return { ...newState, actions: displayActions }
-    
+        
       case "CHANGE_CALL_LIST_INPUT":
-      return { ...prevState, callListSearchInput: action.payload}
+        newState = { ...prevState, callListSearchInput: action.payload}
+        displayCallLists = updateDisplayCallLists(newState)
+        return { ...newState, callLists: displayCallLists }
+
+      case "UPDATE_CAMPAIGN_NAME_INPUT":
+        console.log("UPDATE_CAMPAIGN_NAME_INPUT", action.payload)
+        return { ...prevState, campaignNameInput: action.payload}
     
-        // case "ADD_CAMPAIGN":
-      //   // post request
-      //   // add to campaign options
-      //   return {...prevState, campaignSelection: action.payload}
+      case "ADD_CAMPAIGN":
+        newCampaign = {
+          ...action.payload,
+          display: true
+        }
+        return { ...prevState, campaigns: [...prevState.campaigns, newCampaign]}
       
     default:
       return prevState;
