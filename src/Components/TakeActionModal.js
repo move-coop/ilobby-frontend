@@ -68,6 +68,8 @@ const TakeActionModal = (props) => {
         
       // reset filters and display legislators ?
 
+      // set current CallList and Campaign for rendering callList page
+      
       
       // redirect to calllists/:id
       props.history.push(`/campaigns/calllists/${json.id}`)
@@ -159,13 +161,7 @@ const TakeActionModal = (props) => {
 const mapStateToProps = state => {
   return {
     legislators: state.legislators,
-    campaignOptions: state.campaigns.map(campaign => {
-      return {
-        key: campaign.id,
-        text: campaign.name,
-        value: campaign.id
-      }
-    }),
+    campaignOptions: state.campaignOptions,
     campaignSelection: state.campaignSelection,
     actionTypeOptions: state.actionTypeOptions,
     actionTypeSelection: state.actionTypeSelection,

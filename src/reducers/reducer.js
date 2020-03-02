@@ -33,42 +33,6 @@ const partyOptions = [
   }
 ]
 
-// const committeeOptions = [
-//   {
-//     key: 'Labor',
-//     text: 'Labor',
-//     value: 'Labor',
-//   },
-//   {
-//     key: 'Codes',
-//     text: 'Codes',
-//     value: 'Codes',
-//   },
-//   {
-//     key: 'Judiciary',
-//     text: 'Judiciary',
-//     value: 'Judiciary',
-//   }
-// ]
-
-// const campaignOptions = [
-//   {
-//     key: '1',
-//     text: 'Bail Reform',
-//     value: '1'
-//   },
-//   {
-//     key: '2',
-//     text: 'Greenlight NYC',
-//     value: '2'
-//   },
-//   {
-//     key: '3',
-//     text: 'Single Payer Healthcare',
-//     value: '3'
-//   }
-// ]
-
 const actionTypeOptions = [
   {
     key: '1',
@@ -139,44 +103,51 @@ const initialState = {
     updated_at: "2020-02-26T20:54:06.690Z" 
   },
 
+  // status on App fetches
   legislatorDataLoaded: false,
   committeeDataLoaded: false,
   userDataLoaded: false,
 
+  // LEGISLATORS! Contained fields to control display and selection
+  legislators: [],
+  
+  // serialized user data
   campaigns: [],
   actions: [],
   callLists: [],
   calls: [],
-
-  // campaignOptions: campaignOptions,
-  campaignSelection: "",
-  actionTypeOptions: actionTypeOptions,
-  actionTypeSelection: "",
-  actionNameInput: "",
-  outcomeOptions: outcomeOptions,
-  commitmentOptions: commitmentOptions,
-
+  
+  // data for search page filters
   searchFilter: "",
   chamberFilter: "Senate",
   partyFilter: "",
   committeeFilter: [],
-  
   chamberOptions: chamberOptions,
   partyOptions: partyOptions,
   committeeOptions: [],
   
-  legislators: [],
-  // displayLegislators: [],
-  // selectionCount: 0,
-
   cardView: false,
 
+  // data for Take Action Modal
+  campaignOptions: [],
+  campaignSelection: "",
+  actionTypeOptions: actionTypeOptions,
+  actionTypeSelection: "",
+  actionNameInput: "",
+
+  // additional data for call_lists
+  currentCallList: {},
+  currentCampaign: {},
+  outcomeOptions: outcomeOptions,
+  commitmentOptions: commitmentOptions,
+
+  // data for campaigns page
   campaignSearchInput: "",
   actionSearchInput: "",
   callListSearchInput: "",
 
+  // data for campaign modals
   campaignNameInput: ""
-
 
 }
 
@@ -315,14 +286,21 @@ export const reducer = (prevState = initialState, action) => {
           value: committee.id
         }
       })
-      debugger
       return  { ...prevState, committeeOptions  }
             
     case "STORE_USER_DATA":
       // console.log("reducer legislators", action.payload)
       const { campaigns, actions, call_lists, calls } = action.payload
+      const campaignOptions = campaigns.map(campaign => {
+        return {
+          key: campaign.id,
+          text: campaign.name,
+          value: campaign.id
+        }
+      })
       newState = {
         ...prevState, 
+        campaignOptions,
         campaigns,
         actions, 
         callLists: call_lists,
@@ -419,7 +397,6 @@ export const reducer = (prevState = initialState, action) => {
 
       case "ADD_TA_RESPONSE_TO_STORE":
         console.log("addTAResponseToStore", action.payload)
-        debugger
         return {
           ...prevState,
           callLists: [...prevState.callLists, action.payload.callList],

@@ -33,7 +33,6 @@ class CallListContainer extends React.Component {
 
   }
 
-
   renderLegislatorRows = () => {
    
     const currentCalls = this.props.calls.filter(call => call.call_list_id === this.currentCallList().id)
@@ -106,6 +105,7 @@ class CallListContainer extends React.Component {
 
       return legislatorRows
   }
+
   render() {
 
     
