@@ -13,9 +13,47 @@ const centerOfNewYorkState = { lat: 42.6339359, lng: - 75.9691296}
 
 class SPCMapsContainer extends React.Component {
 
+  centerReducer = (acc, legislator) => {
+    
+    JSON.parse(legislator.geo).extent.forEach(ele => {
+      if (ele > 0) {
+        if (ele > acc.latmax || !acc.latmax) {
+          acc = {
+            ...acc,
+            latmax: ele
+          }
+        }
+        if (ele < acc.latmin || !acc.latmin) {
+          acc = {
+            ...acc,
+            latmin: ele
+          };
+        } 
+      } else {
+        if (ele > acc.lonmax || !acc.lonmax) {
+          acc = {
+            ...acc,
+            lonmax: ele
+          }
+        }
+        if (ele < acc.lonmin || !acc.lonmin) {
+          acc = {
+            ...acc,
+            lonmin: ele
+          }
+        }
+      }
+
+    })
+    return acc
+  }
+
   render() {
 
     let renderPolygons
+    let preBounds
+    let bounds
+    let points
 
     if (this.props.legislators.length > 0) {
       const displayLegislators = this.props.legislators.filter(legislator => legislator.display === true)
@@ -37,6 +75,24 @@ class SPCMapsContainer extends React.Component {
           onClick={(obj) => { console.log(obj) }}
         />
       })
+      
+      preBounds = displayLegislators.reduce(this.centerReducer, {
+        latmax: null,
+        latmin: null,
+        lonmax: null,
+        lonmin: null
+      });
+
+      points = [
+        {lat: preBounds.latmax, lng: preBounds.lonmax},
+        {lat: preBounds.latmin, lng: preBounds.lonmin}
+      ]
+
+      // debugger
+      bounds = new this.props.google.maps.LatLngBounds();
+      for (var i = 0; i < points.length; i++) {
+        bounds.extend(points[i]);
+      }
     }
 
     const mapStyles = {
@@ -53,6 +109,7 @@ class SPCMapsContainer extends React.Component {
           disableDefaultUI={true}
           mapType={"terrain"}
           initialCenter={centerOfNewYorkState}
+          bounds={bounds}
         >
           {renderPolygons}
         </Map>
