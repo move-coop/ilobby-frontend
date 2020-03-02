@@ -52,7 +52,7 @@ const AddCampaignModal = (props) => {
           onClick={handleOpen}
           size="small" 
           icon>
-          <Icon name='add' /> Add Campaign</Button>
+          <Icon name='add' /></Button>
       }>
       <Modal.Header>Add Campaign</Modal.Header>
       <Modal.Content >

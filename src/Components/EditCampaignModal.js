@@ -72,9 +72,9 @@ const EditCampaignModal = (props) => {
       open={getModalOpen}
       onClose={handleClose}
       trigger={
-        <Button onClick={handleOpen} floted='right' circular icon size="mini" ><Icon name="pencil" /></Button>  
+        <Button basic onClick={handleOpen} floted='right' icon size="small" ><Icon name="pencil" /></Button>  
       }>
-      <Modal.Header>Add Campaign</Modal.Header>
+      <Modal.Header>Edit Campaign</Modal.Header>
       <Modal.Content >
         <Input
           fluid

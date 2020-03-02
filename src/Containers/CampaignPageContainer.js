@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Divider, Dropdown, Grid, Header, Icon, Input, List, Tab } from "semantic-ui-react";
+import { Button, Divider, Dropdown, Grid, Header, Icon, Input, List, Tab, Table } from "semantic-ui-react";
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import AddCampaignModal from "../Components/AddCampaignModal";
@@ -12,33 +12,69 @@ class CampaignPageContainer extends React.Component {
     
     const displayCampaigns = this.props.campaigns.filter(campaign => campaign.display === true)
     const renderCampaigns = displayCampaigns.map(campaign => 
-      <List.Item 
-        key={campaign.id} 
-        >{campaign.name} 
-        <EditCampaignModal {...campaign} />
-      </List.Item>
+      <Grid.Row className='campaigns' key={campaign.id} >
+        <Grid.Column width='13'>
+          <Header color='purple' size='small' >{campaign.name}</Header>
+        </Grid.Column>
+        <Grid.Column width='2'>
+          <EditCampaignModal {...campaign} />
+        </Grid.Column>
+      </Grid.Row>
       )
-
 
     const displayActions = this.props.actions.filter(action => action.display === true)
     const renderActions = displayActions.map(action => {
+      const actionCampaign = this.props.campaigns.find(campaign => campaign.id === action.campaign_id)
+      const actionCall = this.props.calls.find(call => call.action_id === action.id)
       const legislator = this.props.legislators.find(legislator => legislator.id == action.legislator_id)
       let legislatorSlug
       if (!!legislator) {
         legislatorSlug = `${legislator.chamber === "Senate" ? "Sen." : "Assemb."} ${legislator.name} (${legislator.party === "Democratic" ? "D-" : "R-"}${legislator.district})`
-        return <List.Item key={action.id} >
-          {action.kind} | {legislatorSlug}:
-        </List.Item>
+        return <Table.Row key={action.id} >
+          <Table.Cell>
+            {action.complete ? <Icon name='check' color='green' /> : <Icon name='wait' color='red' />}
+          </Table.Cell>
+          <Table.Cell>   
+            {actionCall.duration ? `${actionCall.duration}m` : '--'}
+          </Table.Cell>
+          <Table.Cell>
+            <Link to={`/campaigns/calllists/${actionCall.call_list_id}`} >
+              {action.kind}
+            </Link>
+          </Table.Cell>
+          <Table.Cell>
+            {legislatorSlug}<br />
+            {actionCampaign.name}
+          </Table.Cell>
+        </Table.Row>
       }
     })
 
+    var parse = require("postgres-date");
     const displayCallLists = this.props.callLists.filter(list => list.display === true)
     const renderCallLists = displayCallLists.map(list => {
-      return <List.Item key={list.id} >
-        <Link to={`/campaigns/calllists/${list.id}`}>
-          {list.name}
-        </Link>
-      </List.Item>
+      const callListCampaign = this.props.campaigns.find(campaign => list.campaign_id === campaign.id)
+      const callListCalls = this.props.calls.filter(call => call.call_list_id === list.id)
+      const completeCalls = callListCalls.filter(call => {
+        const callAction = this.props.actions.find(action => call.action_id === action.id)
+        return callAction.complete
+      })
+      
+      return (
+        <Table.Row key={list.id}>
+          <Table.Cell>
+            <Link to={`/campaigns/calllists/${list.id}`}>{list.name}</Link>
+            <br />
+            {callListCampaign.name}
+          </Table.Cell>
+          <Table.Cell>{list.created_at.slice(0, 10)}</Table.Cell>
+          <Table.Cell>
+            <Icon name="check" color='grey' />
+            {completeCalls.length} <Icon name="wait" color='grey' />
+            {callListCalls.length - completeCalls.length}
+          </Table.Cell>
+        </Table.Row>
+      );
     })
 
     const panes = [
@@ -53,9 +89,9 @@ class CampaignPageContainer extends React.Component {
             {/* <Button icon><Icon name='add' /></Button><br /> */}
             Showing {displayCallLists.length} of {this.props.callLists.length}
             <Divider hidden />
-            <List>
+            <Table basic='very'>
               {renderCallLists}
-            </List>
+            </Table>
           </Tab.Pane>
         }
       },
@@ -71,9 +107,9 @@ class CampaignPageContainer extends React.Component {
           {/* <Button icon><Icon name='add' /></Button><br /> */}
           Showing {displayActions.length} of {this.props.actions.length}
           <Divider hidden />
-          <List>           
+          <Table basic='very'>           
             {renderActions}
-          </List>
+          </Table>
         </Tab.Pane>
       }}
     ]
@@ -83,20 +119,24 @@ class CampaignPageContainer extends React.Component {
         <Grid padded columns='equal'>
           <Grid.Column>
             <Header>Campaigns</Header>
-            
-            <AddCampaignModal />
-            <Input 
-              fluid 
-              placeholder="Search campaigns..."
-              value={this.props.campaignSearchInput}
-              onChange={(e) => {this.props.changeCampaignInput(e.target.value)}} 
-              />
+            <Grid>
+              <Grid.Column width='13'>
+                <Input 
+                  fluid 
+                  placeholder="Search campaigns..."
+                  value={this.props.campaignSearchInput}
+                  onChange={(e) => {this.props.changeCampaignInput(e.target.value)}} 
+                />
+              </Grid.Column>
+              <Grid.Column width='2'>
+                <AddCampaignModal />
+              </Grid.Column>
+            </Grid>
             Showing {displayCampaigns.length} of {this.props.campaigns.length}
             <Divider hidden />
-            <List>
-              {/* {this.props.legislatorDataLoaded && this.props.userDataLoaded && this.renderCampaigns(displayCampaigns)} */}
+            <Grid divided='vertically' verticalAlign='middle'>
               {renderCampaigns}
-            </List>
+            </Grid>
           </Grid.Column>
           <Grid.Column>
             <Tab panes={panes}>
@@ -114,6 +154,7 @@ const mapStateToProps = state => {
     campaignSearchInput: state.campaignSearchInput,
     actions: state.actions,
     actionSearchInput: state.actionSearchInput,
+    calls: state.calls,
     callLists: state.callLists,
     callListSearchInput: state.callListSearchInput,
     legislatorDataLoaded: state.legislatorDataLoaded,
