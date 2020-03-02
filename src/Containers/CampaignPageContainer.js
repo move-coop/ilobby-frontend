@@ -12,14 +12,16 @@ class CampaignPageContainer extends React.Component {
     
     const displayCampaigns = this.props.campaigns.filter(campaign => campaign.display === true)
     const renderCampaigns = displayCampaigns.map(campaign => 
-      <Grid.Row className='campaigns' key={campaign.id} >
-        <Grid.Column width='13'>
-          <Header color='purple' size='small' >{campaign.name}</Header>
-        </Grid.Column>
-        <Grid.Column width='2'>
-          <EditCampaignModal {...campaign} />
-        </Grid.Column>
-      </Grid.Row>
+      <tbody key={campaign.id} >
+        <Table.Row className='campaigns' >
+          <Table.Cell collapsing>
+            <Header color='purple' size='small' >{campaign.name}</Header>
+          </Table.Cell>
+          <Table.Cell >
+            <EditCampaignModal {...campaign} />
+          </Table.Cell>
+        </Table.Row>
+      </tbody>
       )
 
     const displayActions = this.props.actions.filter(action => action.display === true)
@@ -43,12 +45,20 @@ class CampaignPageContainer extends React.Component {
             </Link>
           </Table.Cell>
           <Table.Cell>
-            {legislatorSlug}<br />
+            {legislatorSlug}
+          </Table.Cell>
+          <Table.Cell>
             {actionCampaign.name}
           </Table.Cell>
         </Table.Row>
       } else {
-        return <Dimmer active inverted ><Loader inverted content="Loading" /></Dimmer>
+        return <Table.Row key={action.id}>
+          <Table.Cell>
+            <Dimmer active inverted >
+              <Loader inverted content="Loading" />
+            </Dimmer>
+          </Table.Cell>
+        </Table.Row>
       }
     })
 
@@ -90,7 +100,7 @@ class CampaignPageContainer extends React.Component {
             {/* <Button icon><Icon name='add' /></Button><br /> */}
             Showing {displayCallLists.length} of {this.props.callLists.length}
             <Divider hidden />
-            <Table basic='very'>
+            <Table basic='very' compact>
               <tbody>
                 {renderCallLists}
               </tbody>
@@ -121,8 +131,8 @@ class CampaignPageContainer extends React.Component {
 
     return (
       <div>
-        <Grid padded columns='equal'>
-          <Grid.Column>
+        <Grid padded columns='2'>
+          <Grid.Column width='6'>
             <Header>Campaigns</Header>
             <Grid>
               <Grid.Column width='13'>
@@ -139,11 +149,11 @@ class CampaignPageContainer extends React.Component {
             </Grid>
             Showing {displayCampaigns.length} of {this.props.campaigns.length}
             <Divider hidden />
-            <Grid divided='vertically' verticalAlign='middle'>
+            <Table compact divided='vertically' verticalAlign='middle' basic='very'>
               {renderCampaigns}
-            </Grid>
+            </Table>
           </Grid.Column>
-          <Grid.Column>
+          <Grid.Column width='10'>
             <Tab panes={panes}>
             </Tab>
           </Grid.Column>

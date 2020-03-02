@@ -12,7 +12,6 @@ const userDataEndpoint = "http://localhost:3000/users"
 class App extends React.Component {
   
   componentDidMount() {
-    console.log("App Did Mount")
     
     // GET LEGISLATORS
     fetch(legislatorsEndpoint)
@@ -135,7 +134,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch({ type: "USER_DATA_LOADED" })
     },
     legislatorDataLoaded: () => {
-      console.log("User Data Loaded")
+      console.log("Legislator Data Loaded")
       dispatch({ type: "LEGISLATOR_DATA_LOADED" })
     },
     committeeDataLoaded: () => {

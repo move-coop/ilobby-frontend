@@ -38,7 +38,6 @@ class LoggedInContainer extends React.Component {
 
 
   render() {
-    console.log("rendering logged in container")
 
     return (
       <div>
