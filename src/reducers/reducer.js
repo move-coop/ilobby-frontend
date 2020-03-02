@@ -33,41 +33,41 @@ const partyOptions = [
   }
 ]
 
-const committeeOptions = [
-  {
-    key: 'Labor',
-    text: 'Labor',
-    value: 'Labor',
-  },
-  {
-    key: 'Codes',
-    text: 'Codes',
-    value: 'Codes',
-  },
-  {
-    key: 'Judiciary',
-    text: 'Judiciary',
-    value: 'Judiciary',
-  }
-]
+// const committeeOptions = [
+//   {
+//     key: 'Labor',
+//     text: 'Labor',
+//     value: 'Labor',
+//   },
+//   {
+//     key: 'Codes',
+//     text: 'Codes',
+//     value: 'Codes',
+//   },
+//   {
+//     key: 'Judiciary',
+//     text: 'Judiciary',
+//     value: 'Judiciary',
+//   }
+// ]
 
-const campaignOptions = [
-  {
-    key: '1',
-    text: 'Bail Reform',
-    value: '1'
-  },
-  {
-    key: '2',
-    text: 'Greenlight NYC',
-    value: '2'
-  },
-  {
-    key: '3',
-    text: 'Single Payer Healthcare',
-    value: '3'
-  }
-]
+// const campaignOptions = [
+//   {
+//     key: '1',
+//     text: 'Bail Reform',
+//     value: '1'
+//   },
+//   {
+//     key: '2',
+//     text: 'Greenlight NYC',
+//     value: '2'
+//   },
+//   {
+//     key: '3',
+//     text: 'Single Payer Healthcare',
+//     value: '3'
+//   }
+// ]
 
 const actionTypeOptions = [
   {
@@ -140,6 +140,7 @@ const initialState = {
   },
 
   legislatorDataLoaded: false,
+  committeeDataLoaded: false,
   userDataLoaded: false,
 
   campaigns: [],
@@ -147,7 +148,7 @@ const initialState = {
   callLists: [],
   calls: [],
 
-  campaignOptions: campaignOptions,
+  // campaignOptions: campaignOptions,
   campaignSelection: "",
   actionTypeOptions: actionTypeOptions,
   actionTypeSelection: "",
@@ -162,7 +163,7 @@ const initialState = {
   
   chamberOptions: chamberOptions,
   partyOptions: partyOptions,
-  committeeOptions: committeeOptions,
+  committeeOptions: [],
   
   legislators: [],
   // displayLegislators: [],
@@ -197,7 +198,7 @@ const updateDisplayLegislators = (newState) => {
       // some() defaults to false if committeeFilter is blank
       (committeeFilter.length === 0 ? true : 
         committeeFilter.some( (element) => {
-          return !!legislator.committees.find( committee => committee.name === element)
+          return !!legislator.committees.find( committee => committee.id === element)
         })
       ) 
       
@@ -306,6 +307,17 @@ export const reducer = (prevState = initialState, action) => {
       displayLegislators = updateDisplayLegislators(newState)
       return { ...newState, legislators: displayLegislators }
       
+    case "STORE_COMMITTEES":
+      let committeeOptions = action.payload.map(committee => {
+        return {
+          key: committee.id,
+          text: committee.filter_name,
+          value: committee.id
+        }
+      })
+      debugger
+      return  { ...prevState, committeeOptions  }
+            
     case "STORE_USER_DATA":
       // console.log("reducer legislators", action.payload)
       const { campaigns, actions, call_lists, calls } = action.payload
@@ -420,6 +432,9 @@ export const reducer = (prevState = initialState, action) => {
       
       case "LEGISLATOR_DATA_LOADED":
         return {...prevState, legislatorDataLoaded: true}
+
+      case "COMMITTEE_DATA_LOADED":
+        return {...prevState, committeeDataLoaded: true}
 
       case "UPDATE_CALL_OUTCOME":
         console.log("update call outcome", action.payload)

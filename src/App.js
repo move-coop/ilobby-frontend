@@ -6,12 +6,15 @@ import LoggedInContainer from './Containers/LoggedInContainer'
 import { connect } from 'react-redux'
 
 const legislatorsEndpoint = "http://localhost:3000/legislators"
+const committeesEndpoint = "http://localhost:3000/committees"
 const userDataEndpoint = "http://localhost:3000/users"
 
 class App extends React.Component {
   
   componentDidMount() {
     console.log("App Did Mount")
+    
+    // GET LEGISLATORS
     fetch(legislatorsEndpoint)
     .then(res => res.json())
     .then(data => {
@@ -22,6 +25,19 @@ class App extends React.Component {
       this.props.legislatorDataLoaded()
     })
 
+    // GET COMMITTEES DATA
+    fetch(committeesEndpoint)
+    .then(res => res.json())
+    .then(data => {
+      // sort alphabetically
+      let committees = data.sort((a, b) => a.filter_name.localeCompare(b.filter_name))
+
+      this.props.storeCommittees(committees)
+      this.props.committeeDataLoaded()
+    })
+
+
+    // GET USER DATA
     const userDataUrl = userDataEndpoint + `/${this.props.currentUser.id}`
 
     fetch(userDataUrl)
@@ -104,6 +120,9 @@ const mapDispatchToProps = (dispatch) => {
     storeLegislators: (data) => {
       dispatch({ type: "STORE_LEGISLATORS", payload: data })
     },
+    storeCommittees: (data) => {
+      dispatch({ type: "STORE_COMMITTEES", payload: data })
+    },
     storeUserData: (data) => {
       dispatch({ type: "STORE_USER_DATA", payload: data })
     },
@@ -118,6 +137,10 @@ const mapDispatchToProps = (dispatch) => {
     legislatorDataLoaded: () => {
       console.log("User Data Loaded")
       dispatch({ type: "LEGISLATOR_DATA_LOADED" })
+    },
+    committeeDataLoaded: () => {
+      console.log("Committee Data Loaded")
+      dispatch({ type: "COMMITTEE_DATA_LOADED" })
     }
   }
 }

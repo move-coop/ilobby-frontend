@@ -159,7 +159,13 @@ const TakeActionModal = (props) => {
 const mapStateToProps = state => {
   return {
     legislators: state.legislators,
-    campaignOptions: state.campaignOptions,
+    campaignOptions: state.campaigns.map(campaign => {
+      return {
+        key: campaign.id,
+        text: campaign.name,
+        value: campaign.id
+      }
+    }),
     campaignSelection: state.campaignSelection,
     actionTypeOptions: state.actionTypeOptions,
     actionTypeSelection: state.actionTypeSelection,
