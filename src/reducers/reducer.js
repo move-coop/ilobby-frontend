@@ -277,6 +277,7 @@ export const reducer = (prevState = initialState, action) => {
   let displayActions
   let displayCallLists
   let newCampaign
+  let newCampaigns
 
   switch (action.type) {
     case "SET_USER":
@@ -520,6 +521,24 @@ export const reducer = (prevState = initialState, action) => {
           display: true
         }
         return { ...prevState, campaigns: [...prevState.campaigns, newCampaign]}
+      
+      case "EDIT_CAMPAIGN":
+        newCampaigns = prevState.campaigns.map(campaign => {
+          if (campaign.id === action.payload.id) {
+            return {...action.payload, display: true }
+          } else {
+            return campaign
+          }
+        })
+        return { ...prevState, campaigns: newCampaigns}
+        
+      case "DELETE_CAMPAIGN":
+        console.log("DELETE CAMPAIGN", action.payload)
+        newCampaigns = prevState.campaigns.filter(campaign => {
+          return campaign.id !== action.payload
+        })
+        return { ...prevState, campaigns: newCampaigns}
+        
       
     default:
       return prevState;

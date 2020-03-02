@@ -3,6 +3,7 @@ import { Button, Divider, Dropdown, Grid, Header, Icon, Input, List, Tab } from 
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import AddCampaignModal from "../Components/AddCampaignModal";
+import EditCampaignModal from "../Components/EditCampaignModal";
 
 
 class CampaignPageContainer extends React.Component {
@@ -10,7 +11,14 @@ class CampaignPageContainer extends React.Component {
   render() {
     
     const displayCampaigns = this.props.campaigns.filter(campaign => campaign.display === true)
-    const renderCampaigns = displayCampaigns.map(campaign => <Header key={campaign.id} >{campaign.name}</Header>)
+    const renderCampaigns = displayCampaigns.map(campaign => 
+      <List.Item 
+        key={campaign.id} 
+        >{campaign.name} 
+        <EditCampaignModal {...campaign} />
+      </List.Item>
+      )
+
 
     const displayActions = this.props.actions.filter(action => action.display === true)
     const renderActions = displayActions.map(action => {
