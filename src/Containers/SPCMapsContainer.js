@@ -49,6 +49,10 @@ class SPCMapsContainer extends React.Component {
     return acc
   }
 
+  mapClicked(mapProps, map, clickEvent) {
+    // debugger
+  }
+
   render() {
 
     let renderPolygons
@@ -71,7 +75,7 @@ class SPCMapsContainer extends React.Component {
           strokeWeight={1}
           fillColor={legislator.party === "Democratic" ? colors.democratic : colors.republican}
           fillOpacity={0.25}
-          onMouseover={() => {  }}
+          onMouseover={(props, polygon, e) => {  }}
           onMouseout={() => {  }}
           onClick={(obj) => { console.log(obj) }}
         />
@@ -84,16 +88,30 @@ class SPCMapsContainer extends React.Component {
         lonmin: null
       });
 
-      points = [
-        {lat: preBounds.latmax, lng: preBounds.lonmax},
-        {lat: preBounds.latmin, lng: preBounds.lonmin}
-      ]
-
-      // debugger
-      bounds = new this.props.google.maps.LatLngBounds();
-      for (var i = 0; i < points.length; i++) {
-        bounds.extend(points[i]);
+      // if statement to set points to preBounds, if all 4 points exist, or set to initial state.
+      if (!!preBounds.latmax && preBounds.latmin && preBounds.lonmax && preBounds.lonmin) {
+        points = [
+          {lat: preBounds.latmax, lng: preBounds.lonmax},
+          {lat: preBounds.latmin, lng: preBounds.lonmin}
+        ]
+      } else {
+        console.log("no results, default points")
+      
+        points = [
+          centerOfNewYorkState,
+          { lat: 45.015864999999984, lng: -71.77749099999998},
+          { lat: 40.477398999999984, lng: -79.76258999999997}
+        ]
       }
+      
+        // debugger
+        bounds = new this.props.google.maps.LatLngBounds();
+       
+        for (var i = 0; i < points.length; i++) {
+          bounds.extend(points[i]);
+        }
+
+
     }
 
     const mapStyles = {
@@ -111,6 +129,7 @@ class SPCMapsContainer extends React.Component {
           mapType={"terrain"}
           initialCenter={centerOfNewYorkState}
           bounds={bounds}
+          onClick={this.mapClicked} 
         >
           {renderPolygons}
         </Map>

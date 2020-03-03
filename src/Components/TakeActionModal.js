@@ -49,11 +49,16 @@ const TakeActionModal = (props) => {
       props.addTAResponseToStore({
         callList: {
           id: json.id,
+          campaign_id: json.campaign.id,
           name: json.name,
-          campaign_id: json.campaign.id
+          created_at: json.created_at,
+          updated_at: json.updated_at,
+          display: true
+
         },
         calls: json.calls,
-        actions: json.call_actions
+        // actions: json.call_actions
+        actions: json.call_actions.map(action => ({...action, display: true}))
       })
 
       // clear store values for modal fields:

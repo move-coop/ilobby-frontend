@@ -147,7 +147,10 @@ const initialState = {
   callListSearchInput: "",
 
   // data for campaign modals
-  campaignNameInput: ""
+  campaignNameInput: "",
+
+  // data for call list modal
+  callListNameInput: ""
 
 }
 
@@ -250,23 +253,23 @@ export const reducer = (prevState = initialState, action) => {
   let displayCallLists
   let newCampaign
   let newCampaigns
+  let newCallLists
 
   switch (action.type) {
     case "SET_USER":
-      console.log("SET USER:", action.payload.user)
-      localStorage.token = action.payload.token  
-      return { 
-          ...prevState, 
-          currentUser: action.payload.user
-        }
+      console.log("SET USER:", action.payload.user);
+      localStorage.token = action.payload.token;
+      return {
+        ...prevState,
+        currentUser: action.payload.user
+      };
 
     case "LOGOUT":
-      return { ...prevState, currentUser: false }
+      return { ...prevState, currentUser: false };
 
-  
     case "TOGGLE_CARDVIEW":
-      console.log("toggling cardview !")
-      return { ...prevState, cardView: !prevState.cardView }
+      console.log("toggling cardview !");
+      return { ...prevState, cardView: !prevState.cardView };
 
     // case "TOGGLE":
     //   console.log("toggling!")
@@ -274,264 +277,293 @@ export const reducer = (prevState = initialState, action) => {
 
     case "STORE_LEGISLATORS":
       // console.log("reducer legislators", action.payload)
-      newState =  { ...prevState, legislators: action.payload }
-      displayLegislators = updateDisplayLegislators(newState)
-      return { ...newState, legislators: displayLegislators }
-      
+      newState = { ...prevState, legislators: action.payload };
+      displayLegislators = updateDisplayLegislators(newState);
+      return { ...newState, legislators: displayLegislators };
+
     case "STORE_COMMITTEES":
       let committeeOptions = action.payload.map(committee => {
         return {
           key: committee.id,
           text: committee.filter_name,
           value: committee.id
-        }
-      })
-      return  { ...prevState, committeeOptions  }
-            
+        };
+      });
+      return { ...prevState, committeeOptions };
+
     case "STORE_USER_DATA":
       // console.log("reducer legislators", action.payload)
-      const { campaigns, actions, call_lists, calls } = action.payload
+      const { campaigns, actions, call_lists, calls } = action.payload;
       const campaignOptions = campaigns.map(campaign => {
         return {
           key: campaign.id,
           text: campaign.name,
           value: campaign.id
-        }
-      })
+        };
+      });
       newState = {
-        ...prevState, 
+        ...prevState,
         campaignOptions,
         campaigns,
-        actions, 
+        actions,
         callLists: call_lists,
         calls
-      }
-      displayCampaigns = updateDisplayCampaigns(newState)
+      };
+      displayCampaigns = updateDisplayCampaigns(newState);
       displayActions = newState.actions.map(action => {
-        return {...action, display: true}
-      })
+        return { ...action, display: true };
+      });
       displayCallLists = newState.callLists.map(list => {
-        return {...list, display: true}
-      })
+        return { ...list, display: true };
+      });
       return {
-        ...newState, 
+        ...newState,
         campaigns: displayCampaigns,
         actions: displayActions,
         callLists: displayCallLists
-      }
-      
+      };
+
     case "SEARCH_FILTER":
-        console.log("search filtering!")
-      newState = { ...prevState, searchFilter: action.payload }
-      displayLegislators = updateDisplayLegislators(newState)
-      return { ...newState, legislators: displayLegislators}
-      
+      console.log("search filtering!");
+      newState = { ...prevState, searchFilter: action.payload };
+      displayLegislators = updateDisplayLegislators(newState);
+      return { ...newState, legislators: displayLegislators };
+
     case "CHAMBER_FILTER":
-      console.log("chamber filtering!")
-      newState = { ...prevState, chamberFilter: action.payload }
-      displayLegislators = updateDisplayLegislators(newState)
-      return { ...newState, legislators: displayLegislators}
-      
+      console.log("chamber filtering!");
+      newState = { ...prevState, chamberFilter: action.payload };
+      displayLegislators = updateDisplayLegislators(newState);
+      return { ...newState, legislators: displayLegislators };
+
     case "PARTY_FILTER":
-      console.log("party filtering!", action.payload)
-      newState = { ...prevState, partyFilter: action.payload }
-      displayLegislators = updateDisplayLegislators(newState)
-      return { ...newState, legislators: displayLegislators}
-      
-      case "COMMITTEE_FILTER":
-        console.log("committee filtering!")
-        newState = { ...prevState, committeeFilter: action.payload }
-        displayLegislators = updateDisplayLegislators(newState)
-        return { ...newState, legislators: displayLegislators}
-      
-      case "TOGGLE_ONE_SELECTION":
-        console.log("toggle one selection", action.payload)
-        let updatedLegislators = prevState.legislators.map(legislator => {
-          if (legislator.id === parseInt(action.payload)){
-            console.log(legislator.id)
-            return { ...legislator, selected: !legislator.selected}
-          } else {
-            return legislator
-          }
-        })
-        return {...prevState, legislators: updatedLegislators}
+      console.log("party filtering!", action.payload);
+      newState = { ...prevState, partyFilter: action.payload };
+      displayLegislators = updateDisplayLegislators(newState);
+      return { ...newState, legislators: displayLegislators };
 
-      case "TOGGLE_ALL_SELECTION":
-        
-        // get array of legislators currently displayed
-        displayLegislators = prevState.legislators.filter(legislator => legislator.display === true)
-        
-        //  if there are any displayed legislators that are not selectd, then select them all
-        console.log(displayLegislators.find(legislator => legislator.selected !== true), "leg !== true")
-        if (!!displayLegislators.find(legislator => legislator.selected !== true)) {
-          
-          // map through legislators changing those currently displayed to selected = true
-          let updatedLegislators = prevState.legislators.map(legislator => {
-            if (legislator.display === true) {
-              return {...legislator, selected: true}
-            } else {
-              return legislator
-            }
-          })
-          return {...prevState, legislators: updatedLegislators }
+    case "COMMITTEE_FILTER":
+      console.log("committee filtering!");
+      newState = { ...prevState, committeeFilter: action.payload };
+      displayLegislators = updateDisplayLegislators(newState);
+      return { ...newState, legislators: displayLegislators };
+
+    case "TOGGLE_ONE_SELECTION":
+      console.log("toggle one selection", action.payload);
+      let updatedLegislators = prevState.legislators.map(legislator => {
+        if (legislator.id === parseInt(action.payload)) {
+          console.log(legislator.id);
+          return { ...legislator, selected: !legislator.selected };
         } else {
-          // otherwise, map through legislators changing those currently displayed to selected = false
-          let updatedLegislators = prevState.legislators.map(legislator => {
-            if (legislator.display === true) {
-              return {...legislator, selected: false}
-            } else {
-              return legislator
-            }
-          })
-          return {...prevState, legislators: updatedLegislators }
+          return legislator;
         }
+      });
+      return { ...prevState, legislators: updatedLegislators };
 
-      case "CAMPAIGN_SELECTION":
-        return {...prevState, campaignSelection: action.payload}
-      
-      case "ACTION_TYPE_SELECTION":
-        return {...prevState, actionTypeSelection: action.payload}
-      
-      case "EDIT_ACTION_NAME":
-        return {...prevState, actionNameInput: action.payload}
+    case "TOGGLE_ALL_SELECTION":
+      // get array of legislators currently displayed
+      displayLegislators = prevState.legislators.filter(
+        legislator => legislator.display === true
+      );
 
-      case "ADD_TA_RESPONSE_TO_STORE":
-        console.log("addTAResponseToStore", action.payload)
-        return {
-          ...prevState,
-          callLists: [...prevState.callLists, action.payload.callList],
-          calls: [...prevState.calls, ...action.payload.calls],
-          actions: [...prevState.actions, ...action.payload.actions]
+      //  if there are any displayed legislators that are not selectd, then select them all
+      console.log(
+        displayLegislators.find(legislator => legislator.selected !== true),
+        "leg !== true"
+      );
+      if (
+        !!displayLegislators.find(legislator => legislator.selected !== true)
+      ) {
+        // map through legislators changing those currently displayed to selected = true
+        let updatedLegislators = prevState.legislators.map(legislator => {
+          if (legislator.display === true) {
+            return { ...legislator, selected: true };
+          } else {
+            return legislator;
+          }
+        });
+        return { ...prevState, legislators: updatedLegislators };
+      } else {
+        // otherwise, map through legislators changing those currently displayed to selected = false
+        let updatedLegislators = prevState.legislators.map(legislator => {
+          if (legislator.display === true) {
+            return { ...legislator, selected: false };
+          } else {
+            return legislator;
+          }
+        });
+        return { ...prevState, legislators: updatedLegislators };
+      }
+
+    case "CAMPAIGN_SELECTION":
+      return { ...prevState, campaignSelection: action.payload };
+
+    case "ACTION_TYPE_SELECTION":
+      return { ...prevState, actionTypeSelection: action.payload };
+
+    case "EDIT_ACTION_NAME":
+      return { ...prevState, actionNameInput: action.payload };
+
+    case "ADD_TA_RESPONSE_TO_STORE":
+      console.log("addTAResponseToStore", action.payload);
+      return {
+        ...prevState,
+        callLists: [...prevState.callLists, action.payload.callList],
+        calls: [...prevState.calls, ...action.payload.calls],
+        actions: [...prevState.actions, ...action.payload.actions]
+      };
+
+    case "USER_DATA_LOADED":
+      return { ...prevState, userDataLoaded: true };
+
+    case "LEGISLATOR_DATA_LOADED":
+      return { ...prevState, legislatorDataLoaded: true };
+
+    case "COMMITTEE_DATA_LOADED":
+      return { ...prevState, committeeDataLoaded: true };
+
+    case "UPDATE_CALL_OUTCOME":
+      console.log("update call outcome", action.payload);
+      newCalls = prevState.calls.map(call => {
+        if (call.id === action.payload.id) {
+          return { ...call, outcome: action.payload.value, changed: true };
+        } else {
+          return call;
         }
+      });
+      return { ...prevState, calls: newCalls };
 
-      case "USER_DATA_LOADED":
-        return {...prevState, userDataLoaded: true}
-      
-      case "LEGISLATOR_DATA_LOADED":
-        return {...prevState, legislatorDataLoaded: true}
-
-      case "COMMITTEE_DATA_LOADED":
-        return {...prevState, committeeDataLoaded: true}
-
-      case "UPDATE_CALL_OUTCOME":
-        console.log("update call outcome", action.payload)
-        newCalls = prevState.calls.map(call => {
-          if (call.id === action.payload.id) {
-            return {...call, outcome: action.payload.value, changed: true}
-          } else {
-            return call
-          }
-        })
-        return {...prevState, calls: newCalls }
-
-      case "UPDATE_CALL_COMMITMENT":
-        console.log("update call commitment", action.payload)
-        newCalls = prevState.calls.map(call => {
-          if (call.id === action.payload.id) {
-            return { ...call, commitment: action.payload.value, changed: true }
-          } else {
-            return call
-          }
-        })
-        return { ...prevState, calls: newCalls }
-
-      case "UPDATE_CALL_NOTES":
-        console.log("update call notes", action.payload)
-        newCalls = prevState.calls.map(call => {
-          if (call.id === action.payload.id) {
-            return {...call, notes: action.payload.value, changed: true}
-          } else {
-            return call
-          }
-        })
-        return {...prevState, calls: newCalls }
-
-      case "UPDATE_CALL_DURATION":
-        console.log("update call duration", action.payload)
-        newCalls = prevState.calls.map(call => {
-          if (call.id === action.payload.id) {
-            return { ...call, duration: action.payload.value, changed: true }
-          } else {
-            return call
-          }
-        })
-        return { ...prevState, calls: newCalls }
-
-      case "RESET_CALL_CHANGED":
-        console.log("hitting1")
-        newCalls = prevState.calls.map(call => {
-          if (call.id === action.payload.id) {
-            console.log("hitting2")
-            return { ...call, changed: false }
-          } else {
-            return call
-          }
-        })
-        return { ...prevState, calls: newCalls }
-
-
-      case "UPDATE_ACTION_COMPLETE":
-        call = prevState.calls.find(call => call.id === action.payload.id)  
-        newActions = prevState.actions.map(act => {
-          if (act.id === call.action_id && !!call.outcome && !!call.duration && !!call.notes && call.commitment) {
-            return { ...act, complete: true }
-          } else {
-            return act
-          }
-        })
-        return { ...prevState, actions: newActions }
-      
-      case "CHANGE_CAMPAIGN_INPUT":
-        newState = { ...prevState, campaignSearchInput: action.payload}
-        displayCampaigns = updateDisplayCampaigns(newState)
-        
-        secondNewState = {...newState, campaigns: displayCampaigns}
-        displayActions = updateDisplayActions(secondNewState)
-        
-        thirdNewState = {...secondNewState, actions: displayActions}
-        displayCallLists = updateDisplayCallLists(thirdNewState)
-        return {...thirdNewState, callLists: displayCallLists}
-      
-
-      case "CHANGE_ACTION_INPUT":
-        newState = { ...prevState, actionSearchInput: action.payload }
-        displayActions = updateDisplayActions(newState)
-        return { ...newState, actions: displayActions }
-        
-      case "CHANGE_CALL_LIST_INPUT":
-        newState = { ...prevState, callListSearchInput: action.payload}
-        displayCallLists = updateDisplayCallLists(newState)
-        return { ...newState, callLists: displayCallLists }
-
-      case "UPDATE_CAMPAIGN_NAME_INPUT":
-        console.log("UPDATE_CAMPAIGN_NAME_INPUT", action.payload)
-        return { ...prevState, campaignNameInput: action.payload}
-    
-      case "ADD_CAMPAIGN":
-        newCampaign = {
-          ...action.payload,
-          display: true
+    case "UPDATE_CALL_COMMITMENT":
+      console.log("update call commitment", action.payload);
+      newCalls = prevState.calls.map(call => {
+        if (call.id === action.payload.id) {
+          return { ...call, commitment: action.payload.value, changed: true };
+        } else {
+          return call;
         }
-        return { ...prevState, campaigns: [...prevState.campaigns, newCampaign]}
-      
-      case "EDIT_CAMPAIGN":
-        newCampaigns = prevState.campaigns.map(campaign => {
-          if (campaign.id === action.payload.id) {
-            return {...action.payload, display: true }
-          } else {
-            return campaign
-          }
-        })
-        return { ...prevState, campaigns: newCampaigns}
-        
-      case "DELETE_CAMPAIGN":
-        console.log("DELETE CAMPAIGN", action.payload)
-        newCampaigns = prevState.campaigns.filter(campaign => {
-          return campaign.id !== action.payload
-        })
-        return { ...prevState, campaigns: newCampaigns}
-        
-      
+      });
+      return { ...prevState, calls: newCalls };
+
+    case "UPDATE_CALL_NOTES":
+      console.log("update call notes", action.payload);
+      newCalls = prevState.calls.map(call => {
+        if (call.id === action.payload.id) {
+          return { ...call, notes: action.payload.value, changed: true };
+        } else {
+          return call;
+        }
+      });
+      return { ...prevState, calls: newCalls };
+
+    case "UPDATE_CALL_DURATION":
+      console.log("update call duration", action.payload);
+      newCalls = prevState.calls.map(call => {
+        if (call.id === action.payload.id) {
+          return { ...call, duration: action.payload.value, changed: true };
+        } else {
+          return call;
+        }
+      });
+      return { ...prevState, calls: newCalls };
+
+    case "RESET_CALL_CHANGED":
+      console.log("hitting1");
+      newCalls = prevState.calls.map(call => {
+        if (call.id === action.payload.id) {
+          console.log("hitting2");
+          return { ...call, changed: false };
+        } else {
+          return call;
+        }
+      });
+      return { ...prevState, calls: newCalls };
+
+    case "UPDATE_ACTION_COMPLETE":
+      call = prevState.calls.find(call => call.id === action.payload.id);
+      newActions = prevState.actions.map(act => {
+        if (
+          act.id === call.action_id &&
+          !!call.outcome &&
+          !!call.duration &&
+          !!call.notes &&
+          call.commitment
+        ) {
+          return { ...act, complete: true };
+        } else {
+          return act;
+        }
+      });
+      return { ...prevState, actions: newActions };
+
+    case "CHANGE_CAMPAIGN_INPUT":
+      newState = { ...prevState, campaignSearchInput: action.payload };
+      displayCampaigns = updateDisplayCampaigns(newState);
+
+      secondNewState = { ...newState, campaigns: displayCampaigns };
+      displayActions = updateDisplayActions(secondNewState);
+
+      thirdNewState = { ...secondNewState, actions: displayActions };
+      displayCallLists = updateDisplayCallLists(thirdNewState);
+      return { ...thirdNewState, callLists: displayCallLists };
+
+    case "CHANGE_ACTION_INPUT":
+      newState = { ...prevState, actionSearchInput: action.payload };
+      displayActions = updateDisplayActions(newState);
+      return { ...newState, actions: displayActions };
+
+    case "CHANGE_CALL_LIST_INPUT":
+      newState = { ...prevState, callListSearchInput: action.payload };
+      displayCallLists = updateDisplayCallLists(newState);
+      return { ...newState, callLists: displayCallLists };
+
+    case "UPDATE_CAMPAIGN_NAME_INPUT":
+      console.log("UPDATE_CAMPAIGN_NAME_INPUT", action.payload);
+      return { ...prevState, campaignNameInput: action.payload };
+
+    case "ADD_CAMPAIGN":
+      newCampaign = {
+        ...action.payload,
+        display: true
+      };
+      return { ...prevState, campaigns: [...prevState.campaigns, newCampaign] };
+
+    case "EDIT_CAMPAIGN":
+      newCampaigns = prevState.campaigns.map(campaign => {
+        if (campaign.id === action.payload.id) {
+          return { ...action.payload, display: true };
+        } else {
+          return campaign;
+        }
+      });
+      return { ...prevState, campaigns: newCampaigns };
+
+    case "DELETE_CAMPAIGN":
+      console.log("DELETE CAMPAIGN", action.payload);
+      newCampaigns = prevState.campaigns.filter(campaign => {
+        return campaign.id !== action.payload;
+      });
+      return { ...prevState, campaigns: newCampaigns };
+
+    case "UPDATE_CALL_LIST_NAME_INPUT":
+      console.log("UPDATE_CALL_LIST_NAME_INPUT", action.payload);
+      return { ...prevState, callListNameInput: action.payload };
+
+    case "EDIT_CALL_LIST":
+      newCallLists = prevState.callLists.map(callList => {
+        if (callList.id === action.payload.id) {
+          return { ...action.payload, display: true };
+        } else {
+          return callList;
+        }
+      });
+      return { ...prevState, callLists: newCallLists };
+
+    case "DELETE_CALL_LIST":
+      console.log("DELETE CALL LIST", action.payload);
+      newCallLists = prevState.callLists.filter(callList => {
+        return callList.id !== action.payload;
+      });
+      return { ...prevState, callLists: newCallLists };
+
     default:
       return prevState;
   }

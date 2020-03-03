@@ -1,5 +1,5 @@
 import React from "react";
-import { Dimmer, Divider, Grid, Header, Icon, Input, Loader, Tab, Table } from "semantic-ui-react";
+import { Button, Dimmer, Divider, Dropdown, Grid, Header, Icon, Input, Loader, Tab, Table } from "semantic-ui-react";
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import AddCampaignModal from "../Components/AddCampaignModal";
@@ -8,7 +8,17 @@ import EditCampaignModal from "../Components/EditCampaignModal";
 
 class CampaignPageContainer extends React.Component {
   
+  handSortSelection = () => {
+    console.log("handle sort selection!")
+  }
+
   render() {
+
+    const sortOptions = [
+      { key: 'edit', icon: 'edit', text: 'Edit Post', value: 'edit' },
+      { key: 'delete', icon: 'delete', text: 'Remove Post', value: 'delete' },
+      { key: 'hide', icon: 'hide', text: 'Hide Post', value: 'hide' },
+    ]
     
     const displayCampaigns = this.props.campaigns.filter(campaign => campaign.display === true)
     const renderCampaigns = displayCampaigns.map(campaign => 
@@ -28,6 +38,7 @@ class CampaignPageContainer extends React.Component {
     const renderActions = displayActions.map(action => {
       const actionCampaign = this.props.campaigns.find(campaign => campaign.id === action.campaign_id)
       const actionCall = this.props.calls.find(call => call.action_id === action.id)
+      const actionCallCallList = this.props.callLists.find(callList => callList.id === actionCall.call_list_id)
       const legislator = this.props.legislators.find(legislator => legislator.id === action.legislator_id)
       let legislatorSlug
       if (!!legislator) {
@@ -36,19 +47,19 @@ class CampaignPageContainer extends React.Component {
           <Table.Cell>
             {action.complete ? <Icon name='check' color='green' /> : <Icon name='wait' color='red' />}
           </Table.Cell>
+          <Table.Cell>
+              {action.kind === "Call" && <Icon name='phone' />}
+          </Table.Cell>
           <Table.Cell>   
             {actionCall.duration ? `${actionCall.duration}m` : '--'}
-          </Table.Cell>
-          <Table.Cell>
-            <Link to={`/campaigns/calllists/${actionCall.call_list_id}`} >
-              {action.kind}
-            </Link>
           </Table.Cell>
           <Table.Cell>
             {legislatorSlug}
           </Table.Cell>
           <Table.Cell>
-            {actionCampaign.name}
+            <Link to={`/campaigns/calllists/${actionCall.call_list_id}`} >
+            {actionCallCallList.name}
+            </Link> | {actionCampaign.name}
           </Table.Cell>
         </Table.Row>
       } else {
@@ -75,14 +86,15 @@ class CampaignPageContainer extends React.Component {
         <Table.Row key={list.id}>
           <Table.Cell>
             <Link to={`/campaigns/calllists/${list.id}`}>{list.name}</Link>
-            <br />
-            {callListCampaign.name}
           </Table.Cell>
           <Table.Cell>{list.created_at.slice(0, 10)}</Table.Cell>
           <Table.Cell>
             <Icon name="check" color='grey' />
             {completeCalls.length} <Icon name="wait" color='grey' />
             {callListCalls.length - completeCalls.length}
+          </Table.Cell>
+          <Table.Cell>
+            {callListCampaign.name}
           </Table.Cell>
         </Table.Row>
       );
@@ -117,7 +129,14 @@ class CampaignPageContainer extends React.Component {
             value={this.props.actionSearchInput}
             onChange={(e) => { this.props.changeActionInput(e.target.value) }}
           />
-          {/* <Button icon><Icon name='add' /></Button><br /> */}
+          <Button.Group >
+            <Button disabled>Sort</Button>
+            <Dropdown
+              className='button icon'
+              options={sortOptions}
+              trigger={<React.Fragment />}
+            />
+          </Button.Group>
           Showing {displayActions.length} of {this.props.actions.length}
           <Divider hidden />
           <Table basic='very'>  

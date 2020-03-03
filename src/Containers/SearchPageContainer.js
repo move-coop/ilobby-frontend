@@ -23,6 +23,10 @@ class SearchPageContainer extends React.Component {
                 <SPCMapsContainer />
             </Grid.Column>
           </Grid.Row>
+          {/* <Grid.Row>
+          <a className="twitter-timeline" data-theme="dark" href={`https://twitter.com/Biaggi4NY?ref_src=twsrc%5Etfw`}>Loading</a>
+          
+          </Grid.Row> */}
         </Grid>
     );
   }

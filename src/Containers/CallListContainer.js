@@ -1,10 +1,19 @@
 import React from "react";
 import { connect } from 'react-redux'
-import { Checkbox, Table, Dropdown, Input, Header, List, Button, Icon } from "semantic-ui-react";
+import { Checkbox, Dimmer, Table, Dropdown, Input, Header, Loader, List, Button, Icon, Grid } from "semantic-ui-react";
+import EditCampaignModal from "../Components/EditCampaignModal"
+import EditCallListModal from "../Components/EditCallListModal";
 
 
 class CallListContainer extends React.Component {
+
+  state = {
+    currentCallList: {},
+    currentCampaign: {},
+    currentCalls: [],
   
+  }
+
   currentCallList = () => this.props.callLists.find(list => list.id === parseInt(this.props.match.params.id))
   currentCampaign = () =>this.props.campaigns.find(campaign => campaign.id === this.currentCallList().campaign_id)  
 
@@ -36,9 +45,10 @@ class CallListContainer extends React.Component {
   renderLegislatorRows = () => {
    
     const currentCalls = this.props.calls.filter(call => call.call_list_id === this.currentCallList().id)
+    const currentSortedCalls = currentCalls.sort((a, b) => callLegislator(a).name.localeCompare(callLegislator(b).name))
+    
     const callAction = (call) => this.props.actions.find(action => action.id === call.action_id)
     const callLegislator = (call) => this.props.legislators.find(legislator => legislator.id === callAction(call).legislator_id)
-    const currentSortedCalls = currentCalls.sort((a, b) => callLegislator(a).name.localeCompare(callLegislator(b).name))
     const phoneNumbers = (legislator) => {
       
       let voices = legislator.contact_infos.filter(contactInfo => contactInfo.kind === 'voice')
@@ -52,10 +62,12 @@ class CallListContainer extends React.Component {
       const legislator = callLegislator(call)
       return (
         <Table.Row key={call.id}>
-          <Table.Cell ><Checkbox
-            checked={callAction(call).complete}
-            label={`${legislator.chamber === "Senate" ? "Sen." : "Assemb."} ${legislator.name} (${legislator.party === "Democratic" ? "D-" : "R-"}${legislator.district})`}
-          /></Table.Cell>
+          <Table.Cell >
+            {callAction(call).complete ? <Icon name='check' color='green' /> : <Icon name='wait' color='red' />}
+          </Table.Cell>
+          <Table.Cell >
+            {legislator.chamber === "Senate" ? "Sen." : "Assemb."} {legislator.name} ({legislator.party === "Democratic" ? "D-" : "R-"}{legislator.district}}
+          </Table.Cell>
           <Table.Cell>{phoneNumbers(legislator)}</Table.Cell>
           <Table.Cell><Dropdown
             callid={call.id}
@@ -70,6 +82,8 @@ class CallListContainer extends React.Component {
             callid={call.id}
             placeholder="Commitment..."
             selection
+            compact
+            fluid
             clearable
             options={this.props.commitmentOptions}
             value={call.commitment}
@@ -77,6 +91,7 @@ class CallListContainer extends React.Component {
             /></Table.Cell>
           <Table.Cell>
             <Input
+              fluid
               callid={call.id}
               onChange={(e, data) => this.props.updateCallDuration(e, data)}
               value={call.duration || ""}
@@ -84,6 +99,7 @@ class CallListContainer extends React.Component {
           </Table.Cell>
           <Table.Cell>
             <Input 
+              fluid
               callid={call.id}
               onChange={(e, data) => this.props.updateCallNotes(e, data) } 
               value={call.notes || ""}
@@ -108,29 +124,71 @@ class CallListContainer extends React.Component {
 
   render() {
 
+    const callListCalls = this.props.calls.filter(call => call.call_list_id === this.currentCallList().id)
+    const completeCalls = callListCalls.filter(call => {
+      const callAction = this.props.actions.find(action => call.action_id === action.id)
+      return callAction.complete
+    })
+    const totalMinutes = callListCalls.reduce((total, call) => {
+      return (total + call.duration)
+    }, 0)
+
     return (
       <div>
-        <Header color="purple" > {this.props.userDataLoaded && `Campaign: ${this.currentCampaign().name}`} </Header>
-        <Header >{this.props.userDataLoaded && `Call List: ${this.currentCallList().name}`}</Header>
-        <Table selectable compact basic striped color={'purple'} >
+        {/* HEADER SECTION */}
+        <Grid columns='equal'>
+          <Grid.Column>
+            <Header as="h2">
+              <Icon name="ordered list" />
+              <Header.Content onClick={() => console.log("CLICK")}>
+                {this.props.userDataLoaded &&
+                  `${this.currentCallList().name} Call List`}{" "}
+                <EditCallListModal {...this.props} />
+                <Header.Subheader>
+                  {this.props.userDataLoaded &&
+                    `${this.currentCampaign().name} Campaign`}
+                </Header.Subheader>
+              </Header.Content>
+            </Header>
+          </Grid.Column>
+
+          <Grid.Column>
+            <Grid.Row>
+              {callListCalls.length} calls total. 
+            </Grid.Row>
+            <Grid.Row>
+              {completeCalls.length} complete. {callListCalls.length - completeCalls.length} remaining.
+            </Grid.Row>
+            <Grid.Row>
+              Total call time: {totalMinutes} minutes.
+            </Grid.Row>
+          </Grid.Column>
+        </Grid>
+
+
+        {/* START OF TABLE TO RENDER EACH CALL */}
+        <Table selectable compact basic striped color={"purple"}>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>Target</Table.HeaderCell>
-              <Table.HeaderCell>Phone</Table.HeaderCell>
-              <Table.HeaderCell>Outcome</Table.HeaderCell>
-              <Table.HeaderCell>Commitment</Table.HeaderCell>
-              <Table.HeaderCell>Minutes</Table.HeaderCell>
-              <Table.HeaderCell>Notes</Table.HeaderCell>
-              <Table.HeaderCell textAlign="center"><Icon name="save" /></Table.HeaderCell>
+              <Table.HeaderCell collapsing ></Table.HeaderCell>
+              <Table.HeaderCell width='3' >Target</Table.HeaderCell>
+              <Table.HeaderCell width='2' >{"Phone Number(s)   "}</Table.HeaderCell>
+              <Table.HeaderCell collapsing >Outcome</Table.HeaderCell>
+              <Table.HeaderCell collapsing >Commitment</Table.HeaderCell>
+              <Table.HeaderCell collapsing >Duration</Table.HeaderCell>
+              <Table.HeaderCell >Notes</Table.HeaderCell>
+              <Table.HeaderCell collapsing></Table.HeaderCell>
             </Table.Row>
           </Table.Header>
 
           <Table.Body>
-            {this.props.userDataLoaded && this.props.legislatorDataLoaded && this.renderLegislatorRows()}
+            {(this.props.userDataLoaded &&
+              this.props.legislatorDataLoaded) ?
+              this.renderLegislatorRows() : <Dimmer active inverted ><Loader inverted content="Loading" /></Dimmer>}
           </Table.Body>
         </Table>
       </div>
-    )
+    );
   } 
 }
 
