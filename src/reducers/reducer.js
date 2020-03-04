@@ -421,78 +421,38 @@ export const reducer = (prevState = initialState, action) => {
     case "COMMITTEE_DATA_LOADED":
       return { ...prevState, committeeDataLoaded: true };
 
-    case "UPDATE_CALL_OUTCOME":
-      console.log("update call outcome", action.payload);
+    case "UPDATE_CALL_DETAILS":
+      console.log("UPDATE_CALL_DETAILS")
+      
       newCalls = prevState.calls.map(call => {
         if (call.id === action.payload.id) {
-          return { ...call, outcome: action.payload.value, changed: true };
+          return action.payload
         } else {
-          return call;
+          return call
         }
-      });
-      return { ...prevState, calls: newCalls };
+      })
 
-    case "UPDATE_CALL_COMMITMENT":
-      console.log("update call commitment", action.payload);
-      newCalls = prevState.calls.map(call => {
-        if (call.id === action.payload.id) {
-          return { ...call, commitment: action.payload.value, changed: true };
-        } else {
-          return call;
-        }
-      });
-      return { ...prevState, calls: newCalls };
-
-    case "UPDATE_CALL_NOTES":
-      console.log("update call notes", action.payload);
-      newCalls = prevState.calls.map(call => {
-        if (call.id === action.payload.id) {
-          return { ...call, notes: action.payload.value, changed: true };
-        } else {
-          return call;
-        }
-      });
-      return { ...prevState, calls: newCalls };
-
-    case "UPDATE_CALL_DURATION":
-      console.log("update call duration", action.payload);
-      newCalls = prevState.calls.map(call => {
-        if (call.id === action.payload.id) {
-          return { ...call, duration: action.payload.value, changed: true };
-        } else {
-          return call;
-        }
-      });
-      return { ...prevState, calls: newCalls };
-
-    case "RESET_CALL_CHANGED":
-      console.log("hitting1");
-      newCalls = prevState.calls.map(call => {
-        if (call.id === action.payload.id) {
-          console.log("hitting2");
-          return { ...call, changed: false };
-        } else {
-          return call;
-        }
-      });
-      return { ...prevState, calls: newCalls };
-
-    case "UPDATE_ACTION_COMPLETE":
-      call = prevState.calls.find(call => call.id === action.payload.id);
+      call = action.payload;
       newActions = prevState.actions.map(act => {
-        if (
-          act.id === call.action_id &&
-          !!call.outcome &&
-          !!call.duration &&
-          !!call.notes &&
-          call.commitment
-        ) {
-          return { ...act, complete: true };
+        if (act.id === call.action_id) {
+          if (
+            !call.outcome || 
+            !call.duration || 
+            !call.notes || 
+            !call.commitment || 
+            call.outcome == "" || 
+            call.notes == "" || 
+            call.commitment == ""
+          ) {
+            return { ...act, complete: false };
+          } else {
+            return { ...act, complete: true };
+          }
         } else {
-          return act;
+          return act
         }
       });
-      return { ...prevState, actions: newActions };
+      return { ...prevState, calls: newCalls, actions: newActions };
 
     case "CHANGE_CAMPAIGN_INPUT":
       newState = { ...prevState, campaignSearchInput: action.payload };

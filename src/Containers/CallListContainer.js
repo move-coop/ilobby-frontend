@@ -8,16 +8,50 @@ import EditCallListModal from "../Components/EditCallListModal";
 class CallListContainer extends React.Component {
 
   state = {
-    currentCallList: {},
-    currentCampaign: {},
-    currentCalls: [],
-  
+    currentSortedCalls: [],
+    actions: []
   }
 
+  componentDidMount() {
+    if (!!this.props.userDataLoaded && !!this.props.legislatorDataLoaded ) {
+      this.setState({
+        currentSortedCalls: this.getCurrentSortedCallsFunc(),
+        actions: this.getCurrentSortedCallsFunc().map(call => {
+          return this.callActionFunc(call)
+        })
+      })
+
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    console.log("CallListContainer did Update")
+    if (!!this.props.userDataLoaded && !!this.props.legislatorDataLoaded && prevProps !== this.props) {
+      this.setState({
+        currentSortedCalls: this.getCurrentSortedCallsFunc(),
+        actions: this.getCurrentSortedCallsFunc().map(call => {
+          return this.callActionFunc(call)
+        })
+      })
+
+    }
+  }
+
+  // functions needed to set state
+  callActionFunc = (call) => this.props.actions.find(action => action.id === call.action_id)
+  callLegislatorFunc = (call) => this.props.legislators.find(legislator => legislator.id === this.callActionFunc(call).legislator_id)
   currentCallList = () => this.props.callLists.find(list => list.id === parseInt(this.props.match.params.id))
-  currentCampaign = () =>this.props.campaigns.find(campaign => campaign.id === this.currentCallList().campaign_id)  
+  getCurrentSortedCallsFunc = () => {
+    const currentCalls = this.props.calls.filter(call => call.call_list_id === this.currentCallList().id)
+    const currentSortedCalls = currentCalls.sort((a, b) => this.callLegislatorFunc(a).name.localeCompare(this.callLegislatorFunc(b).name))
+    return currentSortedCalls
+  }
 
   patchCallData = (call) => {
+    // update store with call data data (optimistic)
+
+    this.props.updateCallDetails(call)
+
     const url = `http://localhost:3000/calls/${call.id}`
     const configObj = {
       method: "PATCH",
@@ -35,20 +69,74 @@ class CallListContainer extends React.Component {
     .then(resp => resp.json())
     .then(json => {
       console.log(json)
-    })
-
-    this.props.updateActionComplete(call.id)
-    this.props.resetCallChanged(call.id)
-
+    }, )
   }
 
+  // local state change handlers
+  updateCallOutcome = (e, data) => {
+    const newSortedCalls = this.state.currentSortedCalls.map(call => {
+      if (call.id === data.callid) {
+        return {...call, outcome: data.value}
+      } else {
+        return call
+      }
+    })
+
+    this.setState({
+      currentSortedCalls: newSortedCalls
+    })
+  }
+
+  updateCallCommitment = (e, data) => {
+    const newSortedCalls = this.state.currentSortedCalls.map(call => {
+      if (call.id === data.callid) {
+        return { ...call, commitment: data.value }
+      } else {
+        return call
+      }
+    })
+
+    this.setState({
+      currentSortedCalls: newSortedCalls
+    })
+  }
+
+
+  updateCallDuration = (e, data) => {
+    const newSortedCalls = this.state.currentSortedCalls.map(call => {
+      if (call.id === data.callid) {
+        return { ...call, duration: parseInt(data.value) }
+      } else {
+        return call
+      }
+    })
+
+    this.setState({
+      currentSortedCalls: newSortedCalls
+    })
+  }
+
+
+  updateCallNotes = (e, data) => {
+    const newSortedCalls = this.state.currentSortedCalls.map(call => {
+      if (call.id === data.callid) {
+        return { ...call, notes: data.value }
+      } else {
+        return call
+      }
+    })
+
+    this.setState({
+      currentSortedCalls: newSortedCalls
+    })
+  }
+
+
+
+
   renderLegislatorRows = () => {
-   
-    const currentCalls = this.props.calls.filter(call => call.call_list_id === this.currentCallList().id)
-    const currentSortedCalls = currentCalls.sort((a, b) => callLegislator(a).name.localeCompare(callLegislator(b).name))
-    
-    const callAction = (call) => this.props.actions.find(action => action.id === call.action_id)
-    const callLegislator = (call) => this.props.legislators.find(legislator => legislator.id === callAction(call).legislator_id)
+       
+    const callActionViaState = (call) => this.state.actions.find(action => action.id === call.action_id)
     const phoneNumbers = (legislator) => {
       
       let voices = legislator.contact_infos.filter(contactInfo => contactInfo.kind === 'voice')
@@ -58,12 +146,17 @@ class CallListContainer extends React.Component {
     }
     
     //map through legislators and craete a table row for each
-    const legislatorRows = currentSortedCalls.map(call => { 
-      const legislator = callLegislator(call)
+    const legislatorRows = this.state.currentSortedCalls.map(call => { 
+      const callViaProps = this.props.calls.find(callViaProps => call.id === callViaProps.id)
+      const noChanges = (call.outcome === callViaProps.outcome &&
+        call.commitment === callViaProps.commitment &&
+        (call.duration === callViaProps.duration || (!call.duration && !callViaProps.duration)) &&
+        call.notes === callViaProps.notes)
+      const legislator = this.callLegislatorFunc(call)
       return (
         <Table.Row key={call.id}>
           <Table.Cell >
-            {callAction(call).complete ? <Icon name='check' color='green' /> : <Icon name='wait' color='red' />}
+            {callActionViaState(call).complete ? <Icon name='check' color='green' /> : <Icon name='wait' color='red' />}
           </Table.Cell>
           <Table.Cell >
             {legislator.chamber === "Senate" ? "Sen." : "Assemb."} {legislator.name} ({legislator.party === "Democratic" ? "D-" : "R-"}{legislator.district}}
@@ -76,7 +169,7 @@ class CallListContainer extends React.Component {
             clearable
             options={this.props.outcomeOptions}
             value={call.outcome}
-            onChange={(e, data) => this.props.updateCallOutcome(e, data)}
+            onChange={(e, data) => this.updateCallOutcome(e, data)}
           /></Table.Cell>
           <Table.Cell><Dropdown
             callid={call.id}
@@ -87,13 +180,14 @@ class CallListContainer extends React.Component {
             clearable
             options={this.props.commitmentOptions}
             value={call.commitment}
-            onChange={(e, data) => this.props.updateCallCommitment(e, data)}
+            onChange={(e, data) => this.updateCallCommitment(e, data)}
             /></Table.Cell>
           <Table.Cell>
             <Input
               fluid
               callid={call.id}
-              onChange={(e, data) => this.props.updateCallDuration(e, data)}
+              type="number"
+              onChange={(e, data) => this.updateCallDuration(e, data)}
               value={call.duration || ""}
             />
           </Table.Cell>
@@ -101,14 +195,14 @@ class CallListContainer extends React.Component {
             <Input 
               fluid
               callid={call.id}
-              onChange={(e, data) => this.props.updateCallNotes(e, data) } 
+              onChange={(e, data) => this.updateCallNotes(e, data) } 
               value={call.notes || ""}
             />
           </Table.Cell>
           <Table.Cell>
             <Button 
-              disabled={!call.changed}
-              color={call.changed && "green"}
+              disabled={noChanges}
+              color={!noChanges && "green"}
               onClick={() => this.patchCallData(call)} 
               compact 
               floated='right' 
@@ -121,6 +215,9 @@ class CallListContainer extends React.Component {
 
       return legislatorRows
   }
+
+  // function needed for render
+  currentCampaign = () => this.props.campaigns.find(campaign => campaign.id === this.currentCallList().campaign_id)  
 
   render() {
 
@@ -182,7 +279,7 @@ class CallListContainer extends React.Component {
           </Table.Header>
 
           <Table.Body>
-            {(this.props.userDataLoaded &&
+            {(this.state.currentSortedCalls.length > 0 &&
               this.props.legislatorDataLoaded) ?
               this.renderLegislatorRows() : <Dimmer active inverted ><Loader inverted content="Loading" /></Dimmer>}
           </Table.Body>
@@ -210,23 +307,12 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    updateCallOutcome: (e, data) => {
-      dispatch({ type: "UPDATE_CALL_OUTCOME", payload: { id: data.callid, value: data.value } })
-    },
-    updateCallCommitment: (e, data) => {
-      dispatch({ type: "UPDATE_CALL_COMMITMENT", payload: { id: data.callid, value: data.value } })
-    },
-    updateCallDuration: (e, data) => {
-      dispatch({ type: "UPDATE_CALL_DURATION", payload: { id: data.callid, value: data.value } })
-    },
-    updateCallNotes: (e, data) => {
-      dispatch({ type: "UPDATE_CALL_NOTES", payload: { id: data.callid, value: data.value}})
-    },
-    resetCallChanged: (id) => {
-      dispatch({ type: "RESET_CALL_CHANGED", payload: { id } })
-    },
+   
     updateActionComplete: (id) => {
       dispatch({ type: "UPDATE_ACTION_COMPLETE", payload: { id } })
+    },
+    updateCallDetails: (json) => {
+      dispatch({ type: "UPDATE_CALL_DETAILS", payload: { ...json } })
     }
   }
 }
