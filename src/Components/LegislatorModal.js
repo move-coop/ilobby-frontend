@@ -1,5 +1,5 @@
 import React from 'react'
-import { Icon, Image, List, Modal, Grid, Button, Header } from 'semantic-ui-react'
+import { Divider, Icon, Image, List, Modal, Grid, Button, Header } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import TwitterEmbed from './TwitterEmbed'
 
@@ -81,28 +81,25 @@ const LegislatorModal = (props) => {
       <Modal.Content image scrolling>
         <Image circular wrapped size="medium" src={props.image} />
         <Modal.Description>
-          <Grid>
+          <Grid >
             <Grid.Row id="contactsAndCommittees">
-              <Header inverted>Contact Information</Header>
+              <Header inverted color='green' >Contact Information</Header>
             </Grid.Row>
             <Grid.Row columns="equal">{renderContactInfos}</Grid.Row>
             <Grid.Row>
-              <Header inverted>Committees</Header>
+              <Header inverted color='green'>Committees</Header>
             </Grid.Row>
             <Grid.Row>
-              <List>{renderCommittees}</List>
+              <List bulleted>{renderCommittees}</List>
             </Grid.Row>
             <Grid.Row columns="1">
-              <Grid.Column floated="right">
-                <Header textAlign="right" icon>
-                  <Icon inverted name="twitter" />
+              <Header icon color='green' >
+                Twitter
+                  {/* <Icon inverted name="twitter" /> */}
                 </Header>
-              </Grid.Column>
             </Grid.Row>
             <Grid.Row id="twitter" columns="1">
-              <Grid.Column floated="right">
                 <TwitterEmbed {...props} />
-              </Grid.Column>
             </Grid.Row>
           </Grid>
         </Modal.Description>
