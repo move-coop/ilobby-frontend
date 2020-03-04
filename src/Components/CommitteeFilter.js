@@ -9,6 +9,8 @@ const CommitteeFilter = props => {
   // const [getSearch, setSearch] = useState("");
   // const searchChangeHandler = newSearch => setSearch(newSearch);
 
+  const filteredCommitteeOptions = props.committeeOptions.filter(option => option.chamber.includes(props.chamberFilter))
+
   return (
     <Dropdown
       placeholder="Committee"
@@ -16,7 +18,8 @@ const CommitteeFilter = props => {
       multiple
       search
       selection
-      options={props.committeeOptions}
+      clearable
+      options={filteredCommitteeOptions}
       value={props.committeeFilter}
       onChange={(e, {value}) => props.editCommitteeFilter({ value })}
     />
@@ -25,6 +28,7 @@ const CommitteeFilter = props => {
 
 const mapStateToProps = state => {
   return {
+    chamberFilter: state.chamberFilter,
     committeeFilter: state.committeeFilter,
     committeeOptions: state.committeeOptions
   };

@@ -5,6 +5,14 @@ import { Header, Checkbox, Button } from 'semantic-ui-react'
 import TakeActionModal from '../Components/TakeActionModal'
 
 class SPCSearchResultsHeader extends React.Component {
+  
+  resetFilters = () => {
+    this.props.editCommitteeFilter({value: []})
+    this.props.editPartyFilter({value: ""})
+    this.props.editChamberFilter({value: "Senate"})
+    this.props.editSearchFilter("")
+  }
+
   render() {
 
     const displayCount = () => {
@@ -26,7 +34,7 @@ class SPCSearchResultsHeader extends React.Component {
     return(
       <div>
         <Header>
-          {displayCount()} Results. {displaySelectedCount()} Selected.
+          {displayCount()} Results. {displaySelectedCount()} Selected. <Button size='mini' outline basic onClick={this.resetFilters} >Reset</Button>
         </Header>
         <Button onClick={this.props.toggleAllSelection} >Select All/None</Button>
         <Route component={TakeActionModal}>
@@ -57,6 +65,20 @@ const mapDispatchToProps = dispatch => {
     },
     toggleCardView: () => {
       dispatch({ type: "TOGGLE_CARDVIEW" })
+    },
+    editCommitteeFilter: (valueObj) => {
+      console.log("editCommitteeFilter", valueObj.value)
+      dispatch({ type: "COMMITTEE_FILTER", payload: valueObj.value });
+    },
+    editPartyFilter: (valueObj) => {
+      console.log("editPartyFilter", valueObj.value)
+      dispatch({ type: "PARTY_FILTER", payload: valueObj.value });
+    },
+    editChamberFilter: (valueObj) => {
+      dispatch({ type: "CHAMBER_FILTER", payload: valueObj.value });
+    },
+    editSearchFilter: (value) => {
+      dispatch({ type: "SEARCH_FILTER", payload: value });
     }
   }
 }

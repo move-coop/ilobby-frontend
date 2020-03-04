@@ -1,5 +1,5 @@
 import React from "react";
-import { Input } from 'semantic-ui-react'
+import { Icon, Input, Button } from 'semantic-ui-react'
 import { connect } from "react-redux";
 
 
@@ -11,13 +11,16 @@ const SearchInput = props => {
   // const searchChangeHandler = newSearch => setSearch(newSearch);
 
   return (
-    <Input 
-      fluid
-      onChange={e => props.editSearchFilter(e.target.value)}
-      value={props.searchFilter}
-      type="text"
-      placeholder="Name or district number..."
-    />
+      <Input 
+        fluid
+        action
+        onChange={e => props.editSearchFilter(e.target.value)}
+        value={props.searchFilter}
+        type="text"
+        placeholder="Name or district number..."
+      />
+      //   <Button basic icon ><Icon name='delete' /></Button>
+      // </Input>
   );
 };
 

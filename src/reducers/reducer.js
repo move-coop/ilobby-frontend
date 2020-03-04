@@ -286,7 +286,8 @@ export const reducer = (prevState = initialState, action) => {
         return {
           key: committee.id,
           text: committee.filter_name,
-          value: committee.id
+          value: committee.id,
+          chamber: committee.chamber
         };
       });
       return { ...prevState, committeeOptions };
