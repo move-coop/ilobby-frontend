@@ -10,11 +10,17 @@ const SearchInput = props => {
   // const [getSearch, setSearch] = useState("");
   // const searchChangeHandler = newSearch => setSearch(newSearch);
 
+  const changeHandler = (value) => {
+    props.editSearchFilter(value)
+    props.setSavedPoints(null)
+    props.setClickZoomed(null)
+  }
+
   return (
       <Input 
         fluid
         action
-        onChange={e => props.editSearchFilter(e.target.value)}
+        onChange={e => changeHandler(e.target.value)}
         value={props.searchFilter}
         type="text"
         placeholder="Name or district number..."
@@ -33,6 +39,12 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    setClickZoomed: (value) => {
+      dispatch({ type: "SET_CLICK_ZOOMED", payload: value })
+    },
+    setSavedPoints: (value) => {
+      dispatch({ type: "SET_SAVED_POINTS", payload: value })
+    },
     editSearchFilter: (value) => {
       dispatch({ type: "SEARCH_FILTER", payload: value });
     }

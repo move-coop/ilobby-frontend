@@ -1,94 +1,76 @@
 import React from "react";
 import { Map, GoogleApiWrapper, Polygon } from "google-maps-react";
 import { connect } from 'react-redux'
-
-
-const colors = {
-  democratic: "#0000FF",
-  republican: "#FF0000"
-}
-
-const selected = {
-
-}
+import { Header, Segment } from 'semantic-ui-react'
 
 const centerOfNewYorkState = { lat: 42.6339359, lng: -75.9691296}
 
-
 class SPCMapsContainer extends React.Component {
 
-  state = {
-    clickZoomed: false,
-    // savedBounds: null,
-    savedPoints: null
-
+  polygonMouseOverHandler = (mapProps, polygon, e) => {
+    if (!this.props.clickZoomed || this.props.clickZoomed.id !== polygon.id) {
+      polygon.setOptions({fillOpacity: 0.4})
+      this.props.setHoverLegislator({ ...mapProps})
+    } 
   }
 
-  polygonMouseOverHandler = (props, polygon, e) => {
-    polygon.setOptions({fillOpacity: 0.4})
-
+  polygonMouseOutHandler = (mapProps, polygon, e) => {
+    if (!this.props.clickZoomed || this.props.clickZoomed.id !== polygon.id) {
+      polygon.setOptions({ fillOpacity: 0.25 })
+      this.props.setHoverLegislator(null)
+    }
   }
 
-  polygonMouseOutHandler = (props, polygon, e) => {
-    polygon.setOptions({ fillOpacity: 0.25 })
-  }
-
-  polygonClickHandler = (props, polygon, e) => {
+  polygonClickHandler = (mapProps, polygon, e) => {
     
     console.log('polygon click')
     
-    // if points are currently saved and you click on a new polygon, it removes the saved points
-    if (this.state.savedPoints) {
-      this.setState({
-        savedPoints: null
-      })
+    // if this is a second click on the same polygon, zoom back out
+    if (this.props.clickZoomed && this.props.clickZoomed.id === polygon.id) {
+      // return opacity to normal
+      this.props.clickZoomed.setOptions({ fillOpacity: 0.25 })
+
+      // remove saved points and clickZoomed
+      this.props.setSavedPoints(null)
+      this.props.setClickZoomed(null)
+      
+
+      // if it is a first click...
+    } else {
+
+      // if another polygon been zoomed, put its opacity back
+      if (!!this.props.clickZoomed) {
+        this.props.clickZoomed.setOptions({ fillOpacity: 0.25 })
+      }
+
+      // set opacity darker of the newly clicked polygon
+      polygon.setOptions({ fillOpacity: 0.4 })
+
+      // find the extent and set Points and ClickZoomed
+      let extent = JSON.parse(mapProps.geo).extent
+      this.props.setSavedPoints([
+        { lat: extent[1], lng: extent[0] },
+        { lat: extent[3], lng: extent[2] }
+      ])
+      this.props.setClickZoomed(polygon)
     }
-
-    // if you are already zoomed in, remove clickZoomed, get current bounds and save them
-    // then clear the input searchfilter
-    // if (!!this.state.clickZoomed) {
-    //   let savedBounds = polygon.map.getBounds()
-
-    //   this.setState({
-    //     clickZoomed: false,
-    //     savedPoints: [
-    //       { lat: savedBounds.getNorthEast().lat(), lng: savedBounds.getNorthEast().lng()},
-    //       { lat: savedBounds.getSouthWest().lat(), lng: savedBounds.getSouthWest().lng()}
-    //     ]
-
-    //   }, this.props.editSearchFilter(""))
-      
-    // } else {
-      // this.props.editSearchFilter(props.name)
-      // WANT TO ADJUST THIS FEATURE: zoom to the object without using the filter
-      let extent = JSON.parse(props.geo).extent
-      
-      this.setState({
-        // clickZoomed: true,
-        savedPoints: [
-          {lat: extent[1], lng: extent[0]},
-          {lat: extent[3], lng: extent[2]}
-        ]
-      })
-    // }
   }
 
-  mapBoundsChangeHandler = () => {
-    console.log("bounds changed!")
-    if (this.state.savedPoints) {
-      this.setState({
-        savedPoints: null
-      })
-    }
+  mapBoundsChangeHandler = (map) => {
+    let bounds = map.getBounds()
+    console.log(bounds)
   }
 
   mapClickHandler = () => {
     console.log("map onclick")
-    if (this.state.savedPoints) {
-      this.setState({
-        savedPoints: null
-      })
+
+    // if a polygon been zoomed/selected, put its opacity back to normal, then remove saved points and clickZoomed
+    if (!!this.props.clickZoomed) {
+      this.props.clickZoomed.setOptions({ fillOpacity: 0.25 })
+      this.props.setSavedPoints(null)
+      this.props.setClickZoomed(null)
     }
+
   }
 
   centerReducer = (acc, legislator) => {
@@ -147,7 +129,7 @@ class SPCMapsContainer extends React.Component {
           strokeColor="#000000"
           strokeOpacity={0.7}
           strokeWeight={!!legislator.selected ? 5 : 1}
-          fillColor={legislator.party === "Democratic" ? colors.democratic : colors.republican}
+          fillColor={legislator.party === "Democratic" ? this.props.colors.democratic : this.props.colors.republican}
           fillOpacity={0.25}
           onMouseover={this.polygonMouseOverHandler}
           onMouseout={this.polygonMouseOutHandler}
@@ -156,8 +138,8 @@ class SPCMapsContainer extends React.Component {
       })
 
       console.log("pick your bounds")
-      if (this.state.savedPoints) {
-        points = this.state.savedPoints
+      if (this.props.savedPoints) {
+        points = this.props.savedPoints
 
       } else {
         preBounds = displayLegislators.reduce(this.centerReducer, {
@@ -199,6 +181,7 @@ class SPCMapsContainer extends React.Component {
     
     return (
       <div id="map">
+     
         <Map
           google={this.props.google}
           zoom={6.5}
@@ -207,8 +190,9 @@ class SPCMapsContainer extends React.Component {
           mapType={"terrain"}
           initialCenter={centerOfNewYorkState}
           bounds={bounds}
-          // onBounds_changed={this.mapBoundsChangeHandler}
-          onClick={this.mapClickHandler}
+          gestureHandling='greedy'
+          onBounds_changed={this.mapBoundsChangeHandler}
+          onClick={(map) => this.mapClickHandler(map)}
 
         >
           {renderPolygons}
@@ -221,7 +205,11 @@ class SPCMapsContainer extends React.Component {
 const mapStateToProps = (state) => {
   return {
     legislators: state.legislators,
-    searchFilter: state.searchFilter
+    searchFilter: state.searchFilter,
+    clickZoomed: state.clickZoomed,
+    savedPoints: state.savedPoints,
+    hoverLegislator: state.hoverLegislator,
+    colors: state.colors
   }
 }
 
@@ -229,8 +217,16 @@ const mapDispatchToProps = dispatch => {
   return {
     editSearchFilter: (value) => {
       dispatch({ type: "SEARCH_FILTER", payload: value });
+    },
+    setClickZoomed: (value) => {
+      dispatch({ type: "SET_CLICK_ZOOMED", payload: value})
+    },
+    setSavedPoints: (value) => {
+      dispatch({ type: "SET_SAVED_POINTS", payload: value})
+    },
+    setHoverLegislator: (value) => {
+      dispatch({ type: "SET_HOVER_LEGISLATOR", payload: value})
     }
-    // changeExampleMessage: () => { dispatch(changeExampleMessage()) }
   };
 };
 

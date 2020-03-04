@@ -43,7 +43,6 @@ const EditCampaignModal = (props) => {
   }
 
   const handleDelete = () => {
-
     const url = `http://localhost:3000/campaigns/${props.id}`
     const configObj = {
       method: "DELETE",
@@ -85,13 +84,15 @@ const EditCampaignModal = (props) => {
       </Modal.Content>
       <Modal.Actions>
        
-        <Button
+       {/* DISABLING CAMPAIGN DELETE FUNCTIONALITY FOR NOW. 
+       * IT TOUCHES SO MANY PIECES AND IT"S NOT CLEAR HOW ESSENTIAL IT IS ANYHOW */}
+        {/* <Button
           color='red'
           inverted
           onClick={handleDelete}
         >
           <Icon name='delete' /> Delete
-        </Button>
+        </Button> */}
         <Button
           color='green'
           inverted

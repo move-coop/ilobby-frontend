@@ -92,6 +92,8 @@ const TakeActionModal = (props) => {
       onClose={handleClose}
       trigger={
         <Button
+          size='mini'
+          color='purple'
           disabled = {selectedLegislators.length === 0} 
           onClick={handleOpen} 
         >Take Action</Button>}>

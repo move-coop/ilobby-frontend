@@ -22,8 +22,7 @@ const TwitterEmbed = (props) => {
       
           <TwitterTimelineEmbed
             sourceType="profile"
-            // screenName={`${props.twitter}`}
-            screenName={'LiuNewYork'}
+            screenName={`${props.twitter}`}
             theme="dark"
             noHeader
             noFooter

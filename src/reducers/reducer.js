@@ -3,6 +3,11 @@
 
 // const API = "http://localhost:3000/legislators"
 
+const colors = {
+  democratic: "#0000FF",
+  republican: "#FF0000"
+}
+
 const chamberOptions = [
   {
     key: 'Senate',
@@ -150,7 +155,13 @@ const initialState = {
   campaignNameInput: "",
 
   // data for call list modal
-  callListNameInput: ""
+  callListNameInput: "",
+
+  // data for map hovering and clicking
+  colors: colors,
+  clickZoomed: null,
+  savedPoints: null,
+  hoverLegislator: null
 
 }
 
@@ -499,10 +510,42 @@ export const reducer = (prevState = initialState, action) => {
 
     case "DELETE_CAMPAIGN":
       console.log("DELETE CAMPAIGN", action.payload);
+      // filter out actions associated with campaign
+      newActions = prevState.actions.filter(action => {
+        return action.campaign_id !== action.payload;
+      });
+      
+      //filter out calls associated with actions associated with campaign
+      newCalls = prevState.calls.filter(call => {
+        return newActions.find(action => call.action_id == action.id)
+      });
+          
+      // filter out call_lists associated with campaign
+      newCallLists = prevState.callLists.filter(list => {
+        return list.campaign_id !== action.payload;
+      });
+
+      // filter out campaign
       newCampaigns = prevState.campaigns.filter(campaign => {
         return campaign.id !== action.payload;
       });
-      return { ...prevState, campaigns: newCampaigns };
+
+      // return state
+      console.log("end of DELETE_CAMPAIGN", {
+        ...prevState,
+        campaigns: newCampaigns,
+        action: newActions,
+        calls: newCalls,
+        callLists: newCallLists
+      })
+
+      return { 
+        ...prevState, 
+        campaigns: newCampaigns,
+        action: newActions,
+        calls: newCalls,
+        callLists: newCallLists
+      };
 
     case "UPDATE_CALL_LIST_NAME_INPUT":
       console.log("UPDATE_CALL_LIST_NAME_INPUT", action.payload);
@@ -524,6 +567,18 @@ export const reducer = (prevState = initialState, action) => {
         return callList.id !== action.payload;
       });
       return { ...prevState, callLists: newCallLists };
+
+    case "SET_CLICK_ZOOMED":
+      console.log("SET_CLICK_ZOOMED", action.payload);
+      return { ...prevState, clickZoomed: action.payload };
+
+    case "SET_SAVED_POINTS":
+      console.log("SET_SAVED_POINTS", action.payload);
+      return { ...prevState, savedPoints: action.payload };
+
+    case "SET_HOVER_LEGISLATOR":
+      console.log("SET_HOVER_LEGISLATOR", action.payload);
+      return { ...prevState, hoverLegislator: action.payload };
 
     default:
       return prevState;

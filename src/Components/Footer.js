@@ -5,7 +5,7 @@ import { Header } from "semantic-ui-react";
 const Footer = (props) => {
   return (
     <div>
-      <Header>FOOTER</Header>
+      <Header></Header>
     </div>
   );
 }

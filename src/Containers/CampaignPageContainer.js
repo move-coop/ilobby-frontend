@@ -21,6 +21,7 @@ class CampaignPageContainer extends React.Component {
     ]
     
     const displayCampaigns = this.props.campaigns.filter(campaign => campaign.display === true)
+    
     const renderCampaigns = displayCampaigns.map(campaign => 
       <tbody key={campaign.id} >
         <Table.Row className='campaigns' >
