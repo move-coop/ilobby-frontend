@@ -3,6 +3,7 @@ import NavBar from '../Components/NavBar'
 import Footer from '../Components/Footer'
 import SearchPageContainer from "./SearchPageContainer";
 import CampaignPageContainer from "./CampaignPageContainer";
+import CallListContainer from "./CallListContainer";
 import { Switch, Route } from 'react-router-dom'
 import { connect } from 'react-redux'
 
@@ -37,22 +38,14 @@ class LoggedInContainer extends React.Component {
 
 
   render() {
-    console.log("rendering logged in container")
 
     return (
       <div>
         <Route path="/" component={NavBar} />
         <Switch >
-          <Route path="/campaigns">
-            <CampaignPageContainer />
-          </Route>
-          {/* NEED TO HAVE A COMPONENT FOR CALLLISTS */}
-          {/* <Route path="/calllist/:id">
-            <CampaignPageContainer />
-          </Route> */}
-          <Route path="/">
-            <SearchPageContainer />
-          </Route>
+          <Route path="/campaigns/calllists/:id" component={CallListContainer} />
+          <Route path="/campaigns" component={CampaignPageContainer} />
+          <Route path="/" component={SearchPageContainer} />
         </Switch>
         <Footer />
 

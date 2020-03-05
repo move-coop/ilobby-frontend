@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { Input, Icon, Dropdown, Modal, Header, Button, Grid, List, Divider, Message } from 'semantic-ui-react'
+import { Input, Icon, Dropdown, Modal, Header, Button, Grid, List, Divider } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 
 const TakeActionModal = (props) => {
@@ -15,16 +15,74 @@ const TakeActionModal = (props) => {
 
   const handleOpen = () => {setModalOpen(true)}
   const handleClose = () => {setModalOpen(false)}
-  const handleSubmit = (value) => {
-    props.createNewAction({
-        campaignId: props.campaignSelection,
-        actionTypeId: props.actionTypeSelection,
-        actionName: props.actionNameInput,
-        legislators: selectedLegislators
-      }
-    )
+  const handleSubmit = () => {
+
+    let selectedLegislatorIds = selectedLegislators.map(legislator => legislator.id)
+
+    createCallList({
+        call_list_name: props.actionNameInput,
+        campaign_id: props.campaignSelection,
+        legislator_ids: selectedLegislatorIds,
+        current_user_id: props.currentUser.id
+    })
     handleClose()
   }
+
+  const createCallList = (bodyObj) => {
+    // fetch post request
+    const url = "http://localhost:3000/call_lists"
+    const configObj = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accepts": "application/json"
+      },
+      body: JSON.stringify({call_list: bodyObj})
+    }
+
+    fetch(url, configObj)
+    .then(resp => resp.json())
+    .then(json => {
+      console.log(json)
+      
+      // add responses to store: currentUser.callLists
+      props.addTAResponseToStore({
+        callList: {
+          id: json.id,
+          campaign_id: json.campaign.id,
+          name: json.name,
+          created_at: json.created_at,
+          updated_at: json.updated_at,
+          display: true
+
+        },
+        calls: json.calls,
+        // actions: json.call_actions
+        actions: json.call_actions.map(action => ({...action, display: true}))
+      })
+
+      // clear store values for modal fields:
+      props.editCampaignSelection({value: ""})
+      props.editActionTypeSelection({value: ""})
+      props.editActionName({value: ""})
+
+      // clear selected legislators
+      selectedLegislators.forEach(legislator => {
+        legislator.selected = false
+      })
+        
+      // reset filters and display legislators ?
+
+      // set current CallList and Campaign for rendering callList page
+      
+      
+      // redirect to calllists/:id
+      props.history.push(`/campaigns/calllists/${json.id}`)
+
+    }, )
+
+  }
+
   
   return(
     <Modal 
@@ -34,6 +92,8 @@ const TakeActionModal = (props) => {
       onClose={handleClose}
       trigger={
         <Button
+          size='mini'
+          color='purple'
           disabled = {selectedLegislators.length === 0} 
           onClick={handleOpen} 
         >Take Action</Button>}>
@@ -112,7 +172,8 @@ const mapStateToProps = state => {
     campaignSelection: state.campaignSelection,
     actionTypeOptions: state.actionTypeOptions,
     actionTypeSelection: state.actionTypeSelection,
-    actionNameInput: state.actionNameInput
+    actionNameInput: state.actionNameInput,
+    currentUser: state.currentUser
   }
 }
 
@@ -130,9 +191,9 @@ const mapDispatchToProps = dispatch => {
       console.log("editActionName", valueObj.value)
       dispatch({ type: "EDIT_ACTION_NAME", payload: valueObj.value });
     },
-    createNewAction: (payload) => {
-      console.log("createNewAction", payload)
-      dispatch({ type: "CREATE_NEW_ACTION", payload: payload });
+    addTAResponseToStore: (valueObj) => {
+      console.log("addTAResponseToStore")
+      dispatch({ type: "ADD_TA_RESPONSE_TO_STORE", payload: valueObj });
     }
     
     // addCampaign: (valueObj) => {

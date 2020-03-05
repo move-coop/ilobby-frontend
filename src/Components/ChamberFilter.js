@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Dropdown } from "semantic-ui-react";
 import { connect } from "react-redux";
 
@@ -9,6 +9,13 @@ const ChamberFilter = props => {
   // const [getSearch, setSearch] = useState("");
   // const searchChangeHandler = newSearch => setSearch(newSearch);
 
+
+  const changeHandler = (valueObj) => {
+    props.editChamberFilter(valueObj)
+    props.setSavedPoints(null)
+    props.setClickZoomed(null)
+  }
+
   return (
     <Dropdown
       placeholder="Chamber"
@@ -17,7 +24,7 @@ const ChamberFilter = props => {
       clearable
       options={props.chamberOptions}
       value={props.chamberFilter}
-      onChange={(e, { value }) => props.editChamberFilter({ value })}
+      onChange={(e, { value }) => changeHandler({ value })}
     />
   );
 };
@@ -31,6 +38,12 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    setClickZoomed: (value) => {
+      dispatch({ type: "SET_CLICK_ZOOMED", payload: value })
+    },
+    setSavedPoints: (value) => {
+      dispatch({ type: "SET_SAVED_POINTS", payload: value })
+    },
     editChamberFilter: (valueObj) => {
       dispatch({ type: "CHAMBER_FILTER", payload: valueObj.value });
     }

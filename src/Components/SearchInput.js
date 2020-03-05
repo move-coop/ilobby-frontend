@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Input } from 'semantic-ui-react'
+import React from "react";
+import { Icon, Input, Button } from 'semantic-ui-react'
 import { connect } from "react-redux";
 
 
@@ -10,14 +10,23 @@ const SearchInput = props => {
   // const [getSearch, setSearch] = useState("");
   // const searchChangeHandler = newSearch => setSearch(newSearch);
 
+  const changeHandler = (value) => {
+    props.editSearchFilter(value)
+    props.setSavedPoints(null)
+    props.setClickZoomed(null)
+  }
+
   return (
-    <Input 
-      fluid
-      onChange={e => props.editSearchFilter(e.target.value)}
-      value={props.searchFilter}
-      type="text"
-      placeholder="Name or district number..."
-    />
+      <Input 
+        fluid
+        action
+        onChange={e => changeHandler(e.target.value)}
+        value={props.searchFilter}
+        type="text"
+        placeholder="Name or district number..."
+      />
+      //   <Button basic icon ><Icon name='delete' /></Button>
+      // </Input>
   );
 };
 
@@ -30,6 +39,12 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    setClickZoomed: (value) => {
+      dispatch({ type: "SET_CLICK_ZOOMED", payload: value })
+    },
+    setSavedPoints: (value) => {
+      dispatch({ type: "SET_SAVED_POINTS", payload: value })
+    },
     editSearchFilter: (value) => {
       dispatch({ type: "SEARCH_FILTER", payload: value });
     }

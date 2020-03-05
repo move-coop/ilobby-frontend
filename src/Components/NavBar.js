@@ -1,23 +1,27 @@
-import React, { useState } from "react";
-import { Button, Menu, Icon, Dropdown } from "semantic-ui-react";
+import React from "react";
+import { Button, Menu, Icon } from "semantic-ui-react";
 import { connect } from "react-redux";
 
 
 const NavBar = (props) => {
   // local state just to handle active menu item
 
-  const getPath = () => {
-    if (props.location.pathname.includes("campaigns")) {
-      return "campaigns"
-    } else {
-      return "search"
-    }
-  }
+  // const getPath = () => {
+  //   console.log("getPath", props.location.pathname, props.location.pathname.includes("campaigns"))
+  //   if (props.location.pathname.includes("campaigns")) {
 
-  const [activeItem, setActiveItem] = useState(getPath())
+  //     return "campaigns"
+  //   } else {
+  //     return "search"
+  //   }
+  // }
+
+  // const [activeItem, setActiveItem] = useState(getPath())
+
+  const pathIncludesCampaigns = props.location.pathname.includes("campaigns")
 
   const handleItemClick = (e, { name }) => {
-    setActiveItem(name)
+    // setActiveItem(name)
     if (name === "campaigns") {
       props.history.push('/campaigns')
     } else {
@@ -34,7 +38,7 @@ const NavBar = (props) => {
 
       <Menu.Item
         name="search"
-        active={activeItem === "search"}
+        active={!pathIncludesCampaigns}
         onClick={handleItemClick}
       >
         Search
@@ -42,7 +46,7 @@ const NavBar = (props) => {
 
       <Menu.Item
         name="campaigns"
-        active={activeItem === "campaigns"}
+        active={pathIncludesCampaigns}
         onClick={handleItemClick}
       >
         Campaigns
