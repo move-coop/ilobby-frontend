@@ -2,7 +2,7 @@ import React from 'react';
 import Login from "../Components/Login";
 import Signup from "../Components/Signup";
 import { connect } from "react-redux";
-import { Grid } from "semantic-ui-react";
+import { Grid, Header, Icon } from "semantic-ui-react";
 
 class WelcomeContainer extends React.Component {
   render() {
@@ -21,7 +21,14 @@ class WelcomeContainer extends React.Component {
         >
           <Grid.Column>
             <Grid.Row>
-              iLobby
+              <Header as="h1" icon>
+                <Icon name="volleyball ball" />
+                Welcome to iLobby
+                <Header.Subheader>
+                  Find and influence your Elected Officials
+                </Header.Subheader>
+              </Header>
+
               <br />
               <br />
               <br />
@@ -38,8 +45,6 @@ class WelcomeContainer extends React.Component {
             </Grid.Row>
           </Grid.Column>
         </Grid>
-
-
       </div>
     );
   }

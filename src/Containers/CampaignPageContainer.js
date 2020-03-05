@@ -130,14 +130,14 @@ class CampaignPageContainer extends React.Component {
             value={this.props.actionSearchInput}
             onChange={(e) => { this.props.changeActionInput(e.target.value) }}
           />
-          <Button.Group >
+          {/* <Button.Group >
             <Button disabled>Sort</Button>
             <Dropdown
               className='button icon'
               options={sortOptions}
               trigger={<React.Fragment />}
             />
-          </Button.Group>
+          </Button.Group> */}
           Showing {displayActions.length} of {this.props.actions.length}
           <Divider hidden />
           <Table basic='very'>  

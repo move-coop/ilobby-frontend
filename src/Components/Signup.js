@@ -61,7 +61,7 @@ class Signup extends React.Component {
   render() {
     return (
       <div>
-        <Header as="h2" color="teal" textAlign="center">
+        <Header as="h2" color="grey" textAlign="center">
           Sign-up for an account
         </Header>
         <Form size="large">
@@ -97,7 +97,7 @@ class Signup extends React.Component {
             />
             <Button
               onClick={this.submitHandler}
-              color="teal"
+              color="grey"
               fluid
               size="large"
             >

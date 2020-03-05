@@ -1,8 +1,9 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Route } from 'react-router'
 import { connect } from 'react-redux'
 import { Header, Checkbox, Button, Grid, Segment } from 'semantic-ui-react'
 import TakeActionModal from '../Components/TakeActionModal'
+import LegislatorModal from "../Components/LegislatorModal";
 
 class SPCSearchResultsHeader extends React.Component {
   
@@ -42,56 +43,64 @@ class SPCSearchResultsHeader extends React.Component {
       if (this.props.clickZoomed) {
         const staticLegislator = this.props.legislators.find(legislator => legislator.id === this.props.clickZoomed.id)
 
-        return <Header color={staticLegislator.party === "Democratic" ? 'blue' : 'red'}>
-          {`${staticLegislator.chamber === "Senate" ? "Sen." : "Assemb."} ${staticLegislator.name} (${staticLegislator.party === "Democratic" ? "D-" : "R-"}${staticLegislator.district})`}
-        </Header>
+        return (
+          <Fragment>
+            <Header>
+              <LegislatorModal {...staticLegislator} />{` ${staticLegislator.chamber === "Senate" ? "Sen." : "Assemb."} ${
+                staticLegislator.name
+              } (${staticLegislator.party === "Democratic" ? "D-" : "R-"}${
+                staticLegislator.district
+              })`}
+            </Header>
+          </Fragment>
+        );
       
       
         // if hoverLegislator exists, show the legislator slug. 
       } else if (this.props.hoverLegislator) {
 
-        return <Header color={this.props.hoverLegislator.party === "Democratic" ? 'blue' : 'red'}>
+        return <Header>
           {`${this.props.hoverLegislator.chamber === "Senate" ? "Sen." : "Assemb."} ${this.props.hoverLegislator.name} (${this.props.hoverLegislator.party === "Democratic" ? "D-" : "R-"}${this.props.hoverLegislator.district})`}
         </Header>
       }
     }
 
-    return(
-        <Grid padded>
-          <Grid.Row columns='2'>
-            
+    return (
+      <Grid padded>
+        <Grid.Row columns="2">
+          <Grid.Column width="6">
+            <Header>{displayCount()} search results</Header>
+          </Grid.Column>
+          <Grid.Column width="10" textAlign="right">
+            {mapInfoDetails()}
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row columns="2">
           <Grid.Column>
-            <Header size='tiny'>
-              {displayCount()} search results 
+            <Header size="tiny" color="purple">
+              {displaySelectedCount()} legislators selected
             </Header>
           </Grid.Column>
-          <Grid.Column textAlign='right' >
-                {mapInfoDetails()}
+          <Grid.Column textAlign="right">
+            <Button size="mini" onClick={this.props.toggleAllSelection}>
+              Select All/None
+            </Button>
+            <Route component={TakeActionModal}></Route>
+            <Button size="mini" outline basic onClick={this.resetFilters}>
+              Reset Filters
+            </Button>
           </Grid.Column>
-          </Grid.Row>
-          <Grid.Row columns='2'>
-            <Grid.Column>
-              <Header size='tiny'>
-                {displaySelectedCount()} legislators selected
-              </Header>
-            </Grid.Column>
-            <Grid.Column textAlign='right'>
-              <Button size='mini' onClick={this.props.toggleAllSelection} >Select All/None</Button>
-              <Route component={TakeActionModal}>
-              </Route>
-              <Button size='mini' outline basic onClick={this.resetFilters} >Reset Filters</Button>
-            </Grid.Column>
-            
-            {/* HIDING CARD VIEW TOGGLE */}
-            {/* <Checkbox
+
+          {/* HIDING CARD VIEW TOGGLE */}
+          {/* <Checkbox
               checked={this.props.cardView}
               onClick={this.props.toggleCardView}
               toggle
               label="Card View"
             /> */}
-          </Grid.Row>
-        </Grid>
-      );
+        </Grid.Row>
+      </Grid>
+    );
   }
 }
 

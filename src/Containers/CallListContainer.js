@@ -159,7 +159,7 @@ class CallListContainer extends React.Component {
             {callActionViaState(call).complete ? <Icon name='check' color='green' /> : <Icon name='wait' color='red' />}
           </Table.Cell>
           <Table.Cell >
-            {legislator.chamber === "Senate" ? "Sen." : "Assemb."} {legislator.name} ({legislator.party === "Democratic" ? "D-" : "R-"}{legislator.district}}
+            {legislator.chamber === "Senate" ? "Sen." : "Assemb."} {legislator.name} ({legislator.party === "Democratic" ? "D-" : "R-"}{legislator.district})
           </Table.Cell>
           <Table.Cell>{phoneNumbers(legislator)}</Table.Cell>
           <Table.Cell><Dropdown
