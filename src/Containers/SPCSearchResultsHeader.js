@@ -79,7 +79,7 @@ class SPCSearchResultsHeader extends React.Component {
               <Button size='mini' onClick={this.props.toggleAllSelection} >Select All/None</Button>
               <Route component={TakeActionModal}>
               </Route>
-              <Button size='mini' outline basic onClick={this.resetFilters} >Reset All</Button>
+              <Button size='mini' outline basic onClick={this.resetFilters} >Reset Filters</Button>
             </Grid.Column>
             
             {/* HIDING CARD VIEW TOGGLE */}
