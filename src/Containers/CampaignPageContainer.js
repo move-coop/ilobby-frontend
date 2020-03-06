@@ -26,7 +26,7 @@ class CampaignPageContainer extends React.Component {
       <tbody key={campaign.id} >
         <Table.Row className='campaigns' >
           <Table.Cell collapsing>
-            <Header color='purple' size='small' >{campaign.name}</Header>
+            <Header color='purple' size='small' onClick={() => this.props.changeCampaignInput(campaign.name)} >{campaign.name}</Header>
           </Table.Cell>
           <Table.Cell >
             <EditCampaignModal {...campaign} />

@@ -99,7 +99,7 @@ const LegislatorModal = (props) => {
                 </Header>
             </Grid.Row>
             <Grid.Row id="twitter" columns="1">
-                {props.twitter ? <LegislatorModal {...props} /> : `${props.chamber === "Senate" ? "Sen." : "Assemb."} ${props.name} seems not to use Twitter`}
+                {props.twitter ? <TwitterEmbed {...props} /> : `${props.chamber === "Senate" ? "Sen." : "Assemb."} ${props.name} seems not to use Twitter`}
             </Grid.Row>
           </Grid>
         </Modal.Description>

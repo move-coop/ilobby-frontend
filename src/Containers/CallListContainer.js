@@ -227,7 +227,8 @@ class CallListContainer extends React.Component {
       return callAction.complete
     })
     const totalMinutes = callListCalls.reduce((total, call) => {
-      return (total + call.duration)
+      let mins = call.duration ? call.duration : 0
+      return (total + mins)
     }, 0)
 
     return (

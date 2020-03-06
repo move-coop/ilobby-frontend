@@ -76,12 +76,12 @@ class SPCSearchResultsHeader extends React.Component {
           </Grid.Column>
         </Grid.Row>
         <Grid.Row columns="2">
-          <Grid.Column>
-            <Header size="tiny" color="purple">
+          <Grid.Column width="6">
+            <Header color="purple">
               {displaySelectedCount()} legislators selected
             </Header>
           </Grid.Column>
-          <Grid.Column textAlign="right">
+          <Grid.Column width="10" textAlign="right">
             <Button size="mini" onClick={this.props.toggleAllSelection}>
               Select All/None
             </Button>
