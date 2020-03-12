@@ -41,7 +41,7 @@ const NavBar = (props) => {
         active={!pathIncludesCampaigns}
         onClick={handleItemClick}
       >
-        Search
+        {"Search & Select"}
       </Menu.Item>
 
       <Menu.Item

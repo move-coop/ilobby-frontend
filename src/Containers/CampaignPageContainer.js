@@ -26,7 +26,7 @@ class CampaignPageContainer extends React.Component {
       <tbody key={campaign.id} >
         <Table.Row className='campaigns' >
           <Table.Cell collapsing>
-            <Header color='purple' size='small' >{campaign.name}</Header>
+            <Header color='purple' size='small' onClick={() => this.props.changeCampaignInput(campaign.name)} >{campaign.name}</Header>
           </Table.Cell>
           <Table.Cell >
             <EditCampaignModal {...campaign} />
@@ -130,14 +130,14 @@ class CampaignPageContainer extends React.Component {
             value={this.props.actionSearchInput}
             onChange={(e) => { this.props.changeActionInput(e.target.value) }}
           />
-          <Button.Group >
+          {/* <Button.Group >
             <Button disabled>Sort</Button>
             <Dropdown
               className='button icon'
               options={sortOptions}
               trigger={<React.Fragment />}
             />
-          </Button.Group>
+          </Button.Group> */}
           Showing {displayActions.length} of {this.props.actions.length}
           <Divider hidden />
           <Table basic='very'>  

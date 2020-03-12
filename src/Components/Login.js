@@ -51,7 +51,7 @@ class Login extends React.Component {
   render() {
     return (
       <div>
-        <Header as="h2" color="grey" textAlign="center">
+        <Header as="h2" color="purple" textAlign="center">
           Log-in to your account
         </Header>
         <Form size="large">
@@ -77,7 +77,7 @@ class Login extends React.Component {
             />
             <Button
               onClick={this.submitHandler}
-              color="grey"
+              color="purple"
               fluid
               size="large"
             >

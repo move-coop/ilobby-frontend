@@ -132,7 +132,7 @@ const TakeActionModal = (props) => {
                 <Divider />
 
                 <Input
-                  placeholder="Name Action..."
+                  placeholder="Name Call List..."
                   fluid
                   value={props.actionNameInput}
                   onChange={(e, { value }) => props.editActionName({ value })}
