@@ -3,6 +3,23 @@
 
 // const API = "http://localhost:3000/legislators"
 
+const currentState = 'tx'
+
+const stateChamberNames = {
+  ny: {
+    upper: "Senate",
+    lower: "Assembly"
+  },
+  tx: {
+    upper: "Senate",
+    lower: "House"
+  },
+  wi: {
+    upper: "Senate",
+    lower: "Assembly"
+  }
+}
+
 const colors = {
   democratic: "#0000FF",
   republican: "#FF0000"
@@ -10,15 +27,15 @@ const colors = {
 
 const chamberOptions = [
   {
-    key: 'Senate',
-    text: 'Senate',
-    value: 'Senate',
+    key: stateChamberNames[currentState].upper,
+    text: stateChamberNames[currentState].upper,
+    value: stateChamberNames[currentState].upper,
     icon: 'angle double up'
   },
   {
-    key: 'Assembly',
-    text: 'Assembly',
-    value: 'Assembly',
+    key: stateChamberNames[currentState].lower,
+    text: stateChamberNames[currentState].lower,
+    value: stateChamberNames[currentState].lower,
     icon: 'angle double down'
   }
 ]

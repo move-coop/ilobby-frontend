@@ -4,6 +4,11 @@ import { connect } from 'react-redux'
 import { Header, Segment } from 'semantic-ui-react'
 
 const centerOfNewYorkState = { lat: 42.6339359, lng: -75.9691296}
+const centerOfTexas = { lat: 31.4757, lng: -99.3312}
+const centerOfWisconsin = { lat: 44.6243, lng: -89.9941}
+
+const centerOfMap = centerOfTexas
+
 const mapStyles = {
   width: "100%",
   height: "80vh"
@@ -199,7 +204,7 @@ class SPCMapsContainer extends React.Component {
           console.log("no results, default points")
         
           points = [
-            centerOfNewYorkState,
+            centerOfMap,
             { lat: 45.015864999999984, lng: -71.77749099999998},
             { lat: 40.477398999999984, lng: -79.76258999999997}
           ]
@@ -225,7 +230,7 @@ class SPCMapsContainer extends React.Component {
           style={mapStyles}
           disableDefaultUI={true}
           mapType={"terrain"}
-          initialCenter={centerOfNewYorkState}
+          initialCenter={centerOfMap}
           bounds={bounds}
           gestureHandling='greedy'
           onBounds_changed={(map) => this.mapBoundsChangeHandler(map)}
