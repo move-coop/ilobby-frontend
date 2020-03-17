@@ -5,9 +5,9 @@ import WelcomeContainer from './Containers/WelcomeContainer'
 import LoggedInContainer from './Containers/LoggedInContainer'
 import { connect } from 'react-redux'
 
-const legislatorsEndpoint = "http://localhost:3000/legislators"
-const committeesEndpoint = "http://localhost:3000/committees"
-const userDataEndpoint = "http://localhost:3000/users"
+const legislatorsEndpoint = `${process.env.REACT_APP_ILOBBY_API}/legislators`
+const committeesEndpoint = `${process.env.REACT_APP_ILOBBY_API}/committees`
+const userDataEndpoint = `${process.env.REACT_APP_ILOBBY_API}/users`
 
 class App extends React.Component {
   

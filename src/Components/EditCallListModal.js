@@ -23,7 +23,7 @@ const EditCallListModal = props => {
   };
 
   const handleSave = () => {
-    const url = `http://localhost:3000/call_lists/${props.match.params.id}`;
+    const url = `${process.env.REACT_APP_ILOBBY_API}/call_lists/${props.match.params.id}`;
     const configObj = {
       method: "PATCH",
       headers: {
@@ -55,7 +55,7 @@ const EditCallListModal = props => {
   };
 
   const handleDelete = () => {
-    const url = `http://localhost:3000/call_lists/${props.id}`;
+    const url = `${process.env.REACT_APP_ILOBBY_API}/call_lists/${props.id}`;
     const configObj = {
       method: "DELETE",
       headers: {
