@@ -15,7 +15,7 @@ const AddCampaignModal = (props) => {
 
   const handleSubmit = () => {
     
-    const url = "http://localhost:3000/campaigns"
+    const url = `${process.env.REACT_APP_ILOBBY_API}/campaigns`
     const configObj = {
       method: "POST",
       headers: {

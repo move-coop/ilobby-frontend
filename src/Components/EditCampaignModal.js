@@ -18,7 +18,7 @@ const EditCampaignModal = (props) => {
 
   const handleSave = () => {
 
-    const url = `http://localhost:3000/campaigns/${props.id}`
+    const url = `${process.env.REACT_APP_ILOBBY_API}/campaigns/${props.id}`
     const configObj = {
       method: "PATCH",
       headers: {
@@ -43,7 +43,7 @@ const EditCampaignModal = (props) => {
   }
 
   const handleDelete = () => {
-    const url = `http://localhost:3000/campaigns/${props.id}`
+    const url = `${process.env.REACT_APP_ILOBBY_API}/campaigns/${props.id}`
     const configObj = {
       method: "DELETE",
       headers: {

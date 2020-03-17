@@ -33,7 +33,7 @@ class Login extends React.Component {
 
     //form should be reset to blank!!
 
-    fetch(`http://localhost:3000/login`, configObj)
+    fetch(`${process.env.REACT_APP_ILOBBY_API}/login`, configObj)
       .then(resp => resp.json())
       .then(json => {
         if (json.errors) {

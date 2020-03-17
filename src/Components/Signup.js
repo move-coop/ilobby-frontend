@@ -40,7 +40,7 @@ class Signup extends React.Component {
 
       //form should be reset to blank!!
 
-      fetch(`http://localhost:3000/signup`, configObj)
+      fetch(`${process.env.REACT_APP_ILOBBY_API}/signup`, configObj)
         .then(resp => resp.json())
         .then(json => {
           if (json.errors) {

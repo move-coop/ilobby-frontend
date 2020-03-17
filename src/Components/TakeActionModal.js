@@ -30,7 +30,7 @@ const TakeActionModal = (props) => {
 
   const createCallList = (bodyObj) => {
     // fetch post request
-    const url = "http://localhost:3000/call_lists"
+    const url = `${process.env.REACT_APP_ILOBBY_API}/call_lists`
     const configObj = {
       method: "POST",
       headers: {

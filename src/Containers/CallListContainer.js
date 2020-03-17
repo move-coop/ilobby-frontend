@@ -52,7 +52,7 @@ class CallListContainer extends React.Component {
 
     this.props.updateCallDetails(call)
 
-    const url = `http://localhost:3000/calls/${call.id}`
+    const url = `${process.env.REACT_APP_ILOBBY_API}/calls/${call.id}`
     const configObj = {
       method: "PATCH",
       headers: {
