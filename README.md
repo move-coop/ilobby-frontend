@@ -1,10 +1,42 @@
+# OVERVIEW
+iLobby is a tool to explore, select and take action towards state-level legislators in the United States.
+
+The frontend visualizes legislative districts using the Google Maps Javascript API.
+
+The backend is an API that pulls data from the openstates.org API and can be found here: https://github.com/jasmosez/ilobby-backend
+
+You will need your own API keys for both.
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). See more information about that at the end of this readme.
+
+## React / Redux versions
+Uses React 12.6 and Redux 7.2
+
+## Configuration
+create an .env file in the root directory defining the following:
+
+`REACT_APP_GOOGLEMAPS_API_KEY` is your Google Maps API key
+`REACT_APP_ILOBBY_API` is the base URL of your backend server. If you are working from a local development environment is should be http://localhost:3000
+
+## How to run the test suite
+There is not test coverage at this time
+
+## Current Deployment(s)
+The frontend is currently deployed at https://ilobby.thisjames.com
+The backend is currently deployed at https://ilobby-backend.herokuapp.com
+
+# Let me know what you think!
+//
+
+# CREATE REACT APP
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
 
 In the project directory, you can run:
 
-### `yarn start`
+### `yarm start`
 
 Runs the app in the development mode.<br />
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
