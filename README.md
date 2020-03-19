@@ -15,8 +15,8 @@ Uses React 12.6 and Redux 7.2
 ## Configuration
 create an .env file in the root directory defining the following:
 
-`REACT_APP_GOOGLEMAPS_API_KEY` is your Google Maps API key
-`REACT_APP_ILOBBY_API` is the base URL of your backend server. If you are working from a local development environment is should be http://localhost:3000
+* `REACT_APP_GOOGLEMAPS_API_KEY` is your Google Maps API key
+* `REACT_APP_ILOBBY_API` is the base URL of your backend server. If you are working from a local development environment is should be http://localhost:3000
 
 ## How to run the test suite
 There is not test coverage at this time
