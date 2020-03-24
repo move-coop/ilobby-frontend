@@ -45,13 +45,14 @@ const partyOptions = [
     key: 'Democratic',
     text: 'Democratic',
     value: 'Democratic',
-    icon: "thumbs up"
+    label: { color: 'blue', empty: true, circular: true }
+
   },
   {
     key: 'Republican',
     text: 'Republican',
     value: 'Republican',
-    icon: "thumbs down"
+    label: { color: 'red', empty: true, circular: true }
   }
 ]
 
