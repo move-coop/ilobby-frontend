@@ -120,7 +120,7 @@ const initialState = {
   currentUser: { 
     id: 1, 
     password_digest: "$2a$12$O4NTR9IaambgLm20pQkj5.lP4d.c8SglnunhTnuT.8d0piAxWBx7G", 
-    email: "jas.schaffer@gmail.com", 
+    email: "james@thisjames.com", 
     created_at: "2020-02-26T20:54:06.690Z", 
     updated_at: "2020-02-26T20:54:06.690Z" 
   },
