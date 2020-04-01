@@ -2,6 +2,8 @@ import React from "react";
 import SPCSearchResultsContainer from "./SPCSearchResultsContainer";
 import SPCFiltersContainer from "./SPCFiltersContainer";
 import SPCMapsContainer from "./SPCMapsContainer";
+import WelcomeModal from "../Components/WelcomeModal";
+
 import { Grid } from "semantic-ui-react";
 
 
@@ -12,6 +14,7 @@ class SearchPageContainer extends React.Component {
         <Grid columns='equal'>
           <Grid.Row>
             <Grid.Column>
+                <WelcomeModal />
                 <SPCFiltersContainer />
             </Grid.Column>
           </Grid.Row>
