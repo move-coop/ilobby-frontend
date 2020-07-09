@@ -86,7 +86,7 @@ class SPCSearchResultsHeader extends React.Component {
               Select All/None
             </Button>
             <Route component={TakeActionModal}></Route>
-            <Button size="mini" outline basic onClick={this.resetFilters}>
+            <Button size="mini" basic onClick={this.resetFilters}>
               Reset Filters
             </Button>
           </Grid.Column>
