@@ -5,46 +5,51 @@ import WelcomeContainer from './Containers/WelcomeContainer'
 import LoggedInContainer from './Containers/LoggedInContainer'
 import { connect } from 'react-redux'
 
-const legislatorsEndpoint = `${process.env.REACT_APP_ILOBBY_API}/legislators`
-const committeesEndpoint = `${process.env.REACT_APP_ILOBBY_API}/committees`
-const userDataEndpoint = `${process.env.REACT_APP_ILOBBY_API}/users`
+// Move all this to LoggedInContainer
+// const legislatorsEndpoint = `${process.env.REACT_APP_ILOBBY_API}/legislators`
+// const committeesEndpoint = `${process.env.REACT_APP_ILOBBY_API}/committees`
+// const userDataEndpoint = `${process.env.REACT_APP_ILOBBY_API}/users`
 
 class App extends React.Component {
   
   componentDidMount() {
     
-    // GET LEGISLATORS
-    fetch(legislatorsEndpoint)
-    .then(res => res.json())
-    .then(data => {
-      // sort alphabetically
-      let legislators = data.sort((a, b) => a.name.localeCompare(b.name))
+    // Move all this to LoggedInContainer
 
-      this.props.storeLegislators(legislators)
-      this.props.legislatorDataLoaded()
-    })
+    // // GET LEGISLATORS
+    // fetch(legislatorsEndpoint)
+    // .then(res => res.json())
+    // .then(data => {
+    //   // sort alphabetically
+    //   let legislators = data.sort((a, b) => a.name.localeCompare(b.name))
 
-    // GET COMMITTEES DATA
-    fetch(committeesEndpoint)
-    .then(res => res.json())
-    .then(data => {
-      // sort alphabetically
-      let committees = data.sort((a, b) => a.filter_name.localeCompare(b.filter_name))
+    //   this.props.storeLegislators(legislators)
+    //   this.props.legislatorDataLoaded()
+    // })
 
-      this.props.storeCommittees(committees)
-      this.props.committeeDataLoaded()
-    })
+    // // GET COMMITTEES DATA
+    // fetch(committeesEndpoint)
+    // .then(res => res.json())
+    // .then(data => {
+    //   // sort alphabetically
+    //   let committees = data.sort((a, b) => a.filter_name.localeCompare(b.filter_name))
+
+    //   this.props.storeCommittees(committees)
+    //   this.props.committeeDataLoaded()
+    // })
 
 
-    // GET USER DATA
-    const userDataUrl = userDataEndpoint + `/${this.props.currentUser.id}`
+    // // GET USER DATA 
+    // console.log("this.props.currentUser.id", this.props.currentUser.id)
+    // const userDataUrl = userDataEndpoint + `/${this.props.currentUser.id}`
 
-    fetch(userDataUrl)
-    .then(res => res.json())
-    .then(data => {
-      this.props.storeUserData(data)
-      this.props.userDataLoaded()
-    })
+    // fetch(userDataUrl)
+    // .then(res => res.json())
+    // .then(data => {
+    //   console.log(data)
+    //   this.props.storeUserData(data)
+    //   this.props.userDataLoaded()
+    // })
   }
 
   // testForLogin = () => {
@@ -107,40 +112,40 @@ class App extends React.Component {
 const mapStateToProps = (state) => {
   return {
     currentUser: state.currentUser,
-    campaigns: state.campaigns,
-    actions: state.actions,
-    callLists: state.callLists,
-    calls: state.calls
+    // campaigns: state.campaigns,
+    // actions: state.actions,
+    // callLists: state.callLists,
+    // calls: state.calls
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    storeLegislators: (data) => {
-      dispatch({ type: "STORE_LEGISLATORS", payload: data })
-    },
-    storeCommittees: (data) => {
-      dispatch({ type: "STORE_COMMITTEES", payload: data })
-    },
-    storeUserData: (data) => {
-      dispatch({ type: "STORE_USER_DATA", payload: data })
-    },
-    setUser: (json) => {
-      console.log("App called setUser")
-      dispatch({ type: "SET_USER", payload: json })
-    },
-    userDataLoaded: () => {
-      console.log("User Data Loaded")
-      dispatch({ type: "USER_DATA_LOADED" })
-    },
-    legislatorDataLoaded: () => {
-      console.log("Legislator Data Loaded")
-      dispatch({ type: "LEGISLATOR_DATA_LOADED" })
-    },
-    committeeDataLoaded: () => {
-      console.log("Committee Data Loaded")
-      dispatch({ type: "COMMITTEE_DATA_LOADED" })
-    }
+    // storeLegislators: (data) => {
+    //   dispatch({ type: "STORE_LEGISLATORS", payload: data })
+    // },
+    // storeCommittees: (data) => {
+    //   dispatch({ type: "STORE_COMMITTEES", payload: data })
+    // },
+    // storeUserData: (data) => {
+    //   dispatch({ type: "STORE_USER_DATA", payload: data })
+    // },
+    // setUser: (json) => {
+    //   console.log("App called setUser")
+    //   dispatch({ type: "SET_USER", payload: json })
+    // },
+    // userDataLoaded: () => {
+    //   console.log("User Data Loaded")
+    //   dispatch({ type: "USER_DATA_LOADED" })
+    // },
+    // legislatorDataLoaded: () => {
+    //   console.log("Legislator Data Loaded")
+    //   dispatch({ type: "LEGISLATOR_DATA_LOADED" })
+    // },
+    // committeeDataLoaded: () => {
+    //   console.log("Committee Data Loaded")
+    //   dispatch({ type: "COMMITTEE_DATA_LOADED" })
+    // }
   }
 }
 
