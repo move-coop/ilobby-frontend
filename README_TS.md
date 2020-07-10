@@ -55,4 +55,4 @@ The current roadmap, which is loosely articulated through [this Trello board](ht
 *  Include data sets about votes on legislative bills, election results and campaign finance history.
 
 ### 6. How do I run this code on my own webserver so I can try it out?
-See Existing Readme 
+This information can be found in the original README files for the [frontend](https://github.com/jasmosez/ilobby-frontend) and the [backend](https://github.com/jasmosez/ilobby-backend).
