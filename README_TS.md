@@ -10,7 +10,7 @@ The work meets the primary goals:
 
 The key incomplete MVP feature relates to user accounts: 
 Auto-login functionality, which looks for a valid token in `localStorage` and, finding one, allows a session to continue until a user logs out, is buggy. It seems to stem from a backend problem decoding tokens, and is currently disabled. 
-As a result, in the version deployed here (ilobby.thisjames.com) has these conditions:
+As a result, in the version deployed here ([ilobby.thisjames.com](https://ilobby.thisjames.com/)) has these conditions:
 Users are automatically logged into a dummy account `james@thisjames.com`.
 Users can log out and signup or sign in with a separate account, but the user-data loaded will still be that which is associated with the default dummy account, and a hard refresh will switch the user back to the dummy account.
 
