@@ -46,6 +46,7 @@ class Signup extends React.Component {
           if (json.errors) {
             alert(json.errors)
           } else {
+            console.log("signup response", json)
             this.props.setUser(json)
             // reroute if successful
           }

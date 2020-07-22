@@ -117,13 +117,14 @@ const commitmentOptions = [
 ]
 
 const initialState = {
-  currentUser: { 
-    id: 1, 
-    password_digest: "$2a$12$O4NTR9IaambgLm20pQkj5.lP4d.c8SglnunhTnuT.8d0piAxWBx7G", 
-    email: "james@thisjames.com", 
-    created_at: "2020-02-26T20:54:06.690Z", 
-    updated_at: "2020-02-26T20:54:06.690Z" 
-  },
+  currentUser: false,
+  // { 
+  //   id: 1, 
+  //   password_digest: "$2a$12$O4NTR9IaambgLm20pQkj5.lP4d.c8SglnunhTnuT.8d0piAxWBx7G", 
+  //   email: "james@thisjames.com", 
+  //   created_at: "2020-02-26T20:54:06.690Z", 
+  //   updated_at: "2020-02-26T20:54:06.690Z" 
+  // },
 
   // status on App fetches
   legislatorDataLoaded: false,
@@ -285,7 +286,7 @@ export const reducer = (prevState = initialState, action) => {
 
   switch (action.type) {
     case "SET_USER":
-      console.log("SET USER:", action.payload.user);
+      console.log("SET USER:", action.payload);
       localStorage.token = action.payload.token;
       return {
         ...prevState,
@@ -293,6 +294,7 @@ export const reducer = (prevState = initialState, action) => {
       };
 
     case "LOGOUT":
+      localStorage.clear()
       return { ...prevState, currentUser: false };
 
     case "TOGGLE_CARDVIEW":
