@@ -38,7 +38,7 @@ class Login extends React.Component {
       .then(json => {
         if (json.errors) {
           console.log("errors")
-          alert(json.errors);
+          alert(`Login Error: ${json.errors}`);
         } else {
           console.log("success")
           this.props.setUser(json);

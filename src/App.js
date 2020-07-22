@@ -14,86 +14,47 @@ class App extends React.Component {
   
   componentDidMount() {
     
-    // Move all this to LoggedInContainer
-
-    // // GET LEGISLATORS
-    // fetch(legislatorsEndpoint)
-    // .then(res => res.json())
-    // .then(data => {
-    //   // sort alphabetically
-    //   let legislators = data.sort((a, b) => a.name.localeCompare(b.name))
-
-    //   this.props.storeLegislators(legislators)
-    //   this.props.legislatorDataLoaded()
-    // })
-
-    // // GET COMMITTEES DATA
-    // fetch(committeesEndpoint)
-    // .then(res => res.json())
-    // .then(data => {
-    //   // sort alphabetically
-    //   let committees = data.sort((a, b) => a.filter_name.localeCompare(b.filter_name))
-
-    //   this.props.storeCommittees(committees)
-    //   this.props.committeeDataLoaded()
-    // })
-
-
-    // // GET USER DATA 
-    // console.log("this.props.currentUser.id", this.props.currentUser.id)
-    // const userDataUrl = userDataEndpoint + `/${this.props.currentUser.id}`
-
-    // fetch(userDataUrl)
-    // .then(res => res.json())
-    // .then(data => {
-    //   console.log(data)
-    //   this.props.storeUserData(data)
-    //   this.props.userDataLoaded()
-    // })
   }
 
-  // testForLogin = () => {
-  //   const token = localStorage.token;
+  testForLogin = () => {
+    const token = localStorage.token;
 
-  //   if (this.props.currentUser) {
-  //     console.log("A")
-  //     return <LoggedInContainer />
-  //   } else {
-  //     if (token) {
-  //       console.log("token!", token)
-  //       this.checkAutoLogin(token)
-  //     } else {
+    if (this.props.currentUser) {
+      console.log("(A) we've got a current user")
+      return <LoggedInContainer />
+    } else {
+      if (token && token !== "undefined") {
+        console.log("(B) No current user, but we've got a token! Testing its validity. Token:", token)
+        return this.checkAutoLogin(token)
+      } else {
         
-  //       console.log("C")
-  //       return <WelcomeContainer />
-  //     }
-  //     console.log("D")
-  //     return <WelcomeContainer />
-  //   }
-  // }
+        console.log("(C) No current user & no token")
+        return <WelcomeContainer />
+      }
+    }
+  }
 
-  // checkAutoLogin = token => {
-  //   fetch("http://localhost:3000/auto_login", {
-  //     headers: {
-  //       Authorization: token
-  //     }
-  //   })
-  //     .then(res => res.json())
-  //     .then(response => {
-  //       if (response.errors) {
+  checkAutoLogin = token => {
+    fetch("http://localhost:3000/auto_login", {
+      headers: {
+        Authorization: token
+      }
+    })
+      .then(resp => resp.json())
+      .then(json => {
+        if (json.errors) {
+          console.log("Autologin Error")
+          alert(json.errors);
+          return <WelcomeContainer />
 
-  //         alert(response.errors);
-  //         console.log("B")
-          
-  //         return <WelcomeContainer />
-  //       } else {
-  //         this.props.setUser(response)
-  //         console.log("B a winner")
+        } else {
+          console.log("Autologin Success", json)
+          this.props.setUser(json)
+          return <LoggedInContainer />
 
-  //         return <LoggedInContainer />
-  //       }
-  //     });
-  // };
+        }
+      });
+  };
 
       
   render() {
@@ -102,8 +63,8 @@ class App extends React.Component {
     // otherwise, render LoggedInContainer
     return (
       <div>
-        {this.props.currentUser ? <LoggedInContainer /> : <WelcomeContainer /> }
-        {/* { this.testForLogin() } */}
+        {/* {this.props.currentUser ? <LoggedInContainer /> : <WelcomeContainer /> } */}
+        { this.testForLogin() }
       </div>
     );
   }
@@ -130,10 +91,10 @@ const mapDispatchToProps = (dispatch) => {
     // storeUserData: (data) => {
     //   dispatch({ type: "STORE_USER_DATA", payload: data })
     // },
-    // setUser: (json) => {
-    //   console.log("App called setUser")
-    //   dispatch({ type: "SET_USER", payload: json })
-    // },
+    setUser: (json) => {
+      console.log("App called setUser")
+      dispatch({ type: "SET_USER", payload: json })
+    },
     // userDataLoaded: () => {
     //   console.log("User Data Loaded")
     //   dispatch({ type: "USER_DATA_LOADED" })

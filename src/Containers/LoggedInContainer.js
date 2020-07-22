@@ -42,8 +42,13 @@ class LoggedInContainer extends React.Component {
     // GET USER DATA 
     console.log("this.props.currentUser.id", this.props.currentUser.id)
     const userDataUrl = userDataEndpoint + `/${this.props.currentUser.id}`
+    const token = localStorage.token;
 
-    fetch(userDataUrl)
+    fetch(userDataUrl, {
+      headers: {
+        Authorization: token
+      }
+    })
       .then(res => res.json())
       .then(data => {
         console.log(data)
