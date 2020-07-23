@@ -6,6 +6,8 @@ import LoggedInContainer from './Containers/LoggedInContainer'
 import { connect } from 'react-redux'
 import WelcomeModal from './Components/WelcomeModal';
 
+const autoLoginEndpoint = `${process.env.REACT_APP_ILOBBY_API}/auto_login`
+
 class App extends React.Component {
   
   componentDidMount() {
@@ -37,7 +39,7 @@ class App extends React.Component {
 
   checkAutoLogin = token => {
     // returns the component corresponding to autologin success or failure
-    fetch("http://localhost:3000/auto_login", {
+    fetch(autoLoginEndpoint, {
       headers: {
         Authorization: token
       }
