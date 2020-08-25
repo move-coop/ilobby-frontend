@@ -131,7 +131,7 @@ const initialState = {
   committeeDataLoaded: false,
   userDataLoaded: false,
 
-  // LEGISLATORS! Contained fields to control display and selection
+  // LEGISLATORS! Contains fields to control display and selection
   legislators: [],
   
   // serialized user data
@@ -152,7 +152,7 @@ const initialState = {
   cardView: false,
 
   // data for Take Action Modal
-  campaignOptions: [],
+  campaignOptions: [], // A campaignOption formats campaign data for easy use with Semantic UI components
   campaignSelection: "",
   actionTypeOptions: actionTypeOptions,
   actionTypeSelection: "",
@@ -269,6 +269,14 @@ const updateDisplayCallLists = (newState) => {
   return displayCallLists
 }
 
+const generateCampaignOption = (campaign) => {
+  return {
+    key: campaign.id,
+    text: campaign.name,
+    value: campaign.id
+  };
+}
+
 export const reducer = (prevState = initialState, action) => {
   let displayLegislators
   let newState
@@ -326,11 +334,7 @@ export const reducer = (prevState = initialState, action) => {
       // console.log("reducer legislators", action.payload)
       const { campaigns, actions, call_lists, calls } = action.payload;
       const campaignOptions = campaigns.map(campaign => {
-        return {
-          key: campaign.id,
-          text: campaign.name,
-          value: campaign.id
-        };
+        return generateCampaignOption(campaign)
       });
       newState = {
         ...prevState,
@@ -511,11 +515,13 @@ export const reducer = (prevState = initialState, action) => {
       return { ...prevState, campaignNameInput: action.payload };
 
     case "ADD_CAMPAIGN":
-      newCampaign = {
+      console.log("ADD_CAMPAIGN", action.payload);
+      const newCampaign = {
         ...action.payload,
         display: true
       };
-      return { ...prevState, campaigns: [...prevState.campaigns, newCampaign] };
+      const newCampaignOption = generateCampaignOption(newCampaign)
+      return { ...prevState, campaigns: [...prevState.campaigns, newCampaign], campaignOptions: [...prevState.campaignOptions, newCampaignOption] };
 
     case "EDIT_CAMPAIGN":
       newCampaigns = prevState.campaigns.map(campaign => {
@@ -525,7 +531,11 @@ export const reducer = (prevState = initialState, action) => {
           return campaign;
         }
       });
-      return { ...prevState, campaigns: newCampaigns };
+      const newCampaignOptions = newCampaigns.map(campaign => {
+        return generateCampaignOption(campaign)  
+      })
+
+      return { ...prevState, campaigns: newCampaigns, campaignOptions: newCampaignOptions };
 
     case "DELETE_CAMPAIGN":
       console.log("DELETE CAMPAIGN", action.payload);
