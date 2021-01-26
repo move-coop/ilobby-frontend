@@ -1,3 +1,4 @@
+import firebase from "firebase";
 import React from "react";
 import { Button, Menu, Icon } from "semantic-ui-react";
 import { connect } from "react-redux";
@@ -72,7 +73,18 @@ const NavBar = (props) => {
 const mapDispatchToProps = dispatch => {
   return {
     logoutCurrentUser: () => {
-      dispatch({ type: "LOGOUT" });
+      firebase
+        .auth()
+        .signOut()
+        .then(function () {
+          // Sign-out successful.
+          dispatch({ type: "LOGOUT" });
+        })
+        .catch(function (error) {
+          // An error happened.
+          console.log("error logging out", error)
+        });
+
     }
     // changeExampleMessage: () => { dispatch(changeExampleMessage()) }
   };
