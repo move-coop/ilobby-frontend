@@ -295,10 +295,11 @@ export const reducer = (prevState = initialState, action) => {
   switch (action.type) {
     case "SET_USER":
       console.log("SET USER:", action.payload);
-      localStorage.token = action.payload.token;
+      // localStorage to be set up App.js with firebase.auth().currentUser.getIdToken
+      // localStorage.token = action.payload.token;
       return {
         ...prevState,
-        currentUser: action.payload.user
+        currentUser: action.payload
       };
 
     case "LOGOUT":

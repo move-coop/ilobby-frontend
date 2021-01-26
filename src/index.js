@@ -1,5 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import firebase from "firebase/app";
+import "firebase/auth";
+import {firebaseConfig} from './firebaseConfig'
 import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
@@ -17,6 +20,9 @@ import { reducer } from "./reducers/reducer";
 const store = createStore(reducer, applyMiddleware(thunk))
 // console.log('store', store)
 // console.log('state', store.getState())
+
+console.log('firebaseConfig', firebaseConfig)
+firebase.initializeApp(firebaseConfig);
 
 ReactDOM.render(
   <Provider store={store}>

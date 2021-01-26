@@ -11,6 +11,7 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.1.2",
     "dotenv": "^8.2.0",
+    "firebase": "^8.2.4",
     "google-maps-react": "^2.0.6",
     "postgres-date": "^1.0.5",
     "react": "^16.13.1",
