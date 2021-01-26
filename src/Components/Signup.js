@@ -1,3 +1,4 @@
+import firebase from "firebase";
 import React from 'react'
 import {
   Button,
@@ -25,32 +26,37 @@ class Signup extends React.Component {
   submitHandler = () => {
     // validate password = password Confirmation
     if (this.state.password === this.state.passwordConfirmation) {
-      // fetch
-      const configObj = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accepts": "application/json"
-        },
-        body: JSON.stringify({
-          email: this.state.email,
-          password: this.state.password
+      
+      console.log('passwords match')
+      
+      // FIREBASE AUTH
+      console.log('calling firebase auth with', this.state.email, this.state.password)
+      
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(this.state.email, this.state.password)
+        .then(resp => {
+          console.log(resp.user);
         })
-      }
+        .catch(error => {
+          console.log(`There has been a problem with your signup operation:\n ${error.message}\n\nError:${error.code}`);
+          alert(`There has been a problem with your signup operation:\n ${error.message}\n\nError:${error.code}`);
+        });
+      // }
 
       //form should be reset to blank!!
 
-      fetch(`${process.env.REACT_APP_ILOBBY_API}/signup`, configObj)
-        .then(resp => resp.json())
-        .then(json => {
-          if (json.errors) {
-            alert(json.errors)
-          } else {
-            console.log("signup response", json)
-            this.props.setUser(json)
-            // reroute if successful
-          }
-        })
+      // fetch(`${process.env.REACT_APP_ILOBBY_API}/signup`, configObj)
+      //   .then(resp => resp.json())
+      //   .then(json => {
+      //     if (json.errors) {
+      //       alert(json.errors)
+      //     } else {
+      //       console.log("signup response", json)
+      //       this.props.setUser(json)
+      //       // reroute if successful
+      //     }
+      //   })
     } else {
       alert("Passwords don't match!")
     }

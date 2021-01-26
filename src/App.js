@@ -24,11 +24,13 @@ class App extends React.Component {
             setUser(user);
           });
         } else {
-          logout();
+          console.log('firebase.auth().onAuthStateChanged: there is no user')
+          console.log("logout not required here bc weve already been logged out")
+          // logout();
         }
       },
       (error) => {
-        console.log(error);
+        alert(error);
       }
     );
   };

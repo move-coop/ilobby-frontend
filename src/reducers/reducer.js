@@ -303,6 +303,7 @@ export const reducer = (prevState = initialState, action) => {
       };
 
     case "LOGOUT":
+      console.log("Logging out:", prevState.currentUser)
       localStorage.clear()
       return { ...prevState, currentUser: false };
 
