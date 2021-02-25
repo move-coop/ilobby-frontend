@@ -16,16 +16,18 @@ const AddCampaignModal = (props) => {
   const handleSubmit = () => {
     
     const url = `${process.env.REACT_APP_ILOBBY_API}/campaigns`
+    const token = localStorage.token;
     const configObj = {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
-        'Accepts': 'application/json'
+        'Accepts': 'application/json',
+        "Authorization": token
       },
       body: JSON.stringify({
         campaign: {
           name: props.campaignNameInput,
-          user_id: props.currentUser.id
+          user_id: props.id
         }
       })
     }
@@ -37,6 +39,10 @@ const AddCampaignModal = (props) => {
     .then(json => {
       props.addCampaign(json)
     })
+    .catch(err => {
+        alert('Create Campaign: fetch error')
+        console.log(err)
+      })
 
     handleClose()
   }
@@ -78,6 +84,7 @@ const AddCampaignModal = (props) => {
 
 const mapStateToProps = state => {
   return {
+    id: state.id,
     currentUser: state.currentUser,
     campaignNameInput: state.campaignNameInput
   }

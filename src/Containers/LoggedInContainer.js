@@ -45,7 +45,7 @@ class LoggedInContainer extends React.Component {
 
     fetch(userDataUrl, {
       headers: {
-        Authorization: token
+        "Authorization": token
       }
     })
       .then(res => res.json())
@@ -55,7 +55,7 @@ class LoggedInContainer extends React.Component {
         this.props.userDataLoaded()
       })
       .catch(err => {
-        alert('user data fetch error')
+        alert('Get User Data: fetch error')
         console.log(err)
       })
   };
@@ -87,10 +87,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setUser: (json) => {
-      console.log("logged in called setUser")
-      dispatch({ type: "SET_USER", payload: json })
-    },
     storeLegislators: (data) => {
       dispatch({ type: "STORE_LEGISLATORS", payload: data })
     },

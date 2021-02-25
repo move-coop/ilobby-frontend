@@ -118,13 +118,7 @@ const commitmentOptions = [
 
 const initialState = {
   currentUser: false,
-  // { 
-  //   id: 1, 
-  //   password_digest: "$2a$12$O4NTR9IaambgLm20pQkj5.lP4d.c8SglnunhTnuT.8d0piAxWBx7G", 
-  //   email: "james@thisjames.com", 
-  //   created_at: "2020-02-26T20:54:06.690Z", 
-  //   updated_at: "2020-02-26T20:54:06.690Z" 
-  // },
+  id: false,
 
   // status on App fetches
   legislatorDataLoaded: false,
@@ -305,7 +299,7 @@ export const reducer = (prevState = initialState, action) => {
     case "LOGOUT":
       console.log("Logging out:", prevState.currentUser)
       localStorage.clear()
-      return { ...prevState, currentUser: false };
+      return { ...prevState, currentUser: false, id: false };
 
     case "TOGGLE_CARDVIEW":
       console.log("toggling cardview !");
@@ -334,7 +328,7 @@ export const reducer = (prevState = initialState, action) => {
 
     case "STORE_USER_DATA":
       // console.log("reducer legislators", action.payload)
-      const { campaigns, actions, call_lists, calls } = action.payload;
+      const { id, campaigns, actions, call_lists, calls } = action.payload;
       const campaignOptions = campaigns.map(campaign => {
         return generateCampaignOption(campaign)
       });
@@ -344,7 +338,8 @@ export const reducer = (prevState = initialState, action) => {
         campaigns,
         actions,
         callLists: call_lists,
-        calls
+        calls,
+        id
       };
       displayCampaigns = updateDisplayCampaigns(newState);
       displayActions = newState.actions.map(action => {
