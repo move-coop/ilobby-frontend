@@ -40,8 +40,7 @@ class LoggedInContainer extends React.Component {
 
 
     // GET USER DATA 
-    console.log("this.props.currentUser.id", this.props.currentUser.id)
-    const userDataUrl = userDataEndpoint + `/${this.props.currentUser.id}`
+    const userDataUrl = userDataEndpoint
     const token = localStorage.token;
 
     fetch(userDataUrl, {
@@ -54,6 +53,10 @@ class LoggedInContainer extends React.Component {
         console.log(data)
         this.props.storeUserData(data)
         this.props.userDataLoaded()
+      })
+      .catch(err => {
+        alert('user data fetch error')
+        console.log(err)
       })
 
 

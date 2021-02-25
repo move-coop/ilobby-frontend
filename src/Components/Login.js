@@ -19,8 +19,7 @@ class Login extends React.Component {
     // FIREBASE AUTH
     console.log(
       "calling firebase auth with",
-      this.state.email,
-      this.state.password
+      this.state.email
     );
 
     firebase
