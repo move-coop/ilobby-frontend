@@ -19,11 +19,13 @@ const EditCampaignModal = (props) => {
   const handleSave = () => {
 
     const url = `${process.env.REACT_APP_ILOBBY_API}/campaigns/${props.id}`
+    const token = localStorage.token;
     const configObj = {
       method: "PATCH",
       headers: {
         'Content-Type': 'application/json',
-        'Accepts': 'application/json'
+        'Accepts': 'application/json',
+        "Authorization": token
       },
       body: JSON.stringify({
         campaign: {
@@ -34,31 +36,41 @@ const EditCampaignModal = (props) => {
     console.log(url)
     console.log(configObj)
     fetch(url, configObj)
-      .then(resp => resp.json())
-      .then(json => {
-        props.editCampaign(json)
-      })
+    .then(resp => resp.json())
+    .then(json => {
+      props.editCampaign(json)
+    })
+    .catch(err => {
+      alert('Edit Campaign: fetch error')
+      console.log(err)
+    })
 
     handleClose()
   }
 
   const handleDelete = () => {
     const url = `${process.env.REACT_APP_ILOBBY_API}/campaigns/${props.id}`
+    const token = localStorage.token;
     const configObj = {
       method: "DELETE",
       headers: {
         'Content-Type': 'application/json',
-        'Accepts': 'application/json'
+        'Accepts': 'application/json',
+        "Authorization": token
       }
     }
 
     console.log(url)
     console.log(configObj)
     fetch(url, configObj)
-      .then(resp => resp.json())
-      .then(json => {
-        console.log(json)
-      })
+    .then(resp => resp.json())
+    .then(json => {
+      console.log(json)
+    })
+    .catch(err => {
+      alert('Delete Campaign: fetch error')
+      console.log(err)
+    })
 
     props.deleteCampaign(props.id)
     handleClose()
@@ -107,7 +119,6 @@ const EditCampaignModal = (props) => {
 
 const mapStateToProps = state => {
   return {
-    currentUser: state.currentUser,
     campaignNameInput: state.campaignNameInput
   }
 }
