@@ -1,5 +1,5 @@
 import React from 'react'
-import { Divider, Icon, Image, List, Modal, Grid, Button, Header } from 'semantic-ui-react'
+import { Divider, Icon, Image, Input, List, Modal, Grid, Button, Header } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import TwitterEmbed from './TwitterEmbed'
 
@@ -86,11 +86,31 @@ const LegislatorModal = (props) => {
               <Header inverted color='green' >Contact Information</Header>
             </Grid.Row>
             <Grid.Row columns="equal">{renderContactInfos}</Grid.Row>
-            <Grid.Row>
-              <Header inverted color='green'>Committees</Header>
-            </Grid.Row>
-            <Grid.Row>
-              <List bulleted>{renderCommittees}</List>
+            <Grid.Row columns="equal">
+              <Grid.Column>
+                <Grid>
+                  <Grid.Row>
+                    <Header inverted color='green'>Committees</Header>
+                  </Grid.Row>
+                  <Grid.Row>
+                    <List bulleted>{renderCommittees}</List>
+                  </Grid.Row>
+                </Grid>
+              </Grid.Column>
+              <Grid.Column>
+                <Grid>
+                  <Grid.Row>
+                    <Header inverted color='red'>Notes</Header>
+                  </Grid.Row>
+                  <Grid.Row>
+                    <Input
+                      // fluid
+                      // inverted
+                      value={props.note.contents}
+                    />
+                  </Grid.Row>
+                </Grid>
+              </Grid.Column>
             </Grid.Row>
             <Grid.Row columns="1">
               <Header icon color='green' >

@@ -15,49 +15,57 @@ class LoggedInContainer extends React.Component {
 
   componentDidMount() {
     console.log("logged in container did mount")
+    const token = localStorage.token;
 
     // GET LEGISLATORS
-    fetch(legislatorsEndpoint)
-      .then(res => res.json())
-      .then(data => {
-        // sort alphabetically
-        let legislators = data.sort((a, b) => a.name.localeCompare(b.name))
+    fetch(legislatorsEndpoint, {
+      headers: {
+        "Authorization": token
+      }
+  })
+    .then(res => res.json())
+    .then(data => {
+      // sort alphabetically
+      let legislators = data.sort((a, b) => a.name.localeCompare(b.name))
 
-        this.props.storeLegislators(legislators)
-        this.props.legislatorDataLoaded()
-      })
+      this.props.storeLegislators(legislators)
+      this.props.legislatorDataLoaded()
+    })
+    .catch(err => {
+      alert('Get Legislator Data: fetch error')
+      console.log(err)
+    })
 
     // GET COMMITTEES DATA
     fetch(committeesEndpoint)
-      .then(res => res.json())
-      .then(data => {
-        // sort alphabetically
-        let committees = data.sort((a, b) => a.filter_name.localeCompare(b.filter_name))
+    .then(res => res.json())
+    .then(data => {
+      // sort alphabetically
+      let committees = data.sort((a, b) => a.filter_name.localeCompare(b.filter_name))
 
-        this.props.storeCommittees(committees)
-        this.props.committeeDataLoaded()
-      })
+      this.props.storeCommittees(committees)
+      this.props.committeeDataLoaded()
+    })
 
 
     // GET USER DATA 
     const userDataUrl = userDataEndpoint
-    const token = localStorage.token;
 
     fetch(userDataUrl, {
       headers: {
         "Authorization": token
       }
     })
-      .then(res => res.json())
-      .then(data => {
-        console.log(data)
-        this.props.storeUserData(data)
-        this.props.userDataLoaded()
-      })
-      .catch(err => {
-        alert('Get User Data: fetch error')
-        console.log(err)
-      })
+    .then(res => res.json())
+    .then(data => {
+      console.log(data)
+      this.props.storeUserData(data)
+      this.props.userDataLoaded()
+    })
+    .catch(err => {
+      alert('Get User Data: fetch error')
+      console.log(err)
+    })
   };
 
 
