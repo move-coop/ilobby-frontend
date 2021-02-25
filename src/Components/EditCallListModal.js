@@ -24,11 +24,13 @@ const EditCallListModal = props => {
 
   const handleSave = () => {
     const url = `${process.env.REACT_APP_ILOBBY_API}/call_lists/${props.match.params.id}`;
+    const token = localStorage.token;
     const configObj = {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Accepts: "application/json"
+        'Accepts': "application/json",
+        "Authorization": token
       },
       body: JSON.stringify({
         call_list: {
@@ -40,37 +42,47 @@ const EditCallListModal = props => {
     };
 
     fetch(url, configObj)
-      .then(resp => resp.json())
-      .then(json => {
-        props.editCallList({
-          id: json.id,
-          campaign_id: json.campaign.id,
-          name: json.name,
-          created_at: json.created_at,
-          updated_at: json.updated_at
-        });
+    .then(resp => resp.json())
+    .then(json => {
+      props.editCallList({
+        id: json.id,
+        campaign_id: json.campaign.id,
+        name: json.name,
+        created_at: json.created_at,
+        updated_at: json.updated_at
       });
+    })
+    .catch(err => {
+      alert('Edit Call List: fetch error')
+      console.log(err)
+    });
 
     handleClose();
   };
 
   const handleDelete = () => {
     const url = `${process.env.REACT_APP_ILOBBY_API}/call_lists/${props.id}`;
+    const token = localStorage.token;
     const configObj = {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Accepts: "application/json"
+        Accepts: "application/json",
+        "Authorization": token
       }
     };
 
     console.log(url);
     console.log(configObj);
     fetch(url, configObj)
-      .then(resp => resp.json())
-      .then(json => {
-        console.log(json);
-      });
+    .then(resp => resp.json())
+    .then(json => {
+      console.log(json);
+    })
+    .catch(err => {
+      alert('Delete Call List: fetch error')
+      console.log(err)
+    });
 
     props.deleteCallList(props.id);
     handleClose();

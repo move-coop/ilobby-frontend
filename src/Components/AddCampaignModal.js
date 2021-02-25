@@ -40,9 +40,9 @@ const AddCampaignModal = (props) => {
       props.addCampaign(json)
     })
     .catch(err => {
-        alert('Create Campaign: fetch error')
-        console.log(err)
-      })
+      alert('Create Campaign: fetch error')
+      console.log(err)
+    })
 
     handleClose()
   }
@@ -85,7 +85,6 @@ const AddCampaignModal = (props) => {
 const mapStateToProps = state => {
   return {
     id: state.id,
-    currentUser: state.currentUser,
     campaignNameInput: state.campaignNameInput
   }
 }
