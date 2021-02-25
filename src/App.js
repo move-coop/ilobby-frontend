@@ -5,24 +5,23 @@ import './App.css';
 import WelcomeContainer from './Containers/WelcomeContainer'
 import LoggedInContainer from './Containers/LoggedInContainer'
 import { connect } from 'react-redux'
-import WelcomeModal from './Components/WelcomeModal';
 
-const autoLoginEndpoint = `${process.env.REACT_APP_ILOBBY_API}/auto_login`
 
 class App extends React.Component {
-  componentDidMount() {}
+  // componentDidMount() {}
 
   initApp = () => {
     const setUser = this.props.setUser;
-    const logout = this.props.logout;
+    // const logout = this.props.logout;
 
     firebase.auth().onAuthStateChanged(
       (user) => {
         if (user) {
-          user.getIdToken().then(function (accessToken) {
+          user.getIdToken(true).then(function (accessToken) {
             localStorage.token = accessToken;
+            console.log('app.js setUser')
             setUser(user);
-          });
+          }).catch(error => alert(error));
         } else {
           console.log('firebase.auth().onAuthStateChanged: there is no user')
           console.log("logout not required here bc weve already been logged out")
