@@ -58,36 +58,10 @@ class LoggedInContainer extends React.Component {
         alert('user data fetch error')
         console.log(err)
       })
-
-
-  //   const token = localStorage.token;
-
-  //   if (token && !this.props.currentUser) {
-  //     //get user info
-  //     this.checkAutoLogin(token)
-  //   }
-  // }
-
-  // checkAutoLogin = token => {
-  //   fetch("http://localhost:3000/auto_login", {
-  //     headers: {
-  //       Authorization: token
-  //     }
-  //   })
-  //     .then(res => res.json())
-  //     .then(response => {
-  //       if (response.errors) {
-  //         alert(response.errors);
-  //       } else {
-  //         debugger
-  //         this.props.setUser(response)
-  //       }
-  //     });
   };
 
 
   render() {
-
     return (
       <div>
         <Route path="/" component={NavBar} />
@@ -100,10 +74,9 @@ class LoggedInContainer extends React.Component {
 
       </div>
     );
-
-
   }
 }
+
 
 const mapStateToProps = (state) => {
   return {
@@ -111,11 +84,11 @@ const mapStateToProps = (state) => {
   }
 }
 
+
 const mapDispatchToProps = (dispatch) => {
   return {
     setUser: (json) => {
       console.log("logged in called setUser")
-      // debugger
       dispatch({ type: "SET_USER", payload: json })
     },
     storeLegislators: (data) => {
@@ -127,10 +100,6 @@ const mapDispatchToProps = (dispatch) => {
     storeUserData: (data) => {
       dispatch({ type: "STORE_USER_DATA", payload: data })
     },
-    // setUser: (json) => {
-    //   console.log("App called setUser")
-    //   dispatch({ type: "SET_USER", payload: json })
-    // },
     userDataLoaded: () => {
       console.log("User Data Loaded")
       dispatch({ type: "USER_DATA_LOADED" })
