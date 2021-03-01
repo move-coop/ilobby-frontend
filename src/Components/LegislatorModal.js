@@ -1,9 +1,14 @@
 import React from 'react'
-import { Divider, Icon, Image, Input, List, Modal, Grid, Button, Header } from 'semantic-ui-react'
+import { Divider, Form, Icon, Image, Input, List, Modal, Grid, Button, Header } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import TwitterEmbed from './TwitterEmbed'
 
 const LegislatorModal = (props) => {
+  const [note, setNote] = React.useState('')
+  
+  React.useEffect(() => {
+    setNote(props.note.contents)
+  }, [props.note.contents])
 
   const contactInfoObj = props.contact_infos.reduce((acc, info) => {
     
@@ -62,6 +67,96 @@ const LegislatorModal = (props) => {
     </List.Item>
   })
 
+  const handleNoteChange = (event) => {
+    setNote(event.target.value)
+  }
+
+  const updateNote = () => {
+    const token = localStorage.token;
+    const url = `${process.env.REACT_APP_ILOBBY_API}/notes/${props.note.id}`
+    const configObj = {
+      method: "PATCH",
+      headers: {
+        'Content-Type': 'application/json',
+        'Accepts': 'application/json',
+        "Authorization": token
+      },
+      body: JSON.stringify({
+        note: {
+          contents: note
+        }
+      })
+    }
+  
+    fetch(url, configObj)
+    .then(resp => resp.json())
+    .then(json => {
+      console.log('this is the updated note:', json)
+      props.editNote(json)
+    })
+    .catch(err => {
+      alert('Update Note: fetch error')
+      console.log(err)
+    })
+
+  }
+
+  const createNote = () => {
+    const token = localStorage.token;
+    const url = `${process.env.REACT_APP_ILOBBY_API}/notes`
+    const configObj = {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+        'Accepts': 'application/json',
+        "Authorization": token
+      },
+      body: JSON.stringify({
+        note: {
+          contents: note,
+          legislator_id: props.id,
+          user_id: props.user_id
+        }
+      })
+    }
+  
+    fetch(url, configObj)
+    .then(resp => resp.json())
+    .then(json => {
+      console.log('this is the new note:', json)
+      props.createNote(json)
+    })
+    .catch(err => {
+      alert('Create Note: fetch error')
+      console.log(err)
+    })
+
+  }
+  
+  const handleNoteSave = () => {
+    console.log('save note', note)
+
+    if (!!props.note.id) {
+      updateNote()
+    } else {
+      createNote()
+    }
+  }
+
+  const formStyle = {
+    width: '100%'
+  };
+
+  const formatDate = (dateStr) => {
+    if (dateStr) {
+      const date = new Date(dateStr)
+      const options = { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', timeZone: 'America/Chicago', timeZoneName: 'short' }
+      return date.toLocaleString('en-US', options)
+    } else {
+      return 'never'
+    }
+  }
+
 
   return (
     <Modal
@@ -100,14 +195,17 @@ const LegislatorModal = (props) => {
               <Grid.Column>
                 <Grid>
                   <Grid.Row>
-                    <Header inverted color='red'>Notes</Header>
+                    <Header inverted color='red'>
+                      Notes
+                      <Header.Subheader>
+                        {`Updated: ${formatDate(props.note.updated_at)}`}
+                      </Header.Subheader>
+                    </Header>
                   </Grid.Row>
                   <Grid.Row>
-                    <Input
-                      // fluid
-                      // inverted
-                      value={props.note.contents}
-                    />
+                    <Form style={formStyle}>
+                      <Form.TextArea value={note} onChange={handleNoteChange} onBlur={handleNoteSave} />
+                    </Form>
                   </Grid.Row>
                 </Grid>
               </Grid.Column>
@@ -130,8 +228,20 @@ const LegislatorModal = (props) => {
 
 const mapStateToProps = state => {
   return {
+    user_id: state.id,
     legislatorDataLoaded: state.legislatorDataLoaded
   }
 }
 
-export default connect(mapStateToProps)(LegislatorModal);
+const mapDispatchToProps = dispatch => {
+  return {
+    editNote: (note) => {
+      dispatch({ type: "EDIT_NOTE", payload: note })
+    },
+    createNote: (note) => {
+      dispatch({ type: "CREATE_NOTE", payload: note })
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(LegislatorModal);
