@@ -21,8 +21,8 @@ class App extends React.Component {
           }).catch(error => alert(error));
         } else {
           console.log('firebase.auth().onAuthStateChanged: there is no user')
-          console.log("logout not required here bc weve already been logged out")
-          // logout();
+          //  logout to ensure state reset to initialState
+          this.props.logout();
         }
       },
       (error) => {
