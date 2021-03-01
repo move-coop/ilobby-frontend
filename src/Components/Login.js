@@ -1,3 +1,4 @@
+import firebase from "firebase";
 import React from 'react'
 import { Button, Form, Header, Segment } from "semantic-ui-react";
 import { connect } from 'react-redux';
@@ -15,37 +16,57 @@ class Login extends React.Component {
   };
 
   submitHandler = () => {
+    // FIREBASE AUTH
+    console.log(
+      "calling firebase auth with",
+      this.state.email
+    );
 
-    // fetch
-    const configObj = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json"
-      },
-      body: JSON.stringify({
-        email: this.state.email,
-        password: this.state.password
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(this.state.email, this.state.password)
+      .then((resp) => {
+        console.log(resp.user);
       })
-    };
-
-    console.log(configObj)
-
-    //form should be reset to blank!!
-
-    fetch(`${process.env.REACT_APP_ILOBBY_API}/login`, configObj)
-      .then(resp => resp.json())
-      .then(json => {
-        if (json.errors) {
-          console.log("errors")
-          alert(`Login Error: ${json.errors}`);
-        } else {
-          console.log("success")
-          this.props.setUser(json);
-          // reroute if successful
-        }
+      .catch(function (error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // ...
+        console.log(errorCode);
+        console.log(errorMessage);
+        alert("Outer Catch", errorMessage, errorCode);
       });
 
+    // FETCH FROM RAILS API
+    // const configObj = {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Accepts: "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     email: this.state.email,
+    //     password: this.state.password,
+    //   }),
+    // };
+
+    // console.log(configObj);
+
+    // //form should be reset to blank!!
+
+    // fetch(`${process.env.REACT_APP_ILOBBY_API}/login`, configObj)
+    //   .then((resp) => resp.json())
+    //   .then((json) => {
+    //     if (json.errors) {
+    //       console.log("errors");
+    //       alert(`Login Error: ${json.errors}`);
+    //     } else {
+    //       console.log("success");
+    //       this.props.setUser(json);
+    //       // reroute if successful
+    //     }
+    //   });
   };
 
   render() {

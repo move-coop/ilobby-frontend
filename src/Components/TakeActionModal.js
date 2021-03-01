@@ -23,7 +23,7 @@ const TakeActionModal = (props) => {
         call_list_name: props.actionNameInput,
         campaign_id: props.campaignSelection,
         legislator_ids: selectedLegislatorIds,
-        current_user_id: props.currentUser.id
+        current_user_id: props.id
     })
     handleClose()
   }
@@ -31,11 +31,13 @@ const TakeActionModal = (props) => {
   const createCallList = (bodyObj) => {
     // fetch post request
     const url = `${process.env.REACT_APP_ILOBBY_API}/call_lists`
+    const token = localStorage.token;
     const configObj = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Accepts": "application/json"
+        "Accepts": "application/json",
+        "Authorization": token
       },
       body: JSON.stringify({call_list: bodyObj})
     }
@@ -79,7 +81,11 @@ const TakeActionModal = (props) => {
       // redirect to calllists/:id
       props.history.push(`/campaigns/calllists/${json.id}`)
 
-    }, )
+    })
+    .catch(err => {
+        alert('Create Call List: fetch error')
+        console.log(err)
+      })
 
   }
 
@@ -173,7 +179,8 @@ const mapStateToProps = state => {
     actionTypeOptions: state.actionTypeOptions,
     actionTypeSelection: state.actionTypeSelection,
     actionNameInput: state.actionNameInput,
-    currentUser: state.currentUser
+    currentUser: state.currentUser,
+    id: state.id
   }
 }
 

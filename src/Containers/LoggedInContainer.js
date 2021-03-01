@@ -15,76 +15,61 @@ class LoggedInContainer extends React.Component {
 
   componentDidMount() {
     console.log("logged in container did mount")
+    const token = localStorage.token;
 
     // GET LEGISLATORS
-    fetch(legislatorsEndpoint)
-      .then(res => res.json())
-      .then(data => {
-        // sort alphabetically
-        let legislators = data.sort((a, b) => a.name.localeCompare(b.name))
+    fetch(legislatorsEndpoint, {
+      headers: {
+        "Authorization": token
+      }
+  })
+    .then(res => res.json())
+    .then(data => {
+      // sort alphabetically
+      let legislators = data.sort((a, b) => a.name.localeCompare(b.name))
 
-        this.props.storeLegislators(legislators)
-        this.props.legislatorDataLoaded()
-      })
+      this.props.storeLegislators(legislators)
+      this.props.legislatorDataLoaded()
+    })
+    .catch(err => {
+      alert('Get Legislator Data: fetch error')
+      console.log(err)
+    })
 
     // GET COMMITTEES DATA
     fetch(committeesEndpoint)
-      .then(res => res.json())
-      .then(data => {
-        // sort alphabetically
-        let committees = data.sort((a, b) => a.filter_name.localeCompare(b.filter_name))
+    .then(res => res.json())
+    .then(data => {
+      // sort alphabetically
+      let committees = data.sort((a, b) => a.filter_name.localeCompare(b.filter_name))
 
-        this.props.storeCommittees(committees)
-        this.props.committeeDataLoaded()
-      })
+      this.props.storeCommittees(committees)
+      this.props.committeeDataLoaded()
+    })
 
 
     // GET USER DATA 
-    console.log("this.props.currentUser.id", this.props.currentUser.id)
-    const userDataUrl = userDataEndpoint + `/${this.props.currentUser.id}`
-    const token = localStorage.token;
+    const userDataUrl = userDataEndpoint
 
     fetch(userDataUrl, {
       headers: {
-        Authorization: token
+        "Authorization": token
       }
     })
-      .then(res => res.json())
-      .then(data => {
-        console.log(data)
-        this.props.storeUserData(data)
-        this.props.userDataLoaded()
-      })
-
-
-  //   const token = localStorage.token;
-
-  //   if (token && !this.props.currentUser) {
-  //     //get user info
-  //     this.checkAutoLogin(token)
-  //   }
-  // }
-
-  // checkAutoLogin = token => {
-  //   fetch("http://localhost:3000/auto_login", {
-  //     headers: {
-  //       Authorization: token
-  //     }
-  //   })
-  //     .then(res => res.json())
-  //     .then(response => {
-  //       if (response.errors) {
-  //         alert(response.errors);
-  //       } else {
-  //         debugger
-  //         this.props.setUser(response)
-  //       }
-  //     });
+    .then(res => res.json())
+    .then(data => {
+      console.log(data)
+      this.props.storeUserData(data)
+      this.props.userDataLoaded()
+    })
+    .catch(err => {
+      alert('Get User Data: fetch error')
+      console.log(err)
+    })
   };
 
 
   render() {
-
     return (
       <div>
         <Route path="/" component={NavBar} />
@@ -97,10 +82,9 @@ class LoggedInContainer extends React.Component {
 
       </div>
     );
-
-
   }
 }
+
 
 const mapStateToProps = (state) => {
   return {
@@ -108,13 +92,9 @@ const mapStateToProps = (state) => {
   }
 }
 
+
 const mapDispatchToProps = (dispatch) => {
   return {
-    setUser: (json) => {
-      console.log("logged in called setUser")
-      // debugger
-      dispatch({ type: "SET_USER", payload: json })
-    },
     storeLegislators: (data) => {
       dispatch({ type: "STORE_LEGISLATORS", payload: data })
     },
@@ -124,10 +104,6 @@ const mapDispatchToProps = (dispatch) => {
     storeUserData: (data) => {
       dispatch({ type: "STORE_USER_DATA", payload: data })
     },
-    // setUser: (json) => {
-    //   console.log("App called setUser")
-    //   dispatch({ type: "SET_USER", payload: json })
-    // },
     userDataLoaded: () => {
       console.log("User Data Loaded")
       dispatch({ type: "USER_DATA_LOADED" })

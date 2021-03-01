@@ -140,7 +140,7 @@ class CallListContainer extends React.Component {
     const phoneNumbers = (legislator) => {
       
       let voices = legislator.contact_infos.filter(contactInfo => contactInfo.kind === 'voice')
-      let numbers = voices.map(voice => <List key={voice.value} ><List.Icon name="phone" /> {voice.value}</List> )
+      let numbers = voices.map((voice, i) => <List key={i} ><List.Icon name="phone" /> {voice.value}</List> )
 
     return numbers
     }

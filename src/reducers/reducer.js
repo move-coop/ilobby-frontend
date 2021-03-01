@@ -118,13 +118,7 @@ const commitmentOptions = [
 
 const initialState = {
   currentUser: false,
-  // { 
-  //   id: 1, 
-  //   password_digest: "$2a$12$O4NTR9IaambgLm20pQkj5.lP4d.c8SglnunhTnuT.8d0piAxWBx7G", 
-  //   email: "james@thisjames.com", 
-  //   created_at: "2020-02-26T20:54:06.690Z", 
-  //   updated_at: "2020-02-26T20:54:06.690Z" 
-  // },
+  id: false,
 
   // status on App fetches
   legislatorDataLoaded: false,
@@ -277,6 +271,10 @@ const generateCampaignOption = (campaign) => {
   };
 }
 
+const updateLegislatorNote = (note) => {
+  console.log('updateLegislatorNote')
+}
+
 export const reducer = (prevState = initialState, action) => {
   let displayLegislators
   let newState
@@ -291,19 +289,22 @@ export const reducer = (prevState = initialState, action) => {
   let newCampaign
   let newCampaigns
   let newCallLists
+  let updatedLegislators
 
   switch (action.type) {
     case "SET_USER":
       console.log("SET USER:", action.payload);
-      localStorage.token = action.payload.token;
+      // localStorage to be set up App.js with firebase.auth().currentUser.getIdToken
+      // localStorage.token = action.payload.token;
       return {
         ...prevState,
-        currentUser: action.payload.user
+        currentUser: action.payload
       };
 
     case "LOGOUT":
+      console.log("Logging out:", prevState.currentUser)
       localStorage.clear()
-      return { ...prevState, currentUser: false };
+      return initialState;
 
     case "TOGGLE_CARDVIEW":
       console.log("toggling cardview !");
@@ -332,7 +333,7 @@ export const reducer = (prevState = initialState, action) => {
 
     case "STORE_USER_DATA":
       // console.log("reducer legislators", action.payload)
-      const { campaigns, actions, call_lists, calls } = action.payload;
+      const { id, campaigns, actions, call_lists, calls } = action.payload;
       const campaignOptions = campaigns.map(campaign => {
         return generateCampaignOption(campaign)
       });
@@ -342,7 +343,8 @@ export const reducer = (prevState = initialState, action) => {
         campaigns,
         actions,
         callLists: call_lists,
-        calls
+        calls,
+        id
       };
       displayCampaigns = updateDisplayCampaigns(newState);
       displayActions = newState.actions.map(action => {
@@ -384,7 +386,7 @@ export const reducer = (prevState = initialState, action) => {
 
     case "TOGGLE_ONE_SELECTION":
       console.log("toggle one selection", action.payload);
-      let updatedLegislators = prevState.legislators.map(legislator => {
+      updatedLegislators = prevState.legislators.map(legislator => {
         if (legislator.id === parseInt(action.payload)) {
           console.log(legislator.id);
           return { ...legislator, selected: !legislator.selected };
@@ -409,7 +411,7 @@ export const reducer = (prevState = initialState, action) => {
         !!displayLegislators.find(legislator => legislator.selected !== true)
       ) {
         // map through legislators changing those currently displayed to selected = true
-        let updatedLegislators = prevState.legislators.map(legislator => {
+        updatedLegislators = prevState.legislators.map(legislator => {
           if (legislator.display === true) {
             return { ...legislator, selected: true };
           } else {
@@ -419,7 +421,7 @@ export const reducer = (prevState = initialState, action) => {
         return { ...prevState, legislators: updatedLegislators };
       } else {
         // otherwise, map through legislators changing those currently displayed to selected = false
-        let updatedLegislators = prevState.legislators.map(legislator => {
+        updatedLegislators = prevState.legislators.map(legislator => {
           if (legislator.display === true) {
             return { ...legislator, selected: false };
           } else {
@@ -596,6 +598,40 @@ export const reducer = (prevState = initialState, action) => {
         return callList.id !== action.payload;
       });
       return { ...prevState, callLists: newCallLists };
+
+    case "CREATE_NOTE":
+      console.log("CREATE NOTE", action.payload)
+      updatedLegislators = prevState.legislators.map(leg => {
+        if (leg.id === action.payload.legislator_id) {
+          return {
+            ...leg,
+            note: action.payload
+          }
+        } else {
+          return leg
+        }
+      })
+      return {
+        ...prevState,
+        legislators: updatedLegislators
+      }
+
+    case "EDIT_NOTE":
+      console.log("EDIT NOTE", action.payload)
+      updatedLegislators = prevState.legislators.map(leg => {
+        if (leg.id === action.payload.legislator_id) {
+          return {
+            ...leg,
+            note: action.payload
+          }
+        } else {
+          return leg
+        }
+      })
+      return {
+        ...prevState,
+        legislators: updatedLegislators
+      }
 
     case "SET_CLICK_ZOOMED":
       console.log("SET_CLICK_ZOOMED", action.payload);
