@@ -9,11 +9,6 @@ class WelcomeContainer extends React.Component {
     console.log("rendering welcome container")
     return (
       <div>
-        {/* WELCOME SPLASH
-        <Button onClick={this.props.toggleCurrentUser} primary>
-          {this.props.currentUser ? "Logout" : "Login"}
-        </Button>
-        <Divider /> */}
         <Grid
           style={{ height: "100vh" }}
           verticalAlign="middle"

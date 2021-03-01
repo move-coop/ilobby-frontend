@@ -304,7 +304,7 @@ export const reducer = (prevState = initialState, action) => {
     case "LOGOUT":
       console.log("Logging out:", prevState.currentUser)
       localStorage.clear()
-      return { ...prevState, currentUser: false, id: false };
+      return initialState;
 
     case "TOGGLE_CARDVIEW":
       console.log("toggling cardview !");
